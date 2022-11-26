@@ -1,0 +1,157 @@
+﻿@model SWQuotation.Models.Login
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+
+    <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css?v=3.2.0">
+
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-image: url('../../images/view3.jpg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+            height: 100%;
+            font-family: 'Numans', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="hold-transition login-page">
+    <div class="login-box">
+
+        <div class="card card-outline card-warning">
+            <div class="card-header text-center">
+                <a href="#" class="h1"><b>Spacewood</b> &nbsp; &nbsp;<img src="~/images/favicon.png" alt="Spacewood Logo" style="height: 40px" ;class="brand_logo" /> </a>
+            </div>
+            <div class="card-body">
+                <p class="login-box-msg">Sign in to start your session</p>
+                @using (Html.BeginForm("Login", "Login", FormMethod.Post))
+                {
+            <form>
+                <div class="input-group mb-3">
+                    @*<input type="email" class="form-control" placeholder="Email">*@
+                    @Html.EditorFor(m => m.LoginId, new { id = "loginid", htmlAttributes = new { @class = "form-control", autocomplete = "off", placeholder = "User Id", @Value = ViewBag.username } }) <br />
+
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-envelope"></span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="input-group mb-3" style="color:red">
+                    @Html.ValidationMessageFor(m => m.LoginId)
+                    <div class="input-group-append">
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    @*<input type="password" class="form-control" placeholder="Password">*@
+                    @Html.EditorFor(m => m.Password, new { htmlAttributes = new { @class = "form-control", autocomplete = "off", placeholder = "Password", @Value = ViewBag.password } }) <br />
+
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        <div class="icheck-primary">
+                            @Html.CheckBoxFor(m => m.RememberMe, new { id = "remember" })
+                            <label for="remember">
+                                Remember Me
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="input-group mb-3" style="color:red">
+                    @Html.ValidationMessageFor(m => m.Password)
+                    <div class="input-group-append">
+                    </div>
+                </div>
+
+                <div class="input-group mb-3" style="color:red">
+                    @ViewBag.ErrorMessage
+                    @Html.HiddenFor(m => m.UrlLink, new { id = "urllink" })
+                    <div class="input-group-append">
+                    </div>
+                </div>
+                <div class="social-auth-links text-center mt-2 mb-3">
+                    <b><input type="submit" value="Login" id="btnLogins" class="btn btn-warning btn-block" /></b>
+                </div>
+            </form>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="~/dist/js/adminlte.min.js?v=3.2.0"></script>
+
+    <script>
+        $(document).ready(function () {
+            debugger
+            var encurl = window.location.href;
+            let res = encurl.replace(/!/g, "&");
+            const urlparam = new URL(res).searchParams;
+            var udate = urlparam.get('DT');
+            var uid = urlparam.get('USR');
+            var mu = urlparam.get('MU');
+            var mp = urlparam.get('MP');
+            var dcrdate = atob(udate);
+            var dcruid = atob(uid);
+            var dcrmuid = atob(mu);
+            var dcrmpwd = atob(mp);
+            var url = "http://localhost:50721/Customer/Index?DT=" + dcrdate + "&USR=" + dcruid;
+            //var url = "https://crm.spacewood.in/Home/SalesActivityDetail?DT=" + dcrdate + "&USR=" + dcruid;
+            if (mu != null && mp != null) {
+                $("#LoginId").val(dcrmuid);
+                $("#Password").val(dcrmpwd);
+                $("#urllink").val(url);
+
+                document.getElementById("btnLogins").click();
+            }
+            else {
+                var username = $('#LoginId').val();
+                var pwd = $('#Password').val();
+                if (username != "" && pwd != "") {
+                    $("#remember").prop('checked', true);
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
+
+

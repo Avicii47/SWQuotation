@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "ProductList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/style.css" rel="stylesheet" />
+<!--Only for demo purpose - no need to add.-->
+<link href="~/css/demo.css" rel="stylesheet" />
+<!-- Font Awesome -->
+<link href="~/plugins/fontawesome-free/css/all.min.css" rel="stylesheet" />
+<!-- Ekko Lightbox -->
+<link href="~/plugins/ekko-lightbox/ekko-lightbox.css" rel="stylesheet" />
+<!-- Theme style -->
+<link href="~/dist/css/adminlte.min.css" rel="stylesheet" />
+
+
+<center><h2>All Product List</h2></center>
+
+<div class="card card-warning card-outline">
+    <div class="tab-content" id="custom-tabs-three-tabContent">
+        <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+            &nbsp;
+            <table id="tblProducts" class="table table-bordered table-striped"></table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="row">
+                <div class="modal-header col-md-6">
+                    <center><h5><label class="modal-title">Product Image</label></h5></center>
+                </div>
+            </div>
+            <input type="hidden" id="ProductId" />
+            <div class="card card-warning card-outline">
+                <input type="hidden" id="prod" />
+                <div class="tab-content" id="custom-tabs-three-tabContent">
+                    <center>
+                        <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                            &nbsp;
+                            <table id="tblProdImg" class="table table-bordered table-striped" style="width:95%"><thead></thead></table>
+                        </div>
+                    </center>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <center><button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">Cancel</button></center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/Product/ProductList.js"></script>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+<script src="~/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Ekko Lightbox -->
+<script src="~/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
+<!-- AdminLTE App -->
+<script src="~/dist/js/adminlte.min.js"></script>
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+            debugger
+            //alert("clicked"); //to test this function ran
+            event.preventDefault();
+            $(this).ekkoLightbox();
+        });
+    });
+</script>

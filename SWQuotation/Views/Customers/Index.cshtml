@@ -1,0 +1,696 @@
+﻿@model SWQuotation.Models.Login
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+
+    <script src="~/Scripts/Customers/Customers.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <!-- Sweet Alert JS -->
+    <link href="~/plugins/sweetalert2/sweetalert2.css" rel="stylesheet" />
+    @*<link href="~/Content/sweetalert/sweet-alert.css" rel="stylesheet" />*@
+    <script src="~/plugins/sweetalert2/sweetalert2.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+</head>
+@*<input type="text" id="txtName" value="@Model.LoginId">*@
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Quotation</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .btn {
+        background-color: #ffc107;
+        border: none;
+        color: black;
+        padding: 6px 16px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        /* Darker background on mouse-over */
+        .btn:hover {
+            background-color: #ffc107;
+        }
+</style>
+
+
+
+
+<section class="content">
+    <div class="container-fluid" id="Container">
+        <div class="card card-warning card-outline">
+            <div class="card-header">
+                <br>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-group" id="CMOB">
+                            <h5><label class="col-sm-10 col-form-label">Enter Mobile No</label></h5>
+                        </div>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="col-sm-6">
+                            <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                   type="number" class="form-control" onchange="CheckValidPhoneno();" placeholder="Enter Mobile No" id="t_cmob" maxlength="10" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="container-fluid" id="didID">
+    <div class="card card-warning card-outline">
+        <div class="card-header">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="CustomerID" id="CuId" hidden="hidden">
+                        <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="QuotationID" id="QuotId" hidden="hidden">
+                        <label class="col-sm-10 col-form-label">Customer Name </label>
+                        <div class="col-sm-11">
+                            <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Customer Name" id="Txtt_cnam">
+                            <input type="text" class="form-control" autocomplete="off" maxlength="50" id="Exicnam" readonly>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-10 col-form-label">Date of Birth</label>
+                            <div class="col-sm-11">
+                                <input type="text" id="Exidob" class="form-control" readonly>
+                                <input type="date" id="Txtt_cdob" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label">Mobile No.</label>
+                        <div class="col-sm-11">
+                            <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Mobile No." id="Exicmob">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-10 col-form-label">Alternate No.</label>
+                            <div class="col-sm-11">
+                                <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                       type="number" class="form-control" onchange="checkValidPhoneno();" placeholder="Enter Alt No." id="Txtt_camo" maxlength="10" />
+                                <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                       type="number" class="form-control" placeholder="Enter Alt No." id="Exicam" maxlength="10" readonly />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label">GST No</label>
+                        <div class="col-sm-11">
+                            <input type="text" class="form-control" autocomplete="off" maxlength="50" id="Txtt_cgst">
+                            <input type="text" class="form-control" autocomplete="off" maxlength="50" id="Exicgst" readonly>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-10 col-form-label">Email Id</label>
+                            <div class="col-sm-11">
+                                <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Email Id" id="Txtt_cmai" onchange="CheckEmailSalesAct();">
+                                <input type="text" class="form-control" autocomplete="off" maxlength="100" id="Exicmai" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label class="col-sm-10 col-form-label" style="visibility:hidden">Add Address</label>
+                            <div class="btn-group"><label class="col-sm-10 col-form-label">Add Address</label><button type="button" data-toggle="modal" value="0" class="btn btn-danger btn-sm" onclick="Modal();" id="btn-sa-confirm"><center><i class="nav-icon fas fa-plus-circle"></i></center></button></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="col-sm-10 col-form-label">Bill To</label>
+                        <div class="col-sm-6">
+                            <div class="input-container" id="TxtBillto">
+                                <input type="text" class="input-block-level" id="BillAddress" />
+                                <button type="button" data-toggle="modal" value="0" class="btn btn-danger btn-sm input-button" id="btn-sa-confirm" onclick="Modal2();"><i class="nav-icon fas fa-plus-circle"></i></button>
+                            </div>
+                            <div class="input-container" id="ExtBillto">
+                                <input type="text" class="input-block-level" id="ExtBill" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="col-sm-10 col-form-label" style=" visibility:hidden">Bill To</label>
+                        <div class="form-check">
+                            <center>
+                                <input type="checkbox" class="form-check-input" id="chk">
+                                <label class="" for="check2">Same as Bill Address</label>
+                            </center>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label class="col-sm-10 col-form-label">Ship to</label>
+                            <div class="col-sm-6">
+                                <div class="input-container" id="TxtShipto">
+                                    <input type="text" class="input-block-level" id="ShipAddress" />
+                                    <button type="button" data-toggle="modal" value="0" class="btn btn-danger btn-sm input-button" id="btn-sa-confirm" onclick="Modal3();"><i class="nav-icon fas fa-plus-circle"></i></button>
+                                </div>
+                                <div class="input-container" id="ExtShipto">
+                                    <input type="text" class="input-block-level" id="ExtShip" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <center><h3><label class="col-sm-10 col-form-label">Address</label></h3></center>
+                                <div class="card card-warning card-outline">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label class="col-sm-10 col-form-label">Address 1</label>
+                                                <div class="col-sm-11">
+                                                    <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Address" id="Txtt_cadd">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label class="col-sm-10 col-form-label">Address 2</label>
+                                                <div class="col-sm-11">
+                                                    <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Address" id="Txtt_cadd2">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label class="col-sm-10 col-form-label">Address 3</label>
+                                                <div class="col-sm-11">
+                                                    <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Address" id="Txtt_cadd3">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label class="col-sm-10 col-form-label">Country</label>
+                                                    <div class="col-sm-11">
+                                                        <select name="ddlcountry" class="form-control select2" id="ddlcountry" onselect="this.value">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label class="col-sm-10 col-form-label">State</label>
+                                                    <div class="col-sm-11">
+                                                        <select class="form-control select2" id="ddlStates" onselect="this.value" onchange="BindCity();"></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label class="col-sm-10 col-form-label">City</label>
+                                                    <div class="col-sm-11">
+                                                        <select class="form-control select2" id="ddlCity" onselect="this.value"></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label class="col-sm-10 col-form-label">District</label>
+                                                    <div class="col-sm-11">
+                                                        <input type="text" class="form-control" autocomplete="off" maxlength="100" id="Txtt_dist">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label class="col-sm-10 col-form-label">Pincode</label>
+                                                <div class="col-sm-11">
+                                                    <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                           type="number" class="form-control" placeholder="Enter Pincode" id="TxtPincode" maxlength="6" />
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="col-sm-10 col-form-label">Landmark</label>
+                                                <div class="col-sm-11">
+                                                    <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Landmark" id="TxtLandmark">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <center><button class="btn btn-success" data-dismiss="modal" aria-hidden="true" onclick="addAddress()">Add Address</button></center>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="tab-content" id="custom-tabs-three-tabContent">
+                            <center>
+                                <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                                    &nbsp;
+                                    <table id="tblAddress" class="table table-bordered table-striped" style="width:95%"><thead></thead></table>
+                                </div>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="tab-content" id="custom-tabs-three-tabContent">
+                            <center>
+                                <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                                    &nbsp;
+                                    <table id="tblAddress1" class="table table-bordered table-striped" style="width:95%"><thead></thead></table>
+                                </div>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card-footer" id="NewCust">
+                <div class="col-sm-12" id="Exist">
+                    <center><input id="Btnsuccess" class="btn btn-success" type="button" value="Next" onclick="addcustomer()" /></center>
+                </div>
+            </div>
+            <div class="card-footer" id="ExiCust">
+                <div class="col-sm-12" id="Exist">
+                    <center><input id="Btnsuccess" class="btn btn-success" type="button" value="Next" onclick="addtoQuot()" /></center>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Select Product</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-11">
+                    <label class="col-sm-10 col-form-label">Select Product</label>
+                    <div class="col-sm-11">
+                        <select class="form-control select2" id="ddlproduct" onselect="this.value" onchange="GetPrice();"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-4">
+                    <label class="col-sm-10 col-form-label">Price</label>
+                    <div class="col-sm-11">
+                        <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="Price" id="Txt_Price" readonly>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label class="col-sm-10 col-form-label">No of Units</label>
+                    <div class="col-sm-11">
+                        <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="No of Units" id="Txtt_No">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label class="col-sm-10 col-form-label">Total Price</label>
+                    <div class="col-sm-11">
+                        <input type="number" class="form-control" autocomplete="off" maxlength="50" id="Txt_TPrice" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-6">
+                    <label class="col-sm-10 col-form-label">Discount In %</label>
+                    <div class="col-sm-11">
+                        <input type="number" class="form-control" autocomplete="off" maxlength="50" id="Txt_Dis">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label class="col-sm-10 col-form-label">Discount In No.</label>
+                    <div class="col-sm-11">
+                        <input type="number" class="form-control" autocomplete="off" maxlength="50" id="Txt_DisN">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-4">
+                    <label class="col-sm-10 col-form-label">Taxes</label>
+                    <div class="col-sm-11">
+                        <select class="form-control select2" id="ddlTaxes" onselect="this.value"></select>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div id="GST">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label class="col-sm-10 col-form-label">CGST</label>
+                                <div class="col-sm-11">
+                                    <input class="form-control" autocomplete="off" maxlength="50" id="Txt_CGST" readonly>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="col-sm-10 col-form-label">SGST</label>
+                                <div class="col-sm-11">
+                                    <input class="form-control" autocomplete="off" maxlength="50" id="Txt_SGST" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="IGST">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label class="col-sm-10 col-form-label">IGST</label>
+                                <div class="col-sm-11">
+                                    <input class="form-control" autocomplete="off" maxlength="50" id="Txt_IGST" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label class="col-sm-10 col-form-label">Final Price</label>
+                    <div class="col-sm-11">
+                        <input class="form-control" autocomplete="off" maxlength="50" id="Txt_netamount" @*style="display:none*@">
+                        <input class="form-control" autocomplete="off" maxlength="50" id="Txt_DisP" @*style="display:none"*@>
+                        <input class="form-control" autocomplete="off" maxlength="50" id="Txt_TPrice1" @*style="display:none"*@>
+                        <input class="form-control" autocomplete="off" maxlength="50" id="Txt_FPrice" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-12">
+                    <center><input id="Btnsuccess" class="btn btn-success" type="button" value="Next" onclick="addtoliner()" /></center>
+                </div>
+            </div>
+        </div>
+
+        @*Table start Here*@
+
+        <div class="card card-warning card-outline">
+            <div class="tab-content" id="custom-tabs-three-tabContent">
+                <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                    &nbsp;
+                    <center>
+                        <table id="tblQuotation" class="table table-bordered table-striped" width="98%">
+                            <thead>
+                                <tr>
+                                    <th><center>SrNo</center></th>
+                                    <th><center>Product Name</center></th>
+                                    <th><center>Quantity</center></th>
+                                    <th><center>Discount</center></th>
+                                    <th><center>ProductPrice</center></th>
+                                    <th><center>TotalPrice(Including Taxes)</center></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Total</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </center>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <label class="col-sm-10 col-form-label">Total Tax</label>
+                    <div class="col-sm-11">
+                        <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="Txt_totaltax" readonly>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <label class="col-sm-10 col-form-label">Total Price</label>
+                    <div class="col-sm-11">
+                        <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="Txt_GPri" readonly>
+                        <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="TxtPER" style="visibility:hidden">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <label class="col-sm-10 col-form-label">Advance</label>
+                    <div class="form-group">
+                        <div class="col-sm-11">
+                            <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="Advance" id="Txtt_adva">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <label class="col-sm-10 col-form-label">Balance</label>
+                    <div class="form-group">
+                        <div class="col-sm-11">
+                            <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="Txtt_bala" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-12">
+                    <center><input id="Btnsuccess" class="btn btn-success" type="button" value="Save" onclick="FinalQuot();" /></center>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .input-container {
+        width: 250px;
+        border: 1px solid #a9a9a9;
+        display: inline-block;
+    }
+
+        .input-container input:focus, .input-container input:active {
+            outline: none;
+        }
+
+        .input-container input {
+            width: 80%;
+            border: none;
+        }
+
+        .input-container button {
+            float: right;
+        }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('#t_cmob').keyup(function (e) {
+            var txtVal = $(this).val();
+            $('#Exicmob').val(txtVal);
+        });
+
+        $('#Exicmob').keyup(function (e) {
+            var txtVal = $(this).val();
+            $('#t_cmob').val(txtVal);
+        });
+    });
+</script>
+
+<script>
+    function myFunction() {
+        var x = document.getElementById("myDIV");
+        (x.style.display === "none")
+        x.style.display = "block";
+        var y = document.getElementById("Exist");
+        y.style.display = "none";
+
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#Txt_Price,#Txtt_No").keyup(function () {
+            var total = 0;
+            var x = Number($("#Txt_Price").val());
+            var y = Number($("#Txtt_No").val());
+            var total = x * y;
+            $("#Txt_TPrice").val(total);
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $("#ddlTaxes").on("change", function () {
+            if (parseInt($("#ddlTaxes").val()) == 2) {
+                $("#IGST").hide();
+                $("#GST").show();
+                
+            } else {
+                $("#IGST").show();
+                $("#GST").hide();
+                
+            }
+        });
+        $("#ddlTaxes").trigger("change");
+    });
+</script>
+
+<script>
+    $(document).on("change keyup blur", "#Txt_Dis", "#Txt_DisN", function () {
+        debugger
+        var main = $('#Txt_TPrice').val();
+        var disc = $('#Txt_Dis').val();
+        var dec = (disc / 100).toFixed(2);
+        var mult = main * dec;
+        var discont = main - mult;
+        document.getElementById("Txt_DisN").disabled = true;
+        $('#Txt_DisP').val(discont);
+        debugger
+        if (parseInt($("#Txt_Dis").val()) == "") {
+            var disN = $('#Txt_DisN').val();
+            var netprice = main - disN;
+            $('#Txt_netamount').val(netprice);
+
+        } else {
+            var netprice = main - discont;
+            $('#Txt_netamount').val(netprice);
+
+        }
+    });
+</script>
+
+<script>
+    $(document).on("change keyup blur", "#Txt_DisN", function () {
+        debugger
+        var main = $('#Txt_TPrice').val();
+        var disN = $('#Txt_DisN').val();
+        var netprice = main - disN;
+            $('#Txt_netamount').val(netprice);
+    });
+</script>
+
+<script>
+    $(document).on("change keyup blur", "#ddlTaxes", function () {
+        debugger
+        $('#Txt_SGST').val("");
+        $('#Txt_IGST').val("");
+        $('#Txt_FPrice').val("");
+        $('#Txt_TPrice1').val("");
+        var DisPrice = $('#Txt_DisP').val();
+        var tax = $('#ddlTaxes').val();
+        getGST(tax);
+        var per = $('#TxtPER').val();
+        var mult = per * DisPrice;
+        var discont = (mult / 100);
+        discont = parseFloat(discont).toFixed(2);
+        var dis = (discont / 2);
+        $('#Txt_TPrice1').val(discont);
+        $('#Txt_CGST').val(dis);
+        $('#Txt_SGST').val(dis);
+        $('#Txt_IGST').val(discont);
+        var t = Number($('#Txt_DisP').val());
+        var tt = Number($('#Txt_TPrice1').val());
+        var totalprice = t + tt
+        value = parseFloat(totalprice).toFixed(2);
+        $('#Txt_FPrice').val(value);
+    });
+</script>
+
+<script>
+    $(document).on("change keyup blur", "#Txt_DisN", function () {
+
+        var main = $('#Txt_TPrice').val();
+        var disN = $('#Txt_DisN').val();
+        var discont = main - disN;
+        document.getElementById("Txt_Dis").disabled = true;
+        $('#Txt_DisP').val(discont);
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#Txt_GPri,#Txtt_adva").keyup(function () {
+            var total = 0;
+            var p = Number($("#Txt_GPri").val());
+            var q = Number($("#Txtt_adva").val());
+            var total = p - q;
+            $("#Txtt_bala").val(total);
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $("#chk").click(function () {
+
+            if ($(this).is(":checked")) {
+                var ShipAddress = $("#BillAddress").val();
+                $("#ShipAddress").val(ShipAddress);
+            } else {
+                $("#ShipAddress").val();
+            }
+        });
+    });
+</script>

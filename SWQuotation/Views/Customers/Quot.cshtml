@@ -1,0 +1,320 @@
+﻿@model IEnumerable<SWQuotation.Models.UserModal>
+@*@model SWQuotation.UserModal*@
+@{
+    ViewBag.Title = "Quot";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/Customers/Quot.js"></script>
+
+
+
+<style>
+    #myDIV {
+        width: 100%;
+        height: 83px;
+        background-color: #FFFFFF;
+        border-bottom: 3px solid;
+        border-bottom-style: solid;
+    }
+</style>
+
+<style>
+    .vl {
+        border-left: 3px solid black;
+        /*height: 500px;*/
+    }
+
+    .center {
+        display: block;
+        margin-top: 60px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+    }
+</style>
+
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>
+
+<STYLE TYPE="text/css">
+    .breakhere {
+        page-break-after: always
+    }
+</STYLE>
+
+<script>
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = mm + '/' + dd + '/' + yyyy;
+</script>
+
+<div class="container-fluid" id="Container">
+    <div class="card card-warning card-outline">
+        <div id="ParentDiv">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="vl">
+                            <h3>&nbsp;&nbsp; WISHLIST DETAILS</h3>
+                                &nbsp;&nbsp; Date :- @Html.Label("txtFrmDate", DateTime.Now.ToString("dd-MMM-yyyy"))<br>
+                                &nbsp;&nbsp; Contact Person :- <label>@Session["userId"].ToString()</label><br>
+                                &nbsp;&nbsp; Contact No :- <label>8983398443</label><br>
+                                &nbsp;&nbsp; Quot ID :-<label id="QuotId"></label>
+                            </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <center><img src="~/images/logo-header.png" style="width: auto; height: 50.6px;" class="center" /></center>
+                    </div>
+                </div>
+            </div>
+            @*<hr width="100%" color="green" />*@
+            <div>
+                <div class="row" style="margin-left:10px ; margin-left:35px">
+                    <div class="col-sm-6">
+                        <br />
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        &nbsp; Name : &nbsp;<label id="CustName" style="margin-left: 22px" />
+                    </div>
+                    <div class="col-sm-6">
+                        <br />
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                        &nbsp; Email :<label id="Email" style="margin-left: 18px" />
+                    </div>
+                </div>
+                <div class="row" style="margin-left:10px ; margin-left:35px">
+                    <div class="col-sm-6">
+                        <br />
+                        <i class="fa fa-phone" aria-hidden="true"></i>
+                        &nbsp; Mobile No. : &nbsp;<label id="PhoneNo" />
+                    </div>
+                    <div class="col-sm-6">
+                        <br />
+                        <i class="fa fa-calculator" aria-hidden="true"></i>
+                        &nbsp; GST NO : &nbsp;<label id="Gst" style="margin-left: 18px" />
+                    </div>
+                </div>
+                <div class="row" style="margin-left:10px ; margin-left:35px">
+                    <div class="col-sm-6">
+                        <br />
+                        <i class="fa fa-address-card" aria-hidden="true"></i>
+                        &nbsp; Bill To Adddress :<br>
+                        &nbsp;<label id="BillTo" style="margin-left: 26px;" />
+                    </div>
+                    <div class="col-sm-6">
+                        <br />
+                        <i class="fa fa-address-card" aria-hidden="true"></i>
+                        &nbsp; Ship To Adddress :<br>
+                        &nbsp;<label id="ShipTo" style="margin-left: 26px" />
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="card card-warning card-outline" style="padding: 10px;">
+                <div class="tab-content" id="custom-tabs-three-tabContent">
+                    <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                        &nbsp;
+                        <table id="tblQuotProduts" class="table table-bordered table-striped" style="padding: 10px;"></table>
+                    </div>
+                </div>
+            </div>
+            <center><hr width="97%" color="black" /></center>
+            <center><lable>(Please Turn To Next Page)</lable></center>
+            <P CLASS="breakhere">
+
+                <div class="row">
+                    <div class="col-sm-7" style="padding:40px; margin-top:-20px">
+                        <div class="vl">
+                            <h3>&nbsp;&nbsp;BAJAJ FINANCE SCHEME</h3>
+                        </div>
+                        <center>
+                            <table>
+                                <tr>
+                                    <th>Scheme</th>
+                                    <th>ROI</th>
+                                    <th>No of EMI</th>
+                                    <th>DP</th>
+                                    <th>EMI</th>
+                                </tr>
+                                <tr>
+                                    <td>9 x 3</td>
+                                    <td>6%</td>
+                                    <td>6</td>
+                                    <td>₹ 13,025</td>
+                                    <td>₹ 3,443</td>
+                                </tr>
+                                <tr>
+                                    <td>12 x 4</td>
+                                    <td>7%</td>
+                                    <td>8</td>
+                                    <td>₹ 13,366</td>
+                                    <td>₹ 2,583</td>
+                                </tr>
+                                <tr>
+                                    <td>10 x 2</td>
+                                    <td>8%</td>
+                                    <td>8</td>
+                                    <td>₹ 9,544</td>
+                                    <td>₹ 3,099</td>
+                                </tr>
+                                <tr>
+                                    <td>18 x 6</td>
+                                    <td>9%</td>
+                                    <td>12</td>
+                                    <td>₹ 13,986</td>
+                                    <td>₹ 1,722</td>
+                                <tr>
+                                    <td>8 x 0</td>
+                                    <td>10%</td>
+                                    <td>8</td>
+                                    <td>₹ 3,025</td>
+                                    <td>₹ 3,443</td>
+                                </tr>
+                            </table>
+                        </center>
+                    </div>
+                    <div class="col-sm-5" style="margin-top: 65px; padding-right: 40px; text-align: left;">
+                        <center>
+                            <TABLE border="1">
+                                <TR>
+                                <TR><TH>Gross Amount<TD>Rs.<label id="GAmt" />
+                                <TR><TH>Discount<TD>Rs.<label id="Discount" />
+                                <TR><TH>Net Amount<TD>Rs.<label id="NetAmt" />
+                                <TR><TH>Taxes GST(18%)<TD>Rs.<label id="Tax" />
+                                <TR><TH>Total Amount<TD>Rs.<label id="Total" />
+                                <TR><TH>Advance<TD>Rs.<label id="Adv" />
+                                <TR><TH>Balance<TD>Rs.<label id="Bal" />
+                            </TABLE>
+                        </center>
+                    </div>
+                </div>
+                <center><hr width="97%" color="black" /></center>
+
+                <div class="row">
+                    <div class="col-sm-6" style="padding:40px; margin-top:-20px">
+                        <div class="vl">
+                            <h4>&nbsp;&nbsp;TERMS & CONDITIONS </h4>
+                        </div>
+                        1)&nbsp;&nbsp;Prices are inclusive of taxes.<br>
+                        2)&nbsp;&nbsp;Payment made by cheque shall be subject to realisation of cheque.<br>
+                        3)&nbsp;&nbsp;Prices are inclusive of taxes.<br>
+                        4)&nbsp;&nbsp;Delivery of goods shall be effected after atleast 2 days of payment.<br>
+                        5)&nbsp;&nbsp;Minimum two days for installation after delivery<br>
+                        6)&nbsp;&nbsp;No refund shall be allowed, No return of material allowed.<br>
+                        7)&nbsp;&nbsp;Delay in payments attract 24% interest p.a.<br>
+                        8)&nbsp;&nbsp;No Warranty on Sofa & Dining.<br>
+                        9)&nbsp;&nbsp;This prices mentioned in this quotation are valid for 15 days.
+                    </div>
+                    <div class="col-sm-6" style="margin-top: 20px; padding-right: 40px; text-align: left;">
+                        <div class="vl">
+                            <h3>&nbsp;&nbsp;OUR BANK DETAILS </h3>
+                        </div>
+                        <TABLE border="1">
+                            <TR>
+                            <TR><TH>Name<TD>Spacewood Furnishers Pvt Ltd
+                            <TR><TH>Bank<TD>Union Bank Of India
+                            <TR><TH>Branch<TD>Dhantoli, Nagpur
+                            <TR><TH>A/C No.<TD>366005010000307
+                            <TR><TH>RTGS/IFSC<TD>UBIN0536601
+                        </TABLE>
+                    </div>
+                </div>
+                <center><hr width="97%" color="black" /></center>
+                <div class="row">
+                    <div class="col-sm-4" style="padding: 35px; margin-top: -38px; margin-right: -20px">
+                        <div class="vl">
+                            <h5>&nbsp;&nbsp;DISPATCH INFO :</h5>
+                        </div>
+                        <TABLE border="1">
+                            <TR>
+                            <TR><TH style="font-size: 14px">Mob No<TD style="font-size: 14px"> 8698589883
+                            <TR><TH style="font-size: 14px">Email<TD style="font-size: 14px"><h12>swngpacc@spacewood.in</h12>
+                        </TABLE>
+                    </div>
+                    <div class="col-sm-4" style="padding: 35px; margin-top: -38px; text-align: left; margin-right: -20px">
+                        <div class="vl">
+                            <h5>&nbsp;&nbsp;INSTALLATION INFO :</h5>
+                        </div>
+                        <TABLE border="1">
+                            <TR>
+                            <TR><TH style="font-size: 14px">Mob No<TD style="font-size: 14px"> 9156475787
+                            <TR><TH style="font-size: 14px">Email<TD style="font-size: 14px"><h12>swngpacc@spacewood.in</h12>
+                        </TABLE>
+                    </div>
+                    <div class="col-sm-4" style="padding: 35px; margin-top: -38px; text-align: left; margin-right: -20px">
+                        <div class="vl">
+                            <h5>&nbsp;&nbsp;AFTER SALES INFO :</h5>
+                        </div>
+                        <TABLE border="1">
+                            <TR>
+                            <TR><TH style="font-size: 14px">Mob No<TD style="font-size: 14px"> 9156475787
+                            <TR><TH style="font-size: 14px">Email<TD style="font-size: 14px"><h12>swngpacc@spacewood.in</h12>
+                        </TABLE>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-6">
+        <center><button type="button" id="printButton" class="btn btn-primary hidden-print" onclick="printDiv('ParentDiv')"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button></center>
+    </div>
+    <br>
+    <div class="col-sm-6">
+        <center><button type="button" id="PrintPDF" class="btn btn-primary hidden-print" onclick="PDF('ParentDiv')"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Pdf</button></center>
+    </div>
+</div>
+
+
+<script language="javascript" type="text/javascript">
+    function printDiv(ParentDiv) {
+        var divElements = document.getElementById(ParentDiv).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+            "<html><head><title></title></head><body>" +
+            divElements + "</body>";
+        window.print();
+        recognition.onresult = function (event) {
+            console.log(event);
+            document.getElementById('printButton').value = event.results[0][0].transcript;
+        }
+        recognition.start();
+        document.body.innerHTML = oldPage;
+    }
+</script>
+
+<script>
+    function PDF(ParentDiv) {
+        debugger
+        const element = document.getElementById('ParentDiv');
+
+        html2pdf(element).set({
+            margin: [30, 10, 5, 10],
+            pagebreak: { aviod: 'tr' },
+            jsPDF: { orientation: 'LandScape', Unit: 'pt', formate: 'letter', compressPDF: true }
+        }).save();
+    };
+</script>
+<script src="~/cdnjs/html2pdf.bundle.min.js"></script>
