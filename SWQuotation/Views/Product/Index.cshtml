@@ -4,12 +4,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script src="~/Scripts/Product/Product.js"></script>
+@*<script src="~/Scripts/Product/test.js"></script>*@
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
 <!-- Sweet Alert JS -->
 <link href="~/plugins/sweetalert2/sweetalert2.css" rel="stylesheet" />
-@*<link href="~/Content/sweetalert/sweet-alert.css" rel="stylesheet" />*@
 <script src="~/plugins/sweetalert2/sweetalert2.js"></script>
+
 <!-- dropzonejs -->
 <link rel="stylesheet" href="../../plugins/dropzone/min/dropzone.min.css">
 <!-- dropzonejs -->
@@ -27,117 +30,351 @@
 <!-- Theme style -->
 <link href="~/dist/css/adminlte.min.css" rel="stylesheet" />
 
-<script>
-    // DropzoneJS Demo Code Start
-    Dropzone.autoDiscover = false
-
-    // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
-    var previewNode = document.querySelector("#template")
-    previewNode.id = ""
-    var previewTemplate = previewNode.parentNode.innerHTML
-    previewNode.parentNode.removeChild(previewNode)
-
-    var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-        url: "/Product/SaveProduct", // Set the url
-        thumbnailWidth: 80,
-        thumbnailHeight: 80,
-        parallelUploads: 20,
-        previewTemplate: previewTemplate,
-        autoProcessQueue: false, // Make sure the files aren't queued until manually added
-        previewsContainer: "#previews", // Define the container to display the previews
-        //clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
-    })
-
-    myDropzone.on("addedfile", function (file) {
-        debugger
-        var photo = file;// attach dropzone image element
-        console.log(photo)
-        debugger
-    })
-
-    // Update the total progress bar
-    myDropzone.on("totaluploadprogress", function (progress) {
-        document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
-    })
-
-    myDropzone.on("sending", function (file) {
-        // Show the total progress bar when upload starts
-        document.querySelector("#total-progress").style.opacity = "1"
-        // And disable the start button
-        file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
-    })
-
-    // Hide the total progress bar when nothing's uploading anymore
-    myDropzone.on("queuecomplete", function (progress) {
-        document.querySelector("#total-progress").style.opacity = "0"
-    })
-
-    document.querySelector("#actions .cancel").onclick = function () {
-        myDropzone.removeAllFiles(true)
-    }
-</script>
 
 
-<section class="content">
-    <div class="container-fluid" id="Container">
-        <div class="card card-warning card-outline">
-            <div class="card-header">
-                <header><center><h1>ADD PRODUCT</h1></center></header>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label class="col-sm-10 col-form-label">Product Name </label>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Product List</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="~/Home/Dashboard">Product</a></li>
+                    <li class="breadcrumb-item active">ProductList</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<div class="row">
+
+</div>
+
+
+<div class="body">
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fa fa-list"></i>&nbsp;
+            Product List
+        </h3>
+        <div class="card-tools">
+            <div class="row" style="padding-right: 7px">
+                <ul class="nav nav-pills ml-auto">
+                    <li class="nav-item">
+                        <a class="btn  bg-gradient-secondary" onclick="prod();" style="height: 34px; width: 75px;">
+                            <i class="fa fa-fw fa-plus-circle"></i>@*&nbsp;Add*@
+                        </a>
+                    </li>
+                </ul>&nbsp;&nbsp;
+                <ul class="nav nav-pills ml-auto">
+                    <li class="nav-item">
+                        <a class="btn  bg-gradient-secondary" onclick="prodPrice();" style="height: 34px; width: 75px;">
+                            <i class="fa fa-fw fa-history"></i>@*&nbsp;History*@
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <form>
+        <div class="card-body">
+            <div class="tab-content" id="custom-tabs-three-tabContent">
+                <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                    &nbsp;
+                    <table id="tblProducts" class="table table-bordered table-striped"></table>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+    </div>
+
+<div class="form-group">
+    <div class="row">
+        <input id="Btnsuccess" class="btn btn-secondary" type="button" value="Back" href="~/Home/Dashboard" onclick="back();" style="margin-left: 30px" />&ensp;
+    </div>
+</div>
+<div class="row" style="visibility:hidden">
+    fdsf
+    dsffds
+    dsfdf
+</div>
+
+
+
+<div id="myModal" class="modal">
+    <img class="modal-content" id="img01">
+</div>
+
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-edit"></i>
+                        Edit Product
+                    </h3>
+                    <div class="card-tools">
+                        <ul class="nav nav-pills ml-auto">
+                            <li class="nav-item">
+                                <i class="fa fa-window-close" aria-hidden="true" data-dismiss="modal" style="padding-top: 6px;"></i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label" style="margin-left: 14px;">Product Name </label>
+                        <div class="col-sm-11">
+                            <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Product Name" id="Txt_Prod" style="margin-left: 14px; width: 305px;">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label" style="padding-left: 22px">Product ID </label>
+                        <div class="col-sm-11" style="padding-left: 20px">
+                            <input type="text" class="form-control" autocomplete="off" style="width: 305px" maxlength="50" placeholder="Enter Product Name" id="ProductId">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-10 col-form-label" style="margin-left: 14px;">Product Catogery</label>
                             <div class="col-sm-11">
-                                <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="txtproduct">
+                                <select class="form-control select2" id="cata" onselect="this.value" style="margin-left: 14px; width: 305px; ">
+                                    <option>Chair</option>
+                                    <option>Table</option>
+                                    <option>Door</option>
+                                    <option>Bed</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="col-sm-10 col-form-label">Product Catogery</label>
-                                   <select name="ddlCatogery" class="form-control select2" id="ddlCatogery" onselect="this.value"></select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label" style="padding-left: 22px">Unit Of Measurement </label>
+                        <div class="col-sm-11" style=" padding-left: 20px">
+                            <select class="form-control select2" id="ddlUOM1" style="width: 305px" onselect="this.value"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label" style="margin-left: 14px; padding-left: 10px;">Height Of Product</label>
+                        <div class="col-sm-11">
+                            <input type="number" class="form-control" min="0" oninput="validity.valid||(value='');" autocomplete="off" style="margin-left: 14px; width: 305px; " maxlength="50" placeholder="" id="Txt_Ht">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label" style="padding-left: 23px; ">Width Of Product</label>
+                        <div class="col-sm-11" style=" padding-left: 20px">
+                            <input type="number" class="form-control" style="width: 305px" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" id="Txt_Wdt">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label" style="margin-left: 14px;">Depth Of Product</label>
+                        <div class="col-sm-11">
+                            <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" style="margin-left: 14px; width: 305px; " oninput="validity.valid||(value='');" placeholder="" id="Txt_Dpt">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label" style="padding-left: 22px">Thickness Of Product</label>
+                        <div class="col-sm-11" style=" padding-left: 20px">
+                            <input type="number" class="form-control" autocomplete="off" style="width: 305px" maxlength="50" min="0" oninput="validity.valid||(value='');" id="Txt_Th">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label" style="margin-left: 14px; padding-left: 10px;">Product Colour </label>
+                        <div class="col-sm-11">
+                            <input type="text" class="form-control" autocomplete="off" maxlength="50" min="0" style="margin-left: 14px; width: 305px; " oninput="validity.valid||(value='');" placeholder="Enter Product colour" id="Txt_PCol">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label" style="padding-left: 24px;">Product Price </label>
+                        <div class="col-sm-11" style=" padding-left: 20px">
+                            <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" style="width: 305px; margin-left: 1px; " placeholder="Enter Product Price" id="Txt_Price">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <input id="Btnsuccess" class="btn btn-secondary" type="button" value="Save" onclick="Editdata()" data-dismiss="modal" style="margin-left: 9px" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fa fa-image" style="font-size:18px"></i>
+                        &nbsp; Product Image
+                    </h3>
+                    <div class="card-tools">
+                        <ul class="nav nav-pills ml-auto">
+                            <li class="nav-item">
+                                <i class="fa fa-window-close" aria-hidden="true" data-dismiss="modal" style="padding-top: 6px;"></i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group" style="margin-left: 35px">
+                            <div class="input-group" style="margin-left: -12px;">
+                                <label for="exampleInputFile" style="margin-top: 7px">Add More Image</label>
+                                &ensp;
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" multiple name="file" id="Img">
+                                    <label class="custom-file-label" for="file">Add file</label>
+                                </div>
+                                <div class="input-group-append">
+                                    <span class="input-group-text" onclick="AddImage();" style="height: 38px">Upload</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6" id="Edit" aria-label="Close" data-backdrop="false">
+                        <div class="form-group" style="margin-left: 35px">
+                            <div class="input-group" style="margin-left: -12px;">
+                                <label for="exampleInputFile" style="margin-top: 7px">Edit Image</label>
+                                &ensp;
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="EditImg">
+                                    <label class="custom-file-label" for="Img">Add file</label>
+                                </div>
+                                <div class="input-group-append">
+                                    <span class="input-group-text" onclick="editImage();" style="height: 38px">Upload</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card card-default">
-                            <div class="card-body">
-                                <div class="col-md-12">
-                                    <div class="card-header">
-                                        <div class="row">
-                                            <div class=" col-sm-6">
-                                                <label class="col-sm-10 col-form-label">Add Product Image</label>
-                                            </div>
-                                            <div class=" col-sm-6">
-                                                <center>
-                                                    <button type="button" class="btn btn-success col fileinput-button" style="width: 132.1px;">
-                                                        <i class="fas fa-plus"></i>
-                                                        <span>Add Files</span>
-                                                    </button>
-                                                </center>
-                                            </div>
+                <input type="text" id="PP" style="display:none">
+                <div class="tab-content" id="custom-tabs-three-tabContent" style="margin-top: -23px">
+                    <center>
+                        <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                            &nbsp;
+                            <table id="tblProdImg" class="table table-bordered table-striped" style="width:95%"><thead></thead></table>
+                        </div>
+                    </center>
+                </div>
+                <div class="card-footer">
+                    <div class="form-group">
+                        <div class="row" style="margin-left: -2px">
+                            <button class="btn btn-secondary" @*data-dismiss="modal"*@ onclick="closeM();" aria-hidden="true">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addproduct" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fa fa-plus" style="font-size:18px"></i>
+                        &nbsp; Add Product
+                    </h3>
+                    <div class="card-tools">
+                        <ul class="nav nav-pills ml-auto">
+                            <li class="nav-item">
+                                <i class="fa fa-window-close" aria-hidden="true" data-dismiss="modal" style="padding-top: 6px;"></i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <form>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="col-sm-10 col-form-label">Product Name </label>
+                                    <div class="col-sm-11">
+                                        <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Product Name" id="txtproduct">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-10 col-form-label">Product ID</label>
+                                        <div class="col-sm-11">
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="50" onblur="cheakforId();" placeholder="Enter Product Id" id="txtproductID">
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-default">
                                     <div class="card-body">
-                                        <div class="table table-striped files" id="previews">
-                                            <div id="template" class="row mt-2">
-                                                <div class="col-auto">
-                                                    <span class="preview"><img src="data:," alt="" data-dz-thumbnail /></span>
+                                        <div class="col-md-12">
+                                            <div class="card-header">
+                                                <div class="row">
+                                                    <div class=" col-sm-6">
+                                                        <div class="row">
+                                                            <label class="col-sm-10 col-form-label" style="margin-left: -38px;">Add Product Image</label>
+                                                            <center>
+                                                                <button type="button" class="btn btn-secondary col fileinput-button" style="width: 132.1px; position: absolute; margin-left: -59px; ">
+                                                                    <i class="fas fa-plus"></i>
+                                                                    <span>Add Files</span>
+                                                                </button>
+                                                            </center>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="col d-flex align-items-center">
-                                                    <p class="mb-0">
-                                                        <span class="lead" data-dz-name></span>
-                                                        (<span data-dz-size></span>)
-                                                    </p>
-                                                    <strong class="error text-danger" data-dz-errormessage></strong>
-                                                </div>
-                                                <div class="col-auto d-flex align-items-center">
-                                                    <div class="btn-group">
-                                                        <button data-dz-remove class="btn btn-danger delete">
-                                                            <i class="fas fa-trash"></i>
-                                                            <span>Delete</span>
-                                                        </button>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="table table-striped files" id="previews">
+                                                    <div id="template" class="row mt-2">
+                                                        <div class="col-auto">
+                                                            <span class="preview"><img src="data:," alt="" data-dz-thumbnail /></span>
+                                                        </div>
+                                                        <div class="col d-flex align-items-center">
+                                                            <p class="mb-0">
+                                                                <span class="lead" data-dz-name></span>
+                                                                (<span data-dz-size></span>)
+                                                            </p>
+                                                            <strong class="error text-danger" data-dz-errormessage></strong>
+                                                        </div>
+                                                        <div class="col-auto d-flex align-items-center">
+                                                            <div class="btn-group">
+                                                                <button data-dz-remove class="btn btn-danger delete">
+                                                                    <i class="fas fa-trash"></i>
+                                                                    <span>Delete</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -146,245 +383,185 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label class="col-sm-10 col-form-label">Unit Of Measurement </label>
-                            <div class="col-sm-11">
-                                <select class="form-control select2" id="ddlUOM" onselect="this.value"></select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="col-sm-10 col-form-label">Height Of Product</label>
-                            <div class="col-sm-11">
-                                <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="txtHt">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label class="col-sm-10 col-form-label">Width Of Product</label>
-                            <div class="col-sm-11">
-                                <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="txtWdt">
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="col-sm-10 col-form-label">Depth Of Product</label>
-                            <div class="col-sm-11">
-                                <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="txtDpt">
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="col-sm-10 col-form-label">Thickness Of Product</label>
-                            <div class="col-sm-11">
-                                <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="txtTh">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label class="col-sm-10 col-form-label">Product Colour </label>
-                            <div class="col-sm-11">
-                                <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="txtcolour">
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="col-sm-10 col-form-label">Product Price </label>
-                            <div class="col-sm-11">
-                                <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="txtprice">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <center>
-                        <button class="btn btn-warning" type="submit" onclick="saveProduct();">
-                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Add Product
-                        </button>
-                    </center>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card card-warning card-outline">
-        <header><center><h1>All Product List</h1></center></header>
-        <div class="tab-content" id="custom-tabs-three-tabContent">
-            <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
-                &nbsp;
-                <table id="tblProducts" class="table table-bordered table-striped"></table>
-            </div>
-        </div>
-    </div>
-
-    <div id="myModal" class="modal">
-        <img class="modal-content" id="img01">
-    </div>
-
-    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Edit Product</h4>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label class="col-sm-10 col-form-label">Product Name </label>
-                            <div class="col-sm-11">
-                                <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Product Name" id="Txt_Prod">
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="col-sm-10 col-form-label">Product Catogery</label>
-                                <div class="col-sm-11">
-                                    <select class="form-control select2" id="cat" onselect="this.value"></select>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-10 col-form-label">Product Catogery</label>
+                                        <div class="col-sm-11">
+                                            <select name="ddlCatogery" class="form-control select2" id="ddlCatogery" onselect="this.value" @*style="width: 291.5px; margin-left: -9px; "*@>
+                                                <option>Chair</option>
+                                                <option>Table</option>
+                                                <option>Door</option>
+                                                <option>Bed</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-sm-10 col-form-label">Unit Of Measurement </label>
+                                    <div class="col-sm-11">
+                                        <select class="form-control select2" id="ddlUOM" onselect="this.value"></select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label class="col-sm-10 col-form-label">Unit Of Measurement </label>
-                            <div class="col-sm-11">
-                                <select class="form-control select2" id="ddlUOM1" onselect="this.value"></select>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="col-sm-10 col-form-label">Height Of Product</label>
+                                    <div class="col-sm-11">
+                                        <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" placeholder="Enter Product Height" id="txtHt">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-sm-10 col-form-label">Width Of Product</label>
+                                    <div class="col-sm-11">
+                                        <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" placeholder="Enter Product Width" id="txtWdt">
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <label class="col-sm-10 col-form-label">Height Of Product</label>
-                            <div class="col-sm-11">
-                                <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="Txt_Ht">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="col-sm-10 col-form-label">Depth Of Product</label>
+                                    <div class="col-sm-11">
+                                        <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" placeholder="Enter Product Depth" id="txtDpt">
+                                        <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Product Name" id="prod" style="display:none">
+                                        <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Product Name" id="t_nwbp1" style="display:none">
+                                        <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Product Name" id="postion" style="display:none">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-sm-10 col-form-label">Thickness Of Product</label>
+                                    <div class="col-sm-11">
+                                        <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" placeholder="Enter Product Thickness" id="txtTh">
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label class="col-sm-10 col-form-label">Width Of Product</label>
-                            <div class="col-sm-11">
-                                <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="Txt_Wdt">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="col-sm-10 col-form-label">Product Colour </label>
+                                    <div class="col-sm-11">
+                                        <input type="text" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" placeholder="Enter Product Colour" id="txtcolour">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-sm-10 col-form-label">Product Price</label>
+                                    <div class="col-sm-11">
+                                        <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" placeholder="Enter Product Price" id="txtprice" @*style="width: 291.5px; margin-left: -9px "*@>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-4">
-                            <label class="col-sm-10 col-form-label">Depth Of Product</label>
-                            <div class="col-sm-11">
-                                <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="Txt_Dpt">
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="col-sm-10 col-form-label">Thickness Of Product</label>
-                            <div class="col-sm-11">
-                                <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="Txt_Th">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-6">
+                        <div class="card-footer">
                             <center>
-                                <label class="col-sm-10 col-form-label">Product Colour </label>
-                                <div class="col-sm-11">
-                                    <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Product colour" id="Txt_PCol">
-                                </div>
-                            </center>
-                        </div>
-                        <div class="col-sm-6">
-                            <center>
-                                <label class="col-sm-10 col-form-label">Product Price </label>
-                                <div class="col-sm-11">
-                                    <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Product Price" id="Txt_Price">
-                                </div>
+                                <center><input id="btn btn-secondary" class="btn btn-secondary" type="button" value="Add" onclick="saveProduct()" /></center>
                             </center>
                         </div>
                     </div>
-                </div>
-                <input type="hidden" id="ProductId" />
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <center><input id="Btnsuccess" class="btn btn-success" type="button" value="Edit Product" onclick="Editdata()" data-dismiss="modal" /></center>
-                        </div>
-                        <div class="col-sm-6">
-                            <center><button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">Cancel</button></center>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
-
-    <div class="bs-example" id="Modal">
-        <div id="Modal" class="modal fade" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Product Image</h4>
-                    </div>
-                    <input type="text" id="ProductId" />
-                    <div class="card card-warning card-outline">
-                        <div class="tab-content" id="custom-tabs-three-tabContent">
-                            <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
-                                &nbsp;
-                                <table id="ProductList" class="table table-bordered table-striped" data-toggle="lightbox"></table>
-                            </div>
-                        </div>
-                    </div>
+<div class="modal fade" id="ProductPrice" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="card card-primary">
+                @*<div class="card-header">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3 class="card-title">Product Price History</h3>
+                </div>
+                <div class="col-sm-6" style="padding-left: 530px;">
+                    <i class="fa fa-window-close" aria-hidden="true" data-dismiss="modal"></i>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="row">
-                    <div class="modal-header col-md-6">
-                        <center><h5><label class="modal-title">Product Image</label></h5></center>
-                    </div>
-                    <div class="modal-header col-md-6">
-                        <input type="file" id="Img" multiple name="files" /><button class="btn btn-warning" type="submit" onclick="AddImage();">Add Img</button>
+        </div>*@
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fa fa-history" style="font-size:18px"></i>
+                        &nbsp; Product Price History
+                    </h3>
+                    <div class="card-tools">
+                        <ul class="nav nav-pills ml-auto">
+                            <li class="nav-item">
+                                <i class="fa fa-window-close" aria-hidden="true" data-dismiss="modal" style="padding-top: 6px;"></i>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                <input type="hidden" id="ProductId" />
-                <div class="card card-warning card-outline">
-                    <input type="hidden" id="prod" />
-                    <div class="tab-content" id="custom-tabs-three-tabContent">
-                        <center>
-                            <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
-                                &nbsp;
-                                <table id="tblProdImg" class="table table-bordered table-striped" style="width:95%"><thead></thead></table>
-                            </div>
-                        </center>
+                <div class="tab-content" id="custom-tabs-three-tabContent" style="margin-left: 16px;">
+                    <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                        &nbsp;
+                        <table id="tblprodPrice" class="table table-bordered table-striped" style="width:97%"><thead></thead></table>
                     </div>
                 </div>
                 <div class="card-footer">
                     <div class="form-group">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <center><button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">Cancel</button></center>
-                            </div>
+                        <div class="row" style="margin-left: -2px">
+                            <button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">Close</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-</section>
+<script src="~/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Ekko Lightbox -->
+<script src="~/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
+<!-- AdminLTE App -->
+<script src="~/dist/js/adminlte.min.js"></script>
 
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+            //alert("clicked"); //to test this function ran
+            event.preventDefault();
+            $(this).ekkoLightbox();
+        });
+    });
+</script>
 
+<script>
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function () {
+        debugger
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
+
+<script>
+    function back() {
+        window.location.href = "/Home/Dashboard";
+    }
+    function closeM() {
+        debugger
+        $("#myModal2").modal('hide');
+        $('body').removeClass('modal-backdrop');
+        //$("#myModal2").removeClass("modal-backdrop");
+    }
+</script>
+
+<script>
+    function prod() {
+        $("#addproduct").modal('show');
+    };
+    function prodPrice() {
+        getProdPriceList();
+        $("#ProductPrice").modal('show');
+    };
+</script>
 
 <script>
     //Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
@@ -429,28 +606,8 @@
         document.querySelector("#total-progress").style.opacity = "0"
     })
 
-    document.querySelector("#actions .cancel").onclick = function () {
-        myDropzone.removeAllFiles(true)
-    }
+    //document.querySelector("#actions .cancel").onclick = function () {
+    //    myDropzone.removeAllFiles(true)
+    //}
     // submit button configuration
-</script>
-
-
-<script src="~/plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap -->
-<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- Ekko Lightbox -->
-<script src="~/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
-<!-- AdminLTE App -->
-<script src="~/dist/js/adminlte.min.js"></script>
-
-<script type="text/javascript">
-    jQuery(document).ready(function ($) {
-        $(document).on('click', '[data-toggle="lightbox"]', function (event) {
-            debugger
-            //alert("clicked"); //to test this function ran
-            event.preventDefault();
-            $(this).ekkoLightbox();
-        });
-    });
 </script>

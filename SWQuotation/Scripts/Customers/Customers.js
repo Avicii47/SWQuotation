@@ -1,12 +1,16 @@
-﻿
-$(document).ready(function () {
-
+﻿$(document).ready(function () {
     ExiCust();
     BindProducts();
     getAddress();
+    getAddress1();
     BindTaxes();
     BindCountry();
-
+    newquot();
+    BindECountry();
+    BindEState();
+    BindState();
+    
+    $("#QuotId1").hide();
     $('#tblQuotation').DataTable(
         {
             "paging": false,
@@ -14,8 +18,7 @@ $(document).ready(function () {
             "footerCallback": function (row, data, start, end, display) {
                 var api = this.api();
                 nb_cols = api.columns().nodes().length;
-                var j = 4;
-                debugger
+                var j = 6;
                 while (j < nb_cols) {
                     var pageTotal = api
                         .column(j, { page: 'current' })
@@ -26,48 +29,112 @@ $(document).ready(function () {
                     // Update footer
                     $(api.column(j).footer()).html(pageTotal);
                     j++;
-                }
-                var api1 = this.api();
-                nb_cols = api1.columns().nodes().length;
-                var i = 5;
-                debugger
-                    /*while (i < nb_cols) {*/
-                        var pageTotal1 = api1
-                            .column(i, { page: 'current' })
-                            .data()
-                            .reduce(function (c, d) {
-                                return Number(c) + Number(d);
-                            }, 0);
-                        // Update footer
-                        $(api1.column(i).footer()).html(pageTotal1);
-                        i++;
-                    /*}*/
-                
+                } 
             }
         }
     );
-
+    $("#t_cmob").focus();
 })
 
-function Modal() {
-
-    $("#myModal").modal('show');
+function billtoModal() {
+    debugger
+    getAddress();
+    /*getAddress1();*/
+    $('#myModal').modal('toggle');
+    $("#BillModal").modal('show');
+    BindEState();
+    BindState();
 };
 
-function Modal2() {
-
-    $("#myModal2").modal('show');
-};
-
-function Modal3() {
-
-    $("#myModal3").modal('show');
+function shiptoModal() {
+   /* getAddress();*/
     getAddress1();
+    $('#myModal').modal('toggle');
+    $("#ShipModal").modal('show');
+    BindEState();
+    BindState();
+};
 
+var GetsCode = function (model) {
+    $("#ShipAddress").val(model.model);
+    $("#ExtShip").val(model.model);
+    let url = "../Customers/GetCustAdd";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: '{AddressCode:"' + model.model + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            if (response != null) {
+                $("#NSTo").html(response[0].address).focus;
+                $("#ESTo").html(response[0].address).focus;
+                $("#ShipModal").modal('toggle');
+                $("#myModal").modal('show');
+                return response;
+            }
+            else {
+                return false;
+            }
+            return response;
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
+    });
+}
+
+var GetbillCode = function (model) {
+    debugger
+    $("#BillAddress").val(model.model);
+    $("#ExtBill").val(model.model);
+    let url = "../Customers/GetCustAdd";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: '{AddressCode:"' + model.model + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            debugger
+            if (response != null) {
+                $("#NBTo").html(response[0].address).focus;
+                $("#EBTo").html(response[0].address).focus;
+                $("#BillModal").modal('toggle');
+                $("#myModal").modal('show');
+                return response;
+            }
+            else {
+                return false;
+            }
+            return response;
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
+    });
+}
+
+function AddbillAddress() {
+    $("#AddNewAddressModal").modal('show');
+};
+
+function AddbillAddress() {
+    $("#AddNewAddressModal").modal('show');
 };
 
 var CheckCust = function (t_cmob) {
-    debugger
+    $("#t_cmob").blur();
     var t_cmob = $("#t_cmob").val();
     $.ajax({
         url: "/Customers/CheakCustomer",
@@ -77,16 +144,13 @@ var CheckCust = function (t_cmob) {
         dataType: "json",
         async: false,
         success: function (response) {
-            debugger
             if (response.model == '1') {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Customer Exist',
-                    text: 'Customer Activity Is Present'
-                });
+                toastr.success('Customer Activity Is Present');
                 ExiCust();
                 NewCustDetails(t_cmob);
-
+                $("#ddlproduct").focus();
+                document.getElementById('AddCustomers').style.display = 'none';
+               
             } else {
                 Swal.fire({
                     icon: "warning",
@@ -94,46 +158,52 @@ var CheckCust = function (t_cmob) {
                 });
                 var Txt_tcmob = t_cmob;
                 Txt_tcmob = $("#Txt_tcmob").val;
+                $("#Txtt_cnam").focus();
                 NewCust();
-                myFunction();
-               /* addcustomer();*/
+                //myFunction();
+                document.getElementById('AddtoQuot').style.display = 'none';
             }
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
         }
     });
 };
 
 function ExiCust() {
+    debugger
     $("#Exicnam").show();
     $("#Exicam").show();
     $('#Exicmob').attr('readonly', 'true');
     $("#Exidob").show();
     $("#Exicmai").show();
     $("#Exicgst").show();
-    $("#ExtBillto").show();
-    $("#ExtShipto").show();
-    $("#ExiCust").show();
-    BindState();
+    $("#ExiCustAdd").show();
+   /* BindState();*/
 
     $("#Txtt_cnam").hide();
     $("#Txtt_camo").hide();
     $("#Txtt_cdob").hide();
     $("#Txtt_cmai").hide();
     $("#Txtt_cgst").hide();
-    $("#TxtShipto").hide();
-    $("#TxtBillto").hide();
     $("#NewCust").hide();
+    $("#newcustadd").hide();
 }
 
 function NewCust() {
+    debugger
     $("#Exicnam").hide();
     $("#Exicam").hide();
     $("#Exidob").hide();
     $("#Exicmai").hide();
     $("#Exicgst").hide();
-    $("#ExtBillto").hide();
-    $("#ExtShipto").hide();
-    $("#ExiCust").hide();
-    BindState();
+    $("#ExiCustAdd").hide();
+    $("#ddlproduct").attr("disabled", "disabled");
+    /*BindState();*/
 
     $("#Txtt_cnam").show();
     $("#Txtt_camo").show();
@@ -141,12 +211,53 @@ function NewCust() {
     $("#Txtt_cdob").show();
     $("#Txtt_cmai").show();
     $("#Txtt_cgst").show();
-    $("#TxtShipto").show();
-    $("#TxtBillto").show();
     $("#NewCust").show();
+    $("#newcustadd").show();
+}
+
+function newquot() {
+    debugger
+    $("#ddlproduct").attr("disabled", true);
+    $("#Txt_Price").attr("disabled", true);
+    $("#Txtt_No").attr("disabled", true);
+    $("#Txt_netamount").attr("disabled", true);
+    $("#Txt_TPrice").attr("disabled", true);
+    $("#Txt_Dis").attr("disabled", true);
+    $("#Txt_DisN").attr("disabled", true);
+    $("#ddlTaxes").attr("disabled", true);
+    $("#Txt_totaltax").attr("disabled", true);
+    $("#Txttrasport").attr("disabled", true);
+    $("#Txt_IGST").attr("disabled", true);
+    $("#TxtInstall").attr("disabled", true);
+    $("#Txtt_adva").attr("disabled", true);
+    $("#ExtBill").attr("disabled", true);
+    $("#ExtShip").attr("disabled", true);
+    $("#confirm1").attr("disabled", true);
+    $("#AddtoQuot").attr("disabled", true);
+}
+
+function newquot0() {
+    $("#ddlproduct").attr("disabled", false );
+    $("#Txt_Price").attr("disabled", false );
+    $("#Txtt_No").attr("disabled", false );
+    $("#Txt_netamount").attr("disabled", false );
+    //$("#Btnsuccess1").attr("disabled", false );
+    $("#Txt_TPrice").attr("disabled", false );
+    $("#Txt_Dis").attr("disabled", false );
+    $("#Txt_DisN").attr("disabled", false );
+}
+
+function newquot1() {
+    $("#ddlTaxes").attr("disabled", false );
+    $("#Txt_totaltax").attr("disabled", false );
+    $("#Txttrasport").attr("disabled", false );
+    $("#Txt_IGST").attr("disabled", false );
+    $("#TxtInstall").attr("disabled", false );
+    $("#Txtt_adva").attr("disabled", false );
 }
 
 function NewCustDetails(t_cmob) {
+    debugger
     let url = "../Customers/GetNewCustomerDetails";
     $.ajax({
         type: "POST",
@@ -164,32 +275,94 @@ function NewCustDetails(t_cmob) {
                 $("#Exicam").val(response[0].t_catm).focus;
                 $("#Exicmai").val(response[0].t_cmai).focus;
                 $("#Exidob").val(response[0].t_cdob).focus;
-                //$("#Exidob").attr('readonly', 'true');
+
+                if ($("#Exidob").val() == "01-01-2001 00:00:00") {
+                    $("#Exidob").val("");
+                }
+                else {
+                    $("#Exidob").val(response[0].t_cdob).focus;
+                }
+                
                 $("#Exicgst").val(response[0].t_cgst).focus;
                 $("#ExtBill").val(response[0].Billto);
                 $("#ExtShip").val(response[0].Shipto);
-                
+                var ship = $("#ExtShip").val();
+                GetCode1(ship);
+                var bill = $("#ExtBill").val();
+                $("#ExiCust").show();
+                GetCode(bill);
                 return response;
             }
             else {
                 return false;
             }
             return response;
-            //addtoQuot();
         },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
     });
 }
 
 var addcustomer = function () {
-   
-    var name = $("#Txtt_cnam").val();
-    var cmob = $("#Exicmob").val();
-    var camo = $("#Txtt_camo").val();
-    var cdob = $("#Txtt_cdob").val();
-    var cmai = $("#Txtt_cmai").val();
+    debugger
+    if ($("#Txtt_cnam").val() != "") {
+        var name = $("#Txtt_cnam").val();
+    }
+    else {
+        toastr.error('Enter Customer Name');
+        return false;
+    }
+    if ($("#Exicmob").val() != "") {
+        var cmob = $("#Exicmob").val();
+    }
+    else {
+        toastr.error('Enter Mob.No');
+        return false;
+    }
+    if ($("#Txtt_camo").val() != "") {
+        var camo = $("#Txtt_camo").val();
+    }
+    else {
+        toastr.error('Enter Alt Mob.No');
+        return false;
+    }
+
+    if ($("#Txtt_cdob").val() != "") {
+        var cdob = $("#Txtt_cdob").val();
+    }
+    else {
+        var cdob = "2001-01-01"
+    }
+
+    if ($("#Txtt_cmai").val() != "") {
+        var cmai = $("#Txtt_cmai").val();
+    }
+    else {
+        toastr.error('Enter Email');
+        return false;
+    }
+
+    if ($("#ExtBill").val() != "") {
+        var billto = $("#ExtBill").val();
+    }
+    else {
+        toastr.error('Enter Bill Address');
+        return false;
+    }
+    if ($("#ExtShip").val() != "") {
+        var shipto = $("#ExtShip").val();
+    }
+    else {
+        toastr.error('Enter Ship Address');
+        return false;
+    }
     var cgst = $("#Txtt_cgst").val();
-    var billto = $("#BillAddress").val();
-    var shipto = $("#ShipAddress").val();
+
 
     var data = {
        Name: name,
@@ -201,8 +374,6 @@ var addcustomer = function () {
         BillTo: billto,
         ShipTo: shipto,
     };
-
-
     $.ajax({
         url: "../Customers/AddCust",
         method: "post",
@@ -210,28 +381,115 @@ var addcustomer = function () {
         contentType: "application/json;charset=utf-8",
         dataType: "json",
         success: function (response) {
-            
+            debugger
             var CustId = response.model;
             (response.model == CustId);
             $("#CuId").val(CustId);
             addtoQuot();
-
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response.model,
+            });
         }
     })
 };
 
-var addAddress = function () {
- 
-    var name = $("#Txtt_cnam").val();
-    var address = $("#Txtt_cadd").val();
-    var pincode = $("#TxtPincode").val();
-    var address2 = $("#Txtt_cadd2").val();
-    var address3 = $("#Txtt_cadd3").val();
-    var landmark = $("#TxtLandmark").val();
-    var district = $("#TxtLandmark").val();
-    var country = $("#ddlcountry option:selected").html();
-    var state = $("#ddlStates option:selected").html();
-    var city = $("#ddlCity option:selected").html();
+var addbillAddress = function () {
+    debugger
+  
+    if ($("#Txtt_cnam").val() != "") {
+            var name = $("#Txtt_cnam").val();
+        }
+    else {
+        var name = $("#Exicnam").val();
+    }
+
+    if (name == "") {
+        toastr.error('Select Customer');
+        return false;
+    }
+    else {
+        
+    }
+
+    
+    if ($("#Txtt_cadd").val() != "") {
+        var address = $("#Txtt_cadd").val();
+    }
+    else {
+        toastr.error('Enter Address');
+        $("#Txtt_cadd").val().focus;
+        return false;
+    }
+
+    if ($("#Txtt_cadd2").val() != "") {
+        var address2 = $("#Txtt_cadd2").val();
+    }
+    else {
+        toastr.error('Enter Address');
+        return false;
+    }
+
+    if ($("#Txtt_cadd3").val() != "") {
+        var address3 = $("#Txtt_cadd3").val();
+    }
+    else {
+        toastr.error('Enter Address');
+        return false;
+    }
+
+    if ($("#TxtLandmark").val() != "") {
+        var landmark = $("#TxtLandmark").val();
+    }
+    else {
+        toastr.error('Enter Landmark');
+        return false;
+    }
+
+    if ($("#Txtt_dist").val() != "") {
+        var district = $("#Txtt_dist").val();
+    }
+    else {
+        toastr.error('Enter District');
+        return false;
+    }
+
+    if ($("#ddlcountry option:selected").val() == 0) {
+        toastr.error('Select Country');
+        return false;
+    }
+    else {
+
+        var country = $("#ddlcountry option:selected").val();
+    }
+
+    if ($("#ddlStates option:selected").val() == 0) {
+        toastr.error('Select State');
+        return false;
+    }
+    else {
+        var state = $("#ddlStates option:selected").val();
+    }
+
+    if ($("#ddlCity option:selected").val() == 0) {
+        toastr.error('Select City');
+        return false;
+    }
+    else {
+        var city = $("#ddlCity option:selected").html();
+    }
+
+    if ($("#TxtPincode").val() != "") {
+        var pincode = $("#TxtPincode").val();
+    }
+    else {
+        toastr.error('Enter Pincode');
+        return false;
+    }
+
 
     var data = {
         Name: name,
@@ -246,6 +504,134 @@ var addAddress = function () {
         Country: country,
     };
 
+    $.ajax({
+        url: "../Customers/AddAddress ",
+        method: "post",
+        data: JSON.stringify(data),
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function (model) {
+            toastr.success('Address Added');
+            getAddress();
+            debugger
+            $("#AddbillAddress").modal('hide');
+            $("#ShipModal").modal('hide');
+            GetbillCode(model);
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
+    })
+};
+
+var addshipAddress = function () {
+    debugger
+    if ($("#Txtt_cnam").val() == "") {
+        toastr.error('Select Customer');
+        return false;
+    }
+    else {
+
+    }
+
+    if ($("#Txtt_cnam").val() != "") {
+        var name = $("#Txtt_cnam").val();
+    }
+    else {
+        var name = $("#Exicnam").val();
+    }
+
+    if ($("#Txtt_cadd").val() != "") {
+        var address = $("#Txtt_cadd").val();
+    }
+    else {
+        toastr.error('Enter Address');
+        $("#Txtt_cadd").val().focus;
+        return false;
+    }
+
+    if ($("#Txtt_cadd2").val() != "") {
+        var address2 = $("#Txtt_cadd2").val();
+    }
+    else {
+        toastr.error('Enter Address');
+        return false;
+    }
+
+    if ($("#Txtt_cadd3").val() != "") {
+        var address3 = $("#Txtt_cadd3").val();
+    }
+    else {
+        toastr.error('Enter Address');
+        return false;
+    }
+
+    if ($("#TxtLandmark").val() != "") {
+        var landmark = $("#TxtLandmark").val();
+    }
+    else {
+        toastr.error('Enter Landmark');
+        return false;
+    }
+
+    if ($("#Txtt_dist").val() != "") {
+        var district = $("#Txtt_dist").val();
+    }
+    else {
+        toastr.error('Enter District');
+        return false;
+    }
+
+    if ($("#ddlcountry option:selected").val() == 0) {
+        toastr.error('Select Country');
+        return false;
+    }
+    else {
+
+        var country = $("#ddlcountry option:selected").val();
+    }
+
+    if ($("#ddlStates option:selected").val() == 0) {
+        toastr.error('Select State');
+        return false;
+    }
+    else {
+
+        var state = $("#ddlStates option:selected").val();
+    }
+
+    if ($("#ddlCity option:selected").val() == 0) {
+        toastr.error('Select City');
+        return false;
+    }
+    else {
+        var city = $("#ddlCity option:selected").html();
+    }
+
+    if ($("#TxtPincode").val() != "") {
+        var pincode = $("#TxtPincode").val();
+    }
+    else {
+        toastr.error('Enter Pincode');
+        return false;
+    }
+
+    var data = {
+        Name: name,
+        Address: address,
+        Address2: address2,
+        Address3: address3,
+        StateName: state,
+        Pincode: pincode,
+        Landmark: landmark,
+        City: city,
+        District: district,
+        Country: country,
+    };
 
     $.ajax({
         url: "../Customers/AddAddress ",
@@ -254,16 +640,66 @@ var addAddress = function () {
         contentType: "application/json;charset=utf-8",
         dataType: "json",
         success: function (response) {
+            //Swal.fire({
+            //    icon: 'success',
+            //    title: 'Address Added',
+            //});
+            toastr.success('Address Added');
             getAddress();
+            $("#AddShipAddress").modal('hide');
+            $("#ShipModal").modal('hide');
+            GetScode(response);
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
         }
     })
 };
 
+var GetScode = function (AddressCode) {
+    debugger
+    $("#ShipAddress").val(AddressCode);
+    $("#ExtShip").val(AddressCode);
+    let url = "../Customers/GetCustAdd";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: '{AddressCode:"' + AddressCode + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            debugger
+            if (response != null) {
+                //$("#NSTo").html(response[0].address).focus;
+                $("#ESTo").html(response[0].address).focus;
+                return response;
+            }
+            else {
+                return false;
+            }
+            return response;
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
+    });
+}
+
 function getAddress() {
+    var custid = $('#Exicnam').val();
     $.ajax({
         type: "POST",
         url: "/Customers/GetAddress",
-        data: "{}",
+        data: '{custid:"' + custid + '"}',
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: AddressList,
@@ -277,8 +713,6 @@ function getAddress() {
 }
 
 function AddressList(response) {
-
-
     var datatableVariable = $("#tblAddress").DataTable(
 
         {
@@ -313,9 +747,15 @@ function AddressList(response) {
             columns: [
                 {
                     'data': null, title: '', wrap: true, "render": function (item) {
-                        return '<center><div class="btn-group"><button type="button" onclick="GetCode(' + "'" + item.AddressCode + "'" + ')" value="0" data-dismiss="modal" class="btn btn-success btn-sm" id="btn-sa-confirm"><i class="fas fa-plus-circle"></i></button></div></center>'
+                        return '<center><div class="btn-group"><button type="button" onclick="GetCode(' + "'" + item.AddressCode + "'" + ')" value="0" data-dismiss="modal" class="btn btn-secondary btn-sm" style="height: 34.25px; width: 31.5px;" id="btn-sa-confirm"><i class="fas fa-plus-circle" style="margin-left:-7px;"></i></button></div></center>'
                     },
                 },
+                {
+                    'data': null, title: 'Delete/Edit', wrap: true, "bAutoWidth": true, "render": function (item) {
+                        return '<center><div class="btn-group"><button type="button" style="height: 34.25px; width: 31.5px;" data-toggle="modal" onclick = "DeleteADD(' + "'" + item.AddressCode + "'" + ')" value="0" class="btn btn-danger btn-sm" id="btn-sa-confirm" > <i class="nav-icon fas fa-trash" style="margin-left:-7px;"></i></button></div>&nbsp;' +
+                            '&nbsp;&nbsp;&nbsp;<div class="btn-group"><button type="button" style="height: 34.25px; width: 31.5px;" onclick="AddressDetails(' + "'" + item.AddressCode + "'" + ');Editaddmodal()" class="btn btn-secondary btn-sm"  id="btn-sa-edit"><i class="nav-icon fas fa-edit" style="margin-left:-7px;"></i></button></div></center>'
+                    },
+                }, 
                 { 'data': 'AddressCode', 'title': 'Address Code'/*, "visible": false*/ },
                 { 'data': 't_cnam', 'title': 'Customer Name' },
                 { 'data': 'City', 'title': 'City' },
@@ -325,6 +765,7 @@ function AddressList(response) {
                 { 'data': 't_cadd', 'title': 'Address 1' },
                 { 'data': 'Address2', 'title': 'Address 2' },
                 { 'data': 'Address3', 'title': 'Address 3' },
+                { 'data': 'Pincode', 'title': 'Pincode' },
                 
             ]
         }).buttons().container().appendTo('#tblAddress_wrapper .col-md-6:eq(0)');
@@ -348,8 +789,6 @@ function getAddress1() {
 }
 
 function AddressList1(response) {
- 
-
     var datatableVariable = $("#tblAddress1").DataTable(
 
         {
@@ -384,7 +823,13 @@ function AddressList1(response) {
             columns: [
                 {
                     'data': null, title: '', wrap: true, "render": function (item) {
-                        return '<center><div class="btn-group"><button type="button" onclick="GetCode1(' + "'" + item.AddressCode + "'" + ')" value="0" data-dismiss="modal" class="btn btn-success btn-sm" id="btn-sa-confirm"><i class="fas fa-plus-circle"></i></button></div></center>'
+                        return '<center><div class="btn-group"><button type="button" onclick="GetCode1(' + "'" + item.AddressCode + "'" + ')" value="0" data-dismiss="modal" style="height: 34.25px; width: 31.5px;" class="btn btn-secondary btn-sm" id="btn-sa-confirm"><i class="fas fa-plus-circle" style="margin-left:-7px;"></i></button></div></center>'
+                    },
+                },
+                {
+                    'data': null, title: 'Delete/Edit', wrap: true, "bAutoWidth": false, "render": function (item) {
+                        return '<center><div class="btn-group"><button type="button" data-toggle="modal" style="height: 34.25px; width: 31.5px;" onclick = "DeleteADD(' + "'" + item.AddressCode + "'" + ')" value="0" class="btn btn-danger btn-sm" id="btn-sa-confirm" > <i class="nav-icon fas fa-trash"style="margin-left:-7px;"></i></button></div>&nbsp;' +
+                            '&nbsp;&nbsp;&nbsp;<div class="btn-group"><button type="button" style="height: 34.25px; width: 31.5px;" onclick="AddressDetails(' + "'" + item.AddressCode + "'" + ');Editaddmodal1()" class="btn btn-secondary btn-sm"><i class="nav-icon fas fa-edit"style="margin-left:-7px;"></i></button></div></center>'
                     },
                 },
                 { 'data': 'AddressCode', 'title': 'Address Code'/*, "visible": false*/ },
@@ -396,24 +841,293 @@ function AddressList1(response) {
                 { 'data': 't_cadd', 'title': 'Address 1' },
                 { 'data': 'Address2', 'title': 'Address 2' },
                 { 'data': 'Address3', 'title': 'Address 3' },
+                { 'data': 'Pincode', 'title': 'Pincode' },
 
             ]
         }).buttons().container().appendTo('#tblAddress1_wrapper .col-md-6:eq(0)');
 };
 
+function AddressDetails(AddressCode) {
+    debugger
+    let url = "../Customers/AddressDetails";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: '{AddressCode:"' + AddressCode + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            debugger
+            if (response != null) {
+                $("#Acode").val(response[0].AddressCode);
+                $("#Aname").val(response[0].t_cnam);
+                $("#AAdd1").val(response[0].address);
+                $("#AAdd2").val(response[0].Address2);
+                $("#AAdd3").val(response[0].Address3);
+                $("#ddlEcountry").val(response[0].Country);
+                $("#ddlEStates").val(response[0].State);
+                $("#ddlECity").val(response[0].City);
+                $("#ADist").val(response[0].District);
+                $("#APin").val(response[0].Pincode);
+                return response;
+            }
+            else {
+                return false;
+            }
+            return response;
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
+    });
+}
+
+function Editaddmodal() {
+    debugger
+    $("#EditAddress").modal('show');
+};
+
+function Editaddmodal1() {
+    debugger
+    $("#EditAddress").modal('show');
+};
+
+var DeleteADD = function (AddressCode) {
+    $.ajax({
+        url: "/Customers/DeleteADD",
+        method: "post",
+        data: '{AddressCode:"' + AddressCode + '"}',
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (model) {
+            debugger
+            if (model.model == '0') {
+                toastr.warning('Address Is Added In Quotation');
+                getAddress1();
+                getAddress();
+            } else {
+                toastr.success('Address Deleted');
+            }
+        }
+    });
+};
+
+var EditADD = function () {
+    debugger
+    var add1 = $("#AAdd1").val()
+    var add2 = $("#AAdd2").val();
+    var add3 = $("#AAdd3").val();
+    var country = document.getElementById("ddlEcountry").value;
+    var state = document.getElementById("ddlEStates").value;
+    var city = document.getElementById("ddlECity").value;
+    var dist = $("#ADist").val();
+    var pin = $("#APin").val();
+
+    var model = {
+        Add1: add1,
+        Add2: add2,
+        Add3: add3,
+        Country: country,
+        City: city,
+        Dist: dist,
+        Pin: pin,
+        State: state,
+    };
+
+    $.ajax({
+        url: "../Customers/EditADD ",
+        method: "post",
+        data: JSON.stringify(model),
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            console.log(response);
+            toastr.success('Customer Detail Changed');
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
+    });
+};
+
+function BindECountry() {
+    let url = "../Customers/GetCountry";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: "{}",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response != null) {
+                $("#ddlEcountry").empty();
+                $("#ddlEcountry").append($("<option></option>").val("IND").html("INDIA"));
+                $.each(response, function (data, value) {
+                    $("#ddlEcountry").append($("<option></option>").val(value.PId).html(value.Country));
+                });
+            }
+            else {
+                $("#ddlEcountry").empty();
+                $("#ddlEcountry").append($("<option disabled></option>").val(0).html("Select Country"));
+            }
+            return $("#ddlEcountry option:selected").text();
+        },
+        failure: function (response) {
+            alert(response.responseText);
+            alert("Failure");
+        },
+    });
+}
+
+function BindEState() {
+    debugger
+    var countID = $('#ddlEcountry').val();
+    let url = "../Customers/StateList";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: '{StateId:"' + countID + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response != null) {
+                $("#ddlEStates").empty();
+                $("#ddlEStates").append($("<option></option>").val("0").html("Select State"));
+                $.each(response, function (data, value) {
+                    $("#ddlEStates").append($("<option></option>").val(value.SID).html(value.State));
+                });
+            }
+            else {
+                $("#ddlEStates").empty();
+                $("#ddlEStates").append($("<option disabled></option>").val(0).html("Select State"));
+            }
+            return $("#ddlEStates option:selected").text();
+        },
+        failure: function (response) {
+            alert(response.responseText);
+            alert("Failure");
+        },
+    });
+}
+
+function BindECity() {
+    var StateId = $("#ddlEStates option:selected").val();
+    let url = "../Customers/CityList";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: '{StateId:"' + StateId + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response != null) {
+                $("#ddlECity").empty();
+                $("#ddlECity").append($("<option></option>").val("0").html("Select City"));
+                $.each(response, function (data, value) {
+                    $("#ddlECity").append($("<option></option>").val(value.SID).html(value.City));
+                });
+            }
+            else {
+                $("#ddlECity").empty();
+                $("#ddlECity").append($("<option disabled></option>").val(0).html("Select City"));
+            }
+            return $("#ddlECity option:selected").text();
+        },
+        failure: function (response) {
+            alert(response.responseText);
+            alert("Failure");
+        },
+    });
+}
+
 var GetCode1 = function (AddressCode) {
+    debugger
     $("#ShipAddress").val(AddressCode);
+    $("#ExtShip").val(AddressCode);
+    let url = "../Customers/GetCustAdd";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: '{AddressCode:"' + AddressCode + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            debugger
+            if (response != null) {
+                //$("#NSTo").html(response[0].address).focus;
+                $("#ESTo").html(response[0].address).focus;
+                return response;
+            }
+            else {
+                return false;
+            }
+            return response;
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
+    });
 }
 
 var GetCode = function (AddressCode) {
+    debugger
     $("#BillAddress").val(AddressCode);
+    $("#ExtBill").val(AddressCode);
+    let url = "../Customers/GetCustAdd";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: '{AddressCode:"' + AddressCode + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            debugger
+            if (response != null) {
+                $("#EBTo").html(response[0].address).focus;
+                return response;
+            }
+            else {
+                return false;
+            }
+            return response;
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
+    });
 }
 
 var addtoQuot = function () {
     debugger
-    $('#CustId').val();
-    var cuid = $("#CuId").val();
-    
+    if ($("#CuId").val() != "") {
+        var cuid = $("#CuId").val();
+    }
+    else {
+        toastr.error('Customer Not Found');
+        return false;
+    }
+
     if ($("#ExtBill").val() != "")
         var billto = $("#ExtBill").val();
     else
@@ -429,7 +1143,6 @@ var addtoQuot = function () {
         BillTo: billto,
         ShipTo: shipto,
     };
-
     $.ajax({
         url: "/Customers/AddtoQuot",
         method: "Post",
@@ -437,14 +1150,25 @@ var addtoQuot = function () {
         contentType: "application/json;charset=utf-8",
         datatype: "json",
         success: function (response) {
-         
+            debugger
             var QuotId = response.model;
             (response.model == QuotId);
             $("#QuotId").val(QuotId);
+            toastr.success('Quotation ID Generated');
+            debugger
+            $("#QuotId1").show();
+            $("#BillAddress").focus();
+            document.getElementById('AddCustomers').style.display = 'none';
+            document.getElementById('AddCustomers').style.display = 'none';
+            document.getElementById("Quot").disabled = true;
+            newquot0();
+        },
+        error: function (response) {
             Swal.fire({
-                icon: 'success',
-                title: 'Quotation Data Added',
-            })
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
         }
     })
 };
@@ -487,11 +1211,12 @@ function BindCountry() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
+            debugger
             if (response != null) {
                 $("#ddlcountry").empty();
-                $("#ddlcountry").append($("<option></option>").val("0").html("Select Country"));
+                $("#ddlcountry").append($("<option></option>").val("IND").html("INDIA"));
                 $.each(response, function (data, value) {
-                    $("#ddlcountry").append($("<option></option>").val(value.Country).html(value.Country));
+                    $("#ddlcountry").append($("<option></option>").val(value.PId).html(value.Country));
                 });
             }
             else {
@@ -508,41 +1233,7 @@ function BindCountry() {
 }
 
 
-function BindState() {
-
-    let url = "../Customers/StateList";
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: "{}",
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (response) {
-            debugger
-            if (response != null) {
-                $("#ddlStates").empty();
-                $("#ddlStates").append($("<option></option>").val("0").html("Select State"));
-                $.each(response, function (data, value) {
-                    $("#ddlStates").append($("<option></option>").val(value.SID).html(value.State));
-                });
-            }
-            else {
-                $("#ddlStates").empty();
-                $("#ddlStates").append($("<option disabled></option>").val(0).html("Select State"));
-            }
-            return $("#ddlStates option:selected").text();
-            //var City = $("#ddlStates option:selected").text();
-            //BindCity(City);
-        },
-        failure: function (response) {
-            alert(response.responseText);
-            alert("Failure");
-        },
-    });
-}
-
 function BindTaxes() {
-
     let url = "../Customers/TaxesList";
     $.ajax({
         type: "POST",
@@ -551,7 +1242,6 @@ function BindTaxes() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            debugger
             if (response != null) {
                 $("#ddlTaxes").empty();
                 $("#ddlTaxes").append($("<option></option>").val("0").html("Select Tax"));
@@ -573,7 +1263,7 @@ function BindTaxes() {
 }
 
 function BindCity() {
-   
+    debugger
     var StateId = $("#ddlStates option:selected").val();
     let url = "../Customers/CityList";
     $.ajax({
@@ -587,7 +1277,7 @@ function BindCity() {
                 $("#ddlCity").empty();
                 $("#ddlCity").append($("<option></option>").val("0").html("Select City"));
                 $.each(response, function (data, value) {
-                    $("#ddlCity").append($("<option></option>").val(value.City).html(value.City));
+                    $("#ddlCity").append($("<option></option>").val(value.SID).html(value.City));
                 });
             }
             else {
@@ -603,8 +1293,39 @@ function BindCity() {
     });
 }
 
-function GetPrice() {
+function BindState() {
+    debugger
+    var countID = $('#ddlcountry').val();
+    let url = "../Customers/StateList";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: '{StateId:"' + countID + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response != null) {
+                $("#ddlStates").empty();
+                $("#ddlStates").append($("<option></option>").val("0").html("Select State"));
+                $.each(response, function (data, value) {
+                    $("#ddlStates").append($("<option></option>").val(value.SID).html(value.State));
+                });
+            }
+            else {
+                $("#ddlStates").empty();
+                $("#ddlStates").append($("<option disabled></option>").val(0).html("Select State"));
+            }
+            return $("#ddlStates option:selected").text();
+        },
+        failure: function (response) {
+            alert(response.responseText);
+            alert("Failure");
+        },
+    });
+}
 
+
+function GetPrice() {
     var PId = $('#ddlproduct option:selected').val();
     let url = "../Customers/GetPrice";
     $.ajax({
@@ -626,11 +1347,18 @@ function GetPrice() {
             }
             return response;
         },
-
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
     });
 }
 
 function getGST(tax) {
+    debugger
     let url = "../Customers/getGST";
     $.ajax({
         type: "POST",
@@ -649,9 +1377,81 @@ function getGST(tax) {
             }
             return response;
         },
-
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
     });
 }
+
+function cheakProduct() {
+    debugger
+    if ($("#ddlproduct").val() == '') {
+        toastr.error('Please Select A Product!');
+        BindProducts();
+        $("#ddlproduct").focus();
+        return false;
+    }
+    else {
+        addtoliner();
+        cheakTaxes();
+    }
+}
+
+
+var cheakTaxes = function () {
+    debugger
+    var billto = $("#ExtBill").val();
+    var shipto = $("#ExtShip").val();
+    var model = {
+        BillTo: billto,
+        ShipTo: shipto,
+    };
+    $.ajax({
+        url: "/Customers/cheakTaxes",
+        method: "post",
+        data: JSON.stringify(model),
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            debugger
+            if (response.model == '1') {
+                newquot1();
+                $("#ddlTaxes").empty();
+                $("#ddlTaxes").append($("<option></option>").val("2").html("IntrState(CGST+SGST)"));
+                
+            } else {
+                $("#ddlTaxes").empty();
+                $("#ddlTaxes").append($("<option></option>").val("3").html("InterState(IGST)"));
+            }
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
+    });
+};
+
+
+//function cheakfortaxes() {
+//    if (parseInt($("#ddlTaxes").val()) == 2) {
+//        $("#IGST").hide();
+//        $("#GST").show();
+
+//    } else {
+//        $("#IGST").show();
+//        $("#GST").hide();
+//    }
+//}
+
+
 
 var addtoliner = function (quotId) {
     debugger
@@ -659,10 +1459,16 @@ var addtoliner = function (quotId) {
     var productid = $("#ddlproduct option:selected").val();
     var product = $("#ddlproduct option:selected").html();
     var noofunits = $("#Txtt_No").val();
-    var taxes = $("#ddlTaxes option:selected").val();
-    var taxesinno = $('#Txt_TPrice1').val();
-    var discprice = $('#Txt_netamount').val();
 
+    if ($("#Txtt_No").val() != "") {
+        var diso = $("#Txt_Dis").val();
+    }
+    else {
+        toastr.error('Please Select No. of Units');
+        return false;
+    }
+
+    var discprice = $('#Txt_netamount').val();
     if ($("#Txt_Dis").val() != "")
         var diso = $("#Txt_Dis").val();
     else
@@ -671,20 +1477,8 @@ var addtoliner = function (quotId) {
         var disoN = $("#Txt_DisN").val();
     else
         var disoN = 0;
-
     var topr = $("#Txt_DisP").val();
-    var taxescode = $('#ddlTaxes').val();
-
-    if (parseInt($("#ddlTaxes").val()) == 2) {
-        var cgst = $("#Txt_CGST").val();
-        var sgst = $("#Txt_SGST").val();
-        igst = 0;
-    } else {
-        var igst = $("#Txt_IGST").val();
-        sgst = 0;
-        cgst = 0;
-    };
-    var finalprice = $('#Txt_FPrice').val();
+    var finalprice = $('#Txt_DisP').val();
     var tax = $('#Txt_TPrice1').val();
 
     var model = {
@@ -693,15 +1487,9 @@ var addtoliner = function (quotId) {
         Product: product,
         Totalprice: topr,
         NoOfUnits: noofunits,
+        Discprice: discprice,
         Discount: diso,
         DiscountN: disoN,
-        Taxes: taxes,
-        Taxesinno: taxesinno,
-        TaxCode: taxescode,
-        CGST: cgst,
-        SGST: sgst,
-        IGST: igst,
-        Discprice: discprice,
         FinalPrice: finalprice,
         Taxes: tax
     };
@@ -713,25 +1501,33 @@ var addtoliner = function (quotId) {
         contentType: "application/json;charset=utf-8",
         datatype: "json",
         success: function (response) {
-            //console.log(response.message);
-            Swal.fire({
-                icon: 'success',
-                title: 'Product Added',
-            });
+            //Swal.fire({
+            //    icon: 'success',
+            //    title: 'Product Added',
+            //});
+            toastr.success('Product Added');
             getList(quotId);
             clearfunction();
+            newquot1();
+            $("#ddlTaxes").focus();
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
         }
     })
 };
 
 var clearfunction = function () {
-    $('#ddlproduct').val("");
+    BindProducts();
     $('#Txt_Price').val("");
     $('#Txtt_No').val("");
     $('#Txt_TPrice').val("");
     $('#Txt_Dis').val("");
     $('#Txt_DisN').val("");
-    $('#ddlTaxes').val("");
     $('#Txt_CGST').val("");
     $('#Txt_SGST').val("");
     $('#Txt_IGST').val("");
@@ -764,7 +1560,6 @@ var getList = function (QuotId) {
 };
 
 function bindtotable(response) {
-
     var datatableVariable = $("#tblQuotation").DataTable(
         {
             "responsive": false, "lengthChange": true, "autoWidth": true,
@@ -790,22 +1585,28 @@ function bindtotable(response) {
             
             data: response,
             columns: [
-                { 'data': 'Position', 'title': 'SrNo.' },
-                { 'data': 'PName', 'title': 'ProductName' },
+                {
+                    'data': null, title: 'Delete/Edit', wrap: true, "bAutoWidth": false, "width": 100, "render": function (item) {
+                        return '<center><div class="btn-group"><button type="button" data-toggle="modal" onclick = "DeletePro(' + "'" + item.Position + "'" + ')" value="0" class="btn btn-danger btn-sm" id="btn-sa-confirm" > <i class="nav-icon fas fa-trash"></i></button></div>&nbsp;' +
+                            '&nbsp;&nbsp;&nbsp;<div class="btn-group"><button type="button" onclick="Detailprod(' + "'" + item.Position + "'" + ');Editmodal()" class="btn btn-secondary btn-sm"><i class="nav-icon fas fa-edit"></i></button></div></center>'
+                    },
+                },
+                {
+                    "data": "id", "title": "SNo.",
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                { 'data': 'PName', 'title': 'Product Name' },
                 { 'data': 'PQty', 'title': 'Quantity' },
-                { 'data': 'Diso', 'title': 'DiscountPrice' },
-                { 'data': 'Taxes', 'title': 'Taxes' },
-                { 'data': 'TPrice', 'title': 'TotalPrice' },
-                //{
-                //    'data': null, title: 'Delete', wrap: true, "render": function (item) {
-                //        return '<div class="btn-group"><button type="button" data-toggle="modal" data-target="#exampleModal" onclick = "Delete(' + "'" + item.t_nwbp + "'" + ')" value="0" class="btn btn-danger btn-sm" id="btn-sa-confirm" > <i class="nav-icon fas fa-trash"></i></button></div>'
-                //    },
-                //},
+                { 'data': 'Nou', 'title': 'Units' },
+                { 'data': 'PPrice', 'title': 'Product Price' },
+                { 'data': 'TPrice', 'title': 'Discounted Price' },
             ],
             "footerCallback": function (row, data, start, end, display) {
                 var api = this.api();
                 nb_cols = api.columns().nodes().length;
-                var j = 5;
+                var j = 6;
       
                 while (j < nb_cols) {
                     var pageTotal = api
@@ -818,28 +1619,151 @@ function bindtotable(response) {
                     $(api.column(j).footer()).html(pageTotal);
                     j++;
                     var value = parseFloat(pageTotal).toFixed(2);
-                    $("#Txt_GPri").val(value).focus;
-                }
-                var api1 = this.api();
-                nb_cols = api1.columns().nodes().length;
-                var i = 4;
-                debugger
-                    var pageTotal1 = api1
-                        .column(i, { page: 'current' })
-                        .data()
-                        .reduce(function (c, d) {
-                            return Number(c) + Number(d);
-                        }, 0);
-                    // Update footer
-                    $(api1.column(i).footer()).html(pageTotal1);
-                    i++;
                     debugger
-                    var value1 = parseFloat(pageTotal1).toFixed(2);
-                    $("#Txt_totaltax").val(value1).focus;
+                    $("#Txt_GPri").val(value).focus;
+                    $("#Txt_DisAmt").val(value).focus;
+                   /* Chgtaxes();*/
+                }
             }
             
         }).buttons().container().appendTo('#tblQuotation_wrapper .col-md-6:eq(0)');
-    
+};
+
+var DeletePro = function (Position) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#1ab394',
+        cancelButtonColor: '#d9534f',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            DeleteProduct(Position);
+        }
+    });
+};
+
+
+
+var DeleteProduct = function (Position) {
+    debugger
+    var Qid = $("#QuotId").val()
+    var model = {
+        QuotId: Qid,
+        Position: Position
+    };
+    $.ajax({
+        url: "/Customers/DeleteProduct",
+        method: "post",
+        data: JSON.stringify(model),
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (model) {
+            getList(Qid);
+            toastr.success('Product Deleted!');
+        }
+    });
+};
+
+var Detailprod = function (Position) {
+    debugger
+    var Qid = $("#QuotId").val()
+    var model = {
+        QuotId: Qid,
+        Position: Position
+    };
+    $.ajax({
+        url: "/Customers/Details",
+        method: "post",
+        data: JSON.stringify(model),
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (model) {
+            if (model != null) {
+                debugger
+                $("#edtname").val(model[0].PName);
+                $("#postion").val(model[0].Position);
+                $("#No").val(model[0].PQty);
+                $("#Price").val(model[0].PPrice);
+                $("#TPrice").val(model[0].TPrice);
+                $("#id").val(model[0].ProdId);
+                return model;
+            }
+            else {
+                return false;
+            }
+            return response;
+
+        }
+    });
+};
+
+var EditP = function () {
+    debugger
+    var quotId = $("#QuotId").val()
+    var postion = $("#postion").val()
+    var noofunits = $("#No").val();
+    var price = $("#TPrice").val();
+    if ($("#DisP").val() != "")
+        var discprice = $("#DisP").val();
+    else
+        var discprice = $("#TPrice").val();
+    if ($("#Dis").val() != "")
+        var diso = $("#Dis").val();
+    else
+        var diso = 0;
+    if ($("#DisN").val() != "")
+        var disoN = $("#DisN").val();
+    else
+        var disoN = 0;
+    var dis = Number($("#TPrice").val()) - Number($("#DisP").val());
+    var model = {
+        QuotId: quotId,
+        Postion: postion,
+        No: noofunits,
+        Discprice: discprice,
+        price: price,
+        Diso: diso,
+        DisoN: disoN,
+        dis: dis,
+    };
+
+    $.ajax({
+        url: "../Customers/Editproduct ",
+        method: "post",
+        data: JSON.stringify(model),
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            debugger
+            console.log(response);
+            var QuotId = $("#QuotId").val();
+            getList(QuotId);
+            $('#Editmodal').modal('hide');
+            /*Editdata();*/
+            $('#Dis').val('');
+            $('#DisN').val('');
+            $('#DisP').val('');
+
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
+    });
+};
+
+function Editmodal() {
+    debugger
+    $("#Editmodal").modal('show');
 };
 
 function CheckValidPhoneno() {
@@ -864,7 +1788,6 @@ function CheckValidPhoneno() {
 }
 
 function checkValidPhoneno() {
-
     var txtCustPhon1 = "";
     var txtCustPhon1 = $("#Txtt_camo").val()
     var ValidPhoneno = /^(\+\d{1,3}[- ]?)?\d{10}$/;
@@ -882,7 +1805,7 @@ function checkValidPhoneno() {
     }
 }
 
-function CheckEmailSalesAct() {
+function CheckEmail() {
     var mailid = '';
     mailid = $("#Txtt_cmai").val();
     var EmailCheck = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
@@ -894,6 +1817,7 @@ function CheckEmailSalesAct() {
             toastr.error('Enter valid E-mail address.');
             $("#Txtt_cmai").val('');
             $("#Txtt_cmai").focus();
+            $("#btn-sa-confirm1").attr("disabled", false);
             return false;
         }
     }
@@ -901,26 +1825,111 @@ function CheckEmailSalesAct() {
 
 var FinalQuot = function (QuotId) {
     debugger
-    var quotId = $("#QuotId").val();
-    var totalprice = $("#Txt_GPri").val();
+
+    if ($("#QuotId").val() != "") {
+        var quotId = $("#QuotId").val();
+    }
+    else {
+        toastr.error('Quotation Id Not Found');
+        return false;
+    }
+
+    if ($("#ddlTaxes option:selected").val() != 0) {
+        var taxes = $("#ddlTaxes option:selected").val();
+    }
+    else {
+        toastr.error('Select Taxes');
+        $("#ddlTaxes").focus();
+        return false;
+    }
+    if ($("#Txt_GPri").val() == "0.00") {
+        toastr.error('Select Product');
+        return false;
+    }
+    else {
+        var totalprice = $("#Txt_GPri").val();
+    }
+
+    
+
+    if ($("#Txtt_adva").val() > $("#Txtt_bala").val()) {
+        toastr.error('Advance cannot be more than Balance');
+        return false;
+    }
+    else {
+       
+    }
+
     var advance = $("#Txtt_adva").val();
     var balance = $("#Txtt_bala").val();
-    var cId = $("#Txtt_bala").val();
+    
+
+    var taxesinno = $('#Txt_TPrice1').val();
+    var taxescode = $('#ddlTaxes').val();
+    if (parseInt($("#ddlTaxes").val()) == 2) {
+        var cgst = $("#Txt_CGST").val();
+        var sgst = $("#Txt_SGST").val();
+        igst = 0;
+    } else {
+        var igst = $("#Txt_IGST").val();
+        sgst = 0;
+        cgst = 0;
+    };
+    var disamt = $("#Txt_totaltax").val();
     var ttax = $("#Txt_totaltax").val();
     var gamt = $("#Txt_Price").val();
     var discamt = $("#Txt_netamount").val();
     var netamt = $("#Txt_DisP").val();
+
+    if ($("#Txttrasport").val() != "") {
+        var transport = $("#Txttrasport").val();
+    }
+    else {
+        var transport = $("#Txttrasport").val("0");
+        //toastr.error('Enter Transport Cost');
+        //$("#Txttrasport").val('');
+        //$("#Txttrasport").focus();
+        //return false;
+    }
+
+    if ($("#TxtInstall").val() != "") {
+        var intsall = $("#TxtInstall").val();
+    }
+    else {
+        var intsall = $("#TxtInstall").val("0");
+        //toastr.error('Enter Installation Cost');
+        //$("#TxtInstall").val('');
+        //$("#TxtInstall").focus();
+        //return false;
+    }
+    if ($("#Txtt_adva").val() == "") {
+        var advance = $("#Txtt_adva").val("0");
+    }
+    else {
+        var advance = $("#Txtt_adva").val();
+    }
+    var discount = $("#Txt_DisAmt").val();
+    var tprice = $("#Txt_FPrice1").val();
 
     var data = {
         QuotId: quotId,
         Advance: advance,
         Balance: balance,
         TotalPrice: totalprice,
-        CustId: cId,
         TTax: ttax,
         GAmt: gamt,
         DiscAmt: discamt,
         NetAmt: netamt,
+        Taxes: taxes,
+        Taxesinno: taxesinno,
+        TaxCode: taxescode,
+        CGST: cgst,
+        SGST: sgst,
+        IGST: igst,
+        Transport: transport,
+        Intsall: intsall,
+        DiscountPrice: discount,
+        Tprice: tprice,
     };
     $.ajax({
         url: "../Customers/FinalQuotation",
@@ -933,8 +1942,14 @@ var FinalQuot = function (QuotId) {
             var QuotId = response.model;
             (response.model == QuotId);
             $("#QuotId").val(QuotId);
-            //$("#CuId").val(CustId);
             pageRedirect(QuotId);
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
         }
     })
 };
@@ -943,39 +1958,5 @@ function pageRedirect(QuotId, CustId) {
     debugger
     var QId = QuotId;
     window.location.href = "/Customers/Quot?QuotId=" + QuotId;   
-
     $("#QuotId").val(QId);
-}
-
-
-function CustQuot(QuotId, CustId) {
-    debugger
-    var model = { t_cmob: t_cmob };
-    let url = "../Customers/GetNewCustomerDetails";
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: '{t_cmob:"' + t_cmob + '"}',
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        async: false,
-        success: function (response) {
-            if (response != null) {
-                $("#CustId").val(response[0].t_cuid).focus;
-                $("#Exicnam").val(response[0].t_cnam).focus;
-                $("#Exiadd").val(response[0].t_cadd).focus;
-                $("#Exicmob").val(response[0].t_cmob).focus;
-                $("#Exicam").val(response[0].t_catm).focus;
-                $("#Exicmai").val(response[0].t_cmai).focus;
-                $("#Exidob").val(response[0].t_cdob).focus;
-                $("#Exicgst").val(response[0].t_cgst).focus;
-                $("#ddlStates").val(response[0].State).focus;
-                return response;
-            }
-            else {
-                return false;
-            }
-            return response;
-        },
-    });
 }

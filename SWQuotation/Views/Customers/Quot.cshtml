@@ -4,317 +4,415 @@
     ViewBag.Title = "Quot";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<script src="~/Scripts/jquery-3.4.1.min.js"></script>
-<script src="~/Scripts/Customers/Quot.js"></script>
+<head>
+    <meta name="viewport" content="width=1100px, initial-scale=1" />
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/Customers/Quot.js"></script>
+    <!-- Sweet Alert JS -->
+    <link href="~/plugins/sweetalert2/sweetalert2.css" rel="stylesheet" />
+    @*<link href="~/Content/sweetalert/sweet-alert.css" rel="stylesheet" />*@
+    <script src="~/plugins/sweetalert2/sweetalert2.js"></script>
+</head>
+
+<div id="content">
+    <style>
+        #myDIV {
+            width: 100%;
+            height: 83px;
+            background-color: #FFFFFF;
+            border-bottom: 3px solid;
+            border-bottom-style: solid;
+        }
+    </style>
+
+    <style>
+        .vl {
+            border-left: 3px solid black;
+            /*height: 500px;*/
+        }
+
+        .center {
+            display: block;
+            margin-top: 60px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+        }
+    </style>
+
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+
+    <STYLE TYPE="text/css">
+        .breakhere {
+            page-break-after: always
+        }
+    </STYLE>
+
+    <style type="text/css">
+        body {
+            counter-reset: Serial;
+        }
+
+        tr td:first-child:before {
+            counter-increment: Serial;
+            content: counter(Serial);
+        }
+    </style>
+
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Quotation</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="~/Home/Dashboard">Home</a></li>
+                        <li class="breadcrumb-item active">Quotation</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="container">
+        <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-10">
+                <div class="container-fluid" id="create_pdf">
+                    <div class="card card-warning card-outline" @*style="position:fixed"*@>
+                        <div id="">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div>
+                                            <h3 style="margin-left: -8px;">&nbsp;&nbsp; WISHLIST DETAILS</h3>
+                                            &nbsp;&nbsp; Date&emsp;&emsp;&emsp;&emsp;          :-      &emsp;&emsp;   @Html.Label("txtFrmDate", DateTime.Now.ToString("dd-MMM-yyyy"))<br>
+                                            &nbsp;&nbsp; Contact Person&emsp;   :- &emsp;<label>@Session["userId"].ToString()</label><br>
+                                            &nbsp;&nbsp; Contact No&emsp;&emsp;      :-&emsp;&emsp;<label id="MobNo"></label><br>
+                                            &nbsp;&nbsp; Quot ID&emsp;&emsp;&emsp;&emsp;    :-&emsp;&nbsp;&nbsp;<label id="QuotId"></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <center><img src="~/images/logo-header.png" style="width: auto; height: 50.6px;" class="center" /></center>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="row" style="margin-left:10px ; margin-left:35px">
+                                    <div class="col-sm-6">
+                                        <br />
+                                        <i class="fa fa-user" aria-hidden="true"></i>
+                                        &nbsp; Name : &nbsp;<label id="CustName" style="margin-left: 38px;" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <br />
+                                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                                        &nbsp; Email :<label id="Email" style="margin-left: 34px;" />
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-left: 10px; margin-left: 35px; margin-top: -20px;">
+                                    <div class="col-sm-6" style="margin-left: -2px">
+                                        <br />
+                                        <i class="fa fa-phone" aria-hidden="true"></i>
+                                        &nbsp; Mobile No. : &nbsp;<label id="PhoneNo" style="margin-left: 7px" />
+                                    </div>
+                                    <div class="col-sm-6" style="margin-left: 2px">
+                                        <br />
+                                        <i class="fa fa-calculator" aria-hidden="true"></i>
+                                        &nbsp; GST NO : &nbsp;<label id="Gst" style="margin-left: 18px" />
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-left: 10px; margin-left: 35px; margin-top: -19px;">
+                                    <div class="col-sm-6" style="margin-left: -3px">
+                                        <br />
+                                        <i class="fa fa-address-card" aria-hidden="true"></i>
+                                        &nbsp; Bill To Adddress :<br>
+                                        &nbsp;<label id="BillTo" style="margin-left: 26px;" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <br />
+                                        <i class="fa fa-address-card" aria-hidden="true"></i>
+                                        &nbsp; Ship To Adddress :<br>
+                                        &nbsp;<label id="ShipTo" style="margin-left: 26px" />
+                                    </div>
+                                </div>
+                            </div>
+                            @*<br>*@
+
+                            <center><hr width="97%" color="black" /></center>
+
+                            <div class="vl" style="margin-left: 33px;">
+                                <h3>&nbsp;&nbsp;WISHLIST ITEMS</h3>
+                            </div>
+                            <center>
+                                <div class="card-body p-0" style="width:95%; overflow-y:auto">
+                                    <table id="tblQuotProduts" class="table table-striped" style="word-wrap:break-word">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 10px; padding-bottom: 37px; ">#</th>
+                                                <th style="padding-bottom: 37px;">Product Name</th>
+                                                <th style="width: 137px">Per Product Price</th>
+                                                <th style=" width: 137px">Product Colour</th>
+                                                <th style="width: 10px; padding-bottom: 37px;">Units</th>
+                                                <th style="width: 10px; padding-bottom: 37px;">Quantity</th>
+                                                <th style=" width: 137px">Discounted Price</th>
+                                                <th style=" width: 137px">Product Image</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </center>
+
+                            <center><hr width="97%" color="black" /></center>
+
+                            <P CLASS="breakhere"></P>
+                            <div class="row">
+                                <div class="col-sm-7" style="padding:40px; margin-top:-20px">
+                                    <div class="vl">
+                                        <h3>&nbsp;&nbsp;BAJAJ FINANCE SCHEME</h3>
+                                    </div>
+                                    <center>
+                                        <table>
+                                            <tr>
+                                                <th>Scheme</th>
+                                                <th>ROI</th>
+                                                <th>No of EMI</th>
+                                                <th>DP</th>
+                                                <th>EMI</th>
+                                            </tr>
+                                            <tr>
+                                                <td>9 x 3</td>
+                                                <td>6%</td>
+                                                <td>6</td>
+                                                <td>₹ 13,025</td>
+                                                <td>₹ 3,443</td>
+                                            </tr>
+                                            <tr>
+                                                <td>12 x 4</td>
+                                                <td>7%</td>
+                                                <td>8</td>
+                                                <td>₹ 13,366</td>
+                                                <td>₹ 2,583</td>
+                                            </tr>
+                                            <tr>
+                                                <td>10 x 2</td>
+                                                <td>8%</td>
+                                                <td>8</td>
+                                                <td>₹ 9,544</td>
+                                                <td>₹ 3,099</td>
+                                            </tr>
+                                            <tr>
+                                                <td>18 x 6</td>
+                                                <td>9%</td>
+                                                <td>12</td>
+                                                <td>₹ 13,986</td>
+                                                <td>₹ 1,722</td>
+                                            <tr>
+                                                <td>8 x 0</td>
+                                                <td>10%</td>
+                                                <td>8</td>
+                                                <td>₹ 3,025</td>
+                                                <td>₹ 3,443</td>
+                                            </tr>
+                                        </table>
+                                    </center>
+                                </div>
+                                <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Product Name" id="CustMo" style="display:none">
+                                <div class="col-sm-5" style="margin-top: 65px; padding-right: 40px; text-align: left;">
+                                    <center>
+                                        <TABLE border="1">
+                                            <TR>
+                                            <TR><TH>Gross Amount<TD>Rs.<label id="GAmt" />
+                                            <TR><TH>Discounted Amount<TD>Rs.<label id="Discount" />
+                                            <TR><TH>Net Amount<TD>Rs.<label id="NetAmt" />
+                                            <TR><TH>Taxes GST(18%)<TD>Rs.<label id="Tax" />
+                                            <TR><TH>Shipping Cost<TD>Rs.<label id="ShipCost" />
+                                            <TR><TH>Installation Cost<TD>Rs.<label id="IntallCost" />
+                                            <TR><TH>Total Amount<TD>Rs.<label id="Total" />
+                                            <TR><TH>Advance<TD>Rs.<label id="Adv" />
+                                            <TR><TH>Balance<TD>Rs.<label id="Bal" />
+                                        </TABLE>
+                                    </center>
+                                </div>
+                            </div>
+                            <center><hr width="97%" color="black" /></center>
+
+                            <div class="row">
+                                <div class="col-sm-6" style="padding:40px; margin-top:-20px">
+                                    <div class="vl">
+                                        <h4>&nbsp;&nbsp;TERMS & CONDITIONS </h4>
+                                    </div>
+                                    1)&emsp;Prices are inclusive of taxes.<br>
+                                    2)&emsp;Payment made by cheque shall be subject to realisation of cheque.<br>
+                                    3)&emsp;Prices are inclusive of taxes.<br>
+                                    4)&emsp;Delivery of goods shall be effected after atleast 2 days of payment.<br>
+                                    5)&emsp;Minimum two days for installation after delivery <br>
+                                    6)&emsp;No refund shall be allowed, No return of material allowed.<br>
+                                    7)&emsp;Delay in payments attract 24% interest p.a.<br>
+                                    8)&emsp;No Warranty on Sofa & Dining.<br>
+                                    9)&emsp;This prices mentioned in this quotation are valid for 15 days.
+                                </div>
+                                <div class="col-sm-6" style="margin-top: 20px; padding-right: 40px; text-align: left;">
+                                    <div class="vl">
+                                        <h3>&nbsp;&nbsp;OUR BANK DETAILS </h3>
+                                    </div>
+                                    <TABLE>
+                                        <TR>
+                                        <TR><TH>Name<TD>Spacewood Furnishers Pvt Ltd
+                                        <TR><TH>Bank<TD>Union Bank Of India
+                                        <TR><TH>Branch<TD>Dhantoli, Nagpur
+                                        <TR><TH>A/C No.<TD>366005010000307
+                                        <TR><TH>RTGS/IFSC<TD>UBIN0536601
+                                    </TABLE>
+                                </div>
+                            </div>
+
+                            <center><hr width="97%" color="black" /></center>
+                            <P CLASS="breakhere"></P>
+                            <br>
+                            <br>
+                            <div class="row">
+                                <div class="col-sm-4" style="padding: 35px; margin-top: -38px; margin-right: -20px">
+                                    <div class="vl">
+                                        <h5>&nbsp;&nbsp;<label id="Display1" />:-</h5>
+                                    </div>
+                                    <TABLE border="1">
+                                        <TR><TH style="font-size: 14px">Mob No<TD style="font-size:14px, "> <label id="Mob1" style="font-size: 14px" />
+                                        <TR><TH style="font-size: 14px">Mail<TD style="font-size: 14px"><h12><label id="Email1" /></h12>
+                                    </TABLE>
+                                </div>
+                                <div class="col-sm-4" style="padding: 35px; margin-top: -38px; text-align: left; margin-right: -20px">
+                                    <div class="vl">
+                                        <h5>&nbsp;&nbsp;<label id="Display2" />:-</h5>
+                                    </div>
+                                    <TABLE border="1">
+                                        <TR><TH style="font-size: 14px">Mob No<TD style="font-size:14px, "> <label id="Mob2" style="font-size: 14px" />
+                                        <TR><TH style="font-size: 14px">Mail<TD style="font-size: 14px"><h12><label id="Email2" /></h12>
+                                    </TABLE>
+                                </div>
+                                <div class="col-sm-4" style="padding: 35px; margin-top: -38px; text-align: left; margin-right: -20px">
+                                    <div class="vl">
+                                        <h5>&nbsp;&nbsp;<label id="Display3" />:-</h5>
+                                    </div>
+                                    <TABLE border="1">
+                                        <TR><TH style="font-size: 14px">Mob No<TD style="font-size:14px, "> <label id="Mob3" style="font-size: 14px; padding-right:90px" />
+                                        <TR><TH style="font-size: 14px">Mail<TD style="font-size: 14px"><h12><label id="Email3" /></h12>
+                                    </TABLE>
+                                </div>
+                            </div>
+                            <label id="filename" style="display:none" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-1"></div>
+        </div>
+    </div>
+</div>
+
+<div class="no-print">
+    <div class="row" style="margin-left: 7px;">
+        <input id="Btnsuccess" class="btn btn-secondary" type="button" value="Back" href="~/Home/Dashboard" onclick="back();" style="margin-left: 155px;" />&ensp;
+        <input id="Btnsuccess" class="btn btn-secondary" type="button" value="Print" onclick="window.print()" />&ensp;
+        <input id="Btnsuccess" class="btn btn-secondary" type="button" value="Pdf" onclick="Pdf();" />&ensp;
+        <input id="Btnsuccess" class="btn btn-secondary" type="button" value="Send Email" onclick="SendMail();" />&ensp;
+        <button class="btn btn-secondary" type="button" onclick="share();"><i class='fab fa-whatsapp'></i>&nbsp;Whatsapp</button>
+    </div>
+</div>
 
 
-
-<style>
-    #myDIV {
-        width: 100%;
-        height: 83px;
-        background-color: #FFFFFF;
-        border-bottom: 3px solid;
-        border-bottom-style: solid;
-    }
-</style>
-
-<style>
-    .vl {
-        border-left: 3px solid black;
-        /*height: 500px;*/
-    }
-
-    .center {
-        display: block;
-        margin-top: 60px;
-        margin-left: auto;
-        margin-right: auto;
-        width: 50%;
-    }
-</style>
-
-<style>
-    table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-    }
-
-    tr:nth-child(even) {
-        background-color: #dddddd;
-    }
-</style>
-
-<STYLE TYPE="text/css">
-    .breakhere {
-        page-break-after: always
-    }
-</STYLE>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script>*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script src="~/cdnjs/html2pdf.bundle.min.js"></script>
 
 <script>
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
-
     today = mm + '/' + dd + '/' + yyyy;
 </script>
 
-<div class="container-fluid" id="Container">
-    <div class="card card-warning card-outline">
-        <div id="ParentDiv">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="vl">
-                            <h3>&nbsp;&nbsp; WISHLIST DETAILS</h3>
-                                &nbsp;&nbsp; Date :- @Html.Label("txtFrmDate", DateTime.Now.ToString("dd-MMM-yyyy"))<br>
-                                &nbsp;&nbsp; Contact Person :- <label>@Session["userId"].ToString()</label><br>
-                                &nbsp;&nbsp; Contact No :- <label>8983398443</label><br>
-                                &nbsp;&nbsp; Quot ID :-<label id="QuotId"></label>
-                            </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <center><img src="~/images/logo-header.png" style="width: auto; height: 50.6px;" class="center" /></center>
-                    </div>
-                </div>
-            </div>
-            @*<hr width="100%" color="green" />*@
-            <div>
-                <div class="row" style="margin-left:10px ; margin-left:35px">
-                    <div class="col-sm-6">
-                        <br />
-                        <i class="fa fa-user" aria-hidden="true"></i>
-                        &nbsp; Name : &nbsp;<label id="CustName" style="margin-left: 22px" />
-                    </div>
-                    <div class="col-sm-6">
-                        <br />
-                        <i class="fa fa-envelope" aria-hidden="true"></i>
-                        &nbsp; Email :<label id="Email" style="margin-left: 18px" />
-                    </div>
-                </div>
-                <div class="row" style="margin-left:10px ; margin-left:35px">
-                    <div class="col-sm-6">
-                        <br />
-                        <i class="fa fa-phone" aria-hidden="true"></i>
-                        &nbsp; Mobile No. : &nbsp;<label id="PhoneNo" />
-                    </div>
-                    <div class="col-sm-6">
-                        <br />
-                        <i class="fa fa-calculator" aria-hidden="true"></i>
-                        &nbsp; GST NO : &nbsp;<label id="Gst" style="margin-left: 18px" />
-                    </div>
-                </div>
-                <div class="row" style="margin-left:10px ; margin-left:35px">
-                    <div class="col-sm-6">
-                        <br />
-                        <i class="fa fa-address-card" aria-hidden="true"></i>
-                        &nbsp; Bill To Adddress :<br>
-                        &nbsp;<label id="BillTo" style="margin-left: 26px;" />
-                    </div>
-                    <div class="col-sm-6">
-                        <br />
-                        <i class="fa fa-address-card" aria-hidden="true"></i>
-                        &nbsp; Ship To Adddress :<br>
-                        &nbsp;<label id="ShipTo" style="margin-left: 26px" />
-                    </div>
-                </div>
-            </div>
-            <br>
-            <div class="card card-warning card-outline" style="padding: 10px;">
-                <div class="tab-content" id="custom-tabs-three-tabContent">
-                    <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
-                        &nbsp;
-                        <table id="tblQuotProduts" class="table table-bordered table-striped" style="padding: 10px;"></table>
-                    </div>
-                </div>
-            </div>
-            <center><hr width="97%" color="black" /></center>
-            <center><lable>(Please Turn To Next Page)</lable></center>
-            <P CLASS="breakhere">
+<script type="text/javascript">
 
-                <div class="row">
-                    <div class="col-sm-7" style="padding:40px; margin-top:-20px">
-                        <div class="vl">
-                            <h3>&nbsp;&nbsp;BAJAJ FINANCE SCHEME</h3>
-                        </div>
-                        <center>
-                            <table>
-                                <tr>
-                                    <th>Scheme</th>
-                                    <th>ROI</th>
-                                    <th>No of EMI</th>
-                                    <th>DP</th>
-                                    <th>EMI</th>
-                                </tr>
-                                <tr>
-                                    <td>9 x 3</td>
-                                    <td>6%</td>
-                                    <td>6</td>
-                                    <td>₹ 13,025</td>
-                                    <td>₹ 3,443</td>
-                                </tr>
-                                <tr>
-                                    <td>12 x 4</td>
-                                    <td>7%</td>
-                                    <td>8</td>
-                                    <td>₹ 13,366</td>
-                                    <td>₹ 2,583</td>
-                                </tr>
-                                <tr>
-                                    <td>10 x 2</td>
-                                    <td>8%</td>
-                                    <td>8</td>
-                                    <td>₹ 9,544</td>
-                                    <td>₹ 3,099</td>
-                                </tr>
-                                <tr>
-                                    <td>18 x 6</td>
-                                    <td>9%</td>
-                                    <td>12</td>
-                                    <td>₹ 13,986</td>
-                                    <td>₹ 1,722</td>
-                                <tr>
-                                    <td>8 x 0</td>
-                                    <td>10%</td>
-                                    <td>8</td>
-                                    <td>₹ 3,025</td>
-                                    <td>₹ 3,443</td>
-                                </tr>
-                            </table>
-                        </center>
-                    </div>
-                    <div class="col-sm-5" style="margin-top: 65px; padding-right: 40px; text-align: left;">
-                        <center>
-                            <TABLE border="1">
-                                <TR>
-                                <TR><TH>Gross Amount<TD>Rs.<label id="GAmt" />
-                                <TR><TH>Discount<TD>Rs.<label id="Discount" />
-                                <TR><TH>Net Amount<TD>Rs.<label id="NetAmt" />
-                                <TR><TH>Taxes GST(18%)<TD>Rs.<label id="Tax" />
-                                <TR><TH>Total Amount<TD>Rs.<label id="Total" />
-                                <TR><TH>Advance<TD>Rs.<label id="Adv" />
-                                <TR><TH>Balance<TD>Rs.<label id="Bal" />
-                            </TABLE>
-                        </center>
-                    </div>
-                </div>
-                <center><hr width="97%" color="black" /></center>
+    // Function to share on whatsapp
+    function share() {
+        debugger
+        var QuotId = $('#QuotId').html();
+        var mob = $('#CustMo').val();
+        var ID = '@Session["userId"].ToString()';
+        var name = $('#CustName').html();
+        let linebreak = document.createElement("br");
+        /*queryForm.appendChild(linebreak);*/
 
-                <div class="row">
-                    <div class="col-sm-6" style="padding:40px; margin-top:-20px">
-                        <div class="vl">
-                            <h4>&nbsp;&nbsp;TERMS & CONDITIONS </h4>
-                        </div>
-                        1)&nbsp;&nbsp;Prices are inclusive of taxes.<br>
-                        2)&nbsp;&nbsp;Payment made by cheque shall be subject to realisation of cheque.<br>
-                        3)&nbsp;&nbsp;Prices are inclusive of taxes.<br>
-                        4)&nbsp;&nbsp;Delivery of goods shall be effected after atleast 2 days of payment.<br>
-                        5)&nbsp;&nbsp;Minimum two days for installation after delivery<br>
-                        6)&nbsp;&nbsp;No refund shall be allowed, No return of material allowed.<br>
-                        7)&nbsp;&nbsp;Delay in payments attract 24% interest p.a.<br>
-                        8)&nbsp;&nbsp;No Warranty on Sofa & Dining.<br>
-                        9)&nbsp;&nbsp;This prices mentioned in this quotation are valid for 15 days.
-                    </div>
-                    <div class="col-sm-6" style="margin-top: 20px; padding-right: 40px; text-align: left;">
-                        <div class="vl">
-                            <h3>&nbsp;&nbsp;OUR BANK DETAILS </h3>
-                        </div>
-                        <TABLE border="1">
-                            <TR>
-                            <TR><TH>Name<TD>Spacewood Furnishers Pvt Ltd
-                            <TR><TH>Bank<TD>Union Bank Of India
-                            <TR><TH>Branch<TD>Dhantoli, Nagpur
-                            <TR><TH>A/C No.<TD>366005010000307
-                            <TR><TH>RTGS/IFSC<TD>UBIN0536601
-                        </TABLE>
-                    </div>
-                </div>
-                <center><hr width="97%" color="black" /></center>
-                <div class="row">
-                    <div class="col-sm-4" style="padding: 35px; margin-top: -38px; margin-right: -20px">
-                        <div class="vl">
-                            <h5>&nbsp;&nbsp;DISPATCH INFO :</h5>
-                        </div>
-                        <TABLE border="1">
-                            <TR>
-                            <TR><TH style="font-size: 14px">Mob No<TD style="font-size: 14px"> 8698589883
-                            <TR><TH style="font-size: 14px">Email<TD style="font-size: 14px"><h12>swngpacc@spacewood.in</h12>
-                        </TABLE>
-                    </div>
-                    <div class="col-sm-4" style="padding: 35px; margin-top: -38px; text-align: left; margin-right: -20px">
-                        <div class="vl">
-                            <h5>&nbsp;&nbsp;INSTALLATION INFO :</h5>
-                        </div>
-                        <TABLE border="1">
-                            <TR>
-                            <TR><TH style="font-size: 14px">Mob No<TD style="font-size: 14px"> 9156475787
-                            <TR><TH style="font-size: 14px">Email<TD style="font-size: 14px"><h12>swngpacc@spacewood.in</h12>
-                        </TABLE>
-                    </div>
-                    <div class="col-sm-4" style="padding: 35px; margin-top: -38px; text-align: left; margin-right: -20px">
-                        <div class="vl">
-                            <h5>&nbsp;&nbsp;AFTER SALES INFO :</h5>
-                        </div>
-                        <TABLE border="1">
-                            <TR>
-                            <TR><TH style="font-size: 14px">Mob No<TD style="font-size: 14px"> 9156475787
-                            <TR><TH style="font-size: 14px">Email<TD style="font-size: 14px"><h12>swngpacc@spacewood.in</h12>
-                        </TABLE>
-                    </div>
-                </div>
-        </div>
-    </div>
-</div>
+        // Getting user input
+        let message = "Welcome to Spacewood , Dear " + name + " below is the link to quotation requested. 192.168.100.179:8080/Home/WhatsappQuot?QuotId=" + QuotId + "%26ID=" + ID;
+       /* window.location.href = "192.168.100.179:8080/Home/WhatsappQuot?QuotId=" + QuotId + "&ID=" + ID;*/
 
-
-<div class="row">
-    <div class="col-sm-6">
-        <center><button type="button" id="printButton" class="btn btn-primary hidden-print" onclick="printDiv('ParentDiv')"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button></center>
-    </div>
-    <br>
-    <div class="col-sm-6">
-        <center><button type="button" id="PrintPDF" class="btn btn-primary hidden-print" onclick="PDF('ParentDiv')"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Pdf</button></center>
-    </div>
-</div>
-
-
-<script language="javascript" type="text/javascript">
-    function printDiv(ParentDiv) {
-        var divElements = document.getElementById(ParentDiv).innerHTML;
-        //Get the HTML of whole page
-        var oldPage = document.body.innerHTML;
-        //Reset the page's HTML with div's HTML only
-        document.body.innerHTML =
-            "<html><head><title></title></head><body>" +
-            divElements + "</body>";
-        window.print();
-        recognition.onresult = function (event) {
-            console.log(event);
-            document.getElementById('printButton').value = event.results[0][0].transcript;
-        }
-        recognition.start();
-        document.body.innerHTML = oldPage;
+       /* Opening URL*/
+        window.open(
+            "https://wa.me/" + mob + "/?text=" + message
+        );
     }
 </script>
 
 <script>
-    function PDF(ParentDiv) {
+    function back() {
         debugger
-        const element = document.getElementById('ParentDiv');
-
-        html2pdf(element).set({
-            margin: [30, 10, 5, 10],
-            pagebreak: { aviod: 'tr' },
-            jsPDF: { orientation: 'LandScape', Unit: 'pt', formate: 'letter', compressPDF: true }
-        }).save();
-    };
+        window.location.href = "/Home/Dashboard";
+    }
 </script>
-<script src="~/cdnjs/html2pdf.bundle.min.js"></script>
+
+<script language="javascript" type="text/javascript">
+    function printDiv(create_pdf) {
+        var divToPrint = document.getElementById('create_pdf');
+
+        var newWin = window.open('', 'Print-Window');
+
+        newWin.document.open();
+
+        newWin.document.write('<html><body onload="window.print()">' + divToPrint.innerHTML + '</body></html>');
+
+        newWin.document.close();
+
+        setTimeout(function () { newWin.close(); }, 10);
+    }
+</script>
+
+<script>
+    function Pdf() {
+        var quotId = $('#QuotId').html();
+        var element = document.getElementById('create_pdf');
+        var opt = {
+            margin: [10, 0, 0, 0],
+            filename: 'Quotation Number ' + quotId,
+            image: { type: 'jpeg', quality: 0.99 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).toPdf().save();
+    }
+</script>
+

@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-
     UserDetails(loginid);
 })
 
@@ -41,9 +40,7 @@ function UserDetails2(loginid) {
         dataType: "json",
         async: false,
         success: function (response) {
-           
             return response;
-            //addtoQuot();
         },
     });
 }

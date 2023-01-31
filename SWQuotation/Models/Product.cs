@@ -42,7 +42,7 @@ namespace SWQuotation.Models
             String message = "";
             List<Product> ProductList = new List<Product>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("SWQuot_ProductList", con);
+            SqlCommand cmd = new SqlCommand("QA_ProductList", con);
             cmd.CommandType = CommandType.Text;
             cmd.CommandTimeout = 300;
             con.Open();
@@ -54,8 +54,14 @@ namespace SWQuotation.Models
                     Product Prod = new Product();
                     Prod.ProductId = dr.GetValue(0).ToString();
                     Prod.ProductName = dr.GetValue(1).ToString();
-                    Prod.ProductCatogery = dr.GetValue(2).ToString();
-                    Prod.ProductPrice = dr.GetValue(3).ToString();
+                    Prod.PC = dr.GetValue(2).ToString();
+                    Prod.ProductCatogery = dr.GetValue(3).ToString();
+                    Prod.Height = dr.GetValue(4).ToString();
+                    Prod.Width = dr.GetValue(5).ToString();
+                    Prod.Depth = dr.GetValue(6).ToString();
+                    Prod.Thickness = dr.GetValue(7).ToString();
+                    Prod.UOM = dr.GetValue(8).ToString();
+                    Prod.ProductPrice = dr.GetValue(9).ToString();
                     ProductList.Add(Prod);
                 }
             }
@@ -72,7 +78,7 @@ namespace SWQuotation.Models
             String message = "";
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
             var ReturnValue = "";
-            SqlCommand cmd = new SqlCommand("SWQuot_AddProduct", con);
+            SqlCommand cmd = new SqlCommand("QA_AddProduct", con);
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.AddWithValue("@PId", ProductId);
@@ -80,6 +86,7 @@ namespace SWQuotation.Models
             cmd.Parameters.Add("@delete", SqlDbType.Int, 10);
             //cmd.Parameters.Add("@Img", SqlDbType.Int, 10);
             cmd.Parameters.Add("@Back", SqlDbType.NVarChar, 100);
+            cmd.Parameters.AddWithValue("@P", "");
 
 
             cmd.Parameters["@delete"].Direction = ParameterDirection.Output;
@@ -112,6 +119,38 @@ namespace SWQuotation.Models
             return ReturnValue;
         }
 
+        public string cheakforId(string id)
+        {
+            String message = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            var ReturnValue = "";
+            SqlCommand cmd = new SqlCommand("QA_AddProduct", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@PId", id);
+            cmd.Parameters.AddWithValue("@choice", "cheakforId");
+            cmd.Parameters.Add("@P", SqlDbType.Int, 10);
+            cmd.Parameters["@P"].Direction = ParameterDirection.Output;
+            try
+            {
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+
+                delete = Convert.ToString(cmd.Parameters["@P"].Value);
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            finally
+            {
+                con.Close();
+                ReturnValue = delete;
+            }
+            return ReturnValue;
+        }
+
         public string DeleteImg(Product model)
         {
             String message = "";
@@ -130,11 +169,12 @@ namespace SWQuotation.Models
             };
 
 
-            SqlCommand cmd = new SqlCommand("SWQuot_AddProduct", con);
+            SqlCommand cmd = new SqlCommand("QA_AddProduct", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@PId", ProductId);
             cmd.Parameters.AddWithValue("@Position", Position);
             cmd.Parameters.AddWithValue("@choice", "DeleteImg");
+            cmd.Parameters.AddWithValue("@P", "");
             try
             {
                 cmd.Connection = con;
@@ -157,7 +197,7 @@ namespace SWQuotation.Models
             String message = "";
             List<Product> UOMList = new List<Product>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("select * from tbl_UOM", con);
+            SqlCommand cmd = new SqlCommand("select t_cuni,t_dsca from swlive.dbo.ttcmcs001100", con);
 
             cmd.CommandType = CommandType.Text;
             cmd.CommandTimeout = 300;
@@ -214,7 +254,7 @@ namespace SWQuotation.Models
             String message = "";
             List<Product> NCList = new List<Product>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("SWQuot_ProductDetails", con);
+            SqlCommand cmd = new SqlCommand("QA_ProductDetails", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@ProductId", ProductId);
             con.Open();
@@ -250,7 +290,8 @@ namespace SWQuotation.Models
             String message = "";
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
             var ReturnValue = "";
-            SqlCommand cmd = new SqlCommand("SWQuot_AddProduct", con);
+            SqlCommand cmd = new SqlCommand("QA_AddProduct", con);
+            //cmd.Parameters.Add("@P", SqlDbType.Int, 10);
             cmd.CommandType = CommandType.StoredProcedure;
             try
             {
@@ -265,6 +306,7 @@ namespace SWQuotation.Models
                 cmd.Parameters.AddWithValue("@PPrice", customer.ProductPrice);
                 cmd.Parameters.AddWithValue("@PColour", customer.colour);
                 cmd.Parameters.AddWithValue("@choice", "Update");
+                cmd.Parameters.AddWithValue("@P", "");
 
                 cmd.Connection = con;
                 con.Open();
@@ -279,13 +321,12 @@ namespace SWQuotation.Models
             return ReturnValue;
         }
 
-
         public List<Product> ProductImage(string ProductId)
         {
             String message = "";
             List<Product> NCList = new List<Product>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("select * from tbl_ProductImg where ProductId = '" + ProductId + "'", con);
+            SqlCommand cmd = new SqlCommand("select * from swlive.dbo.ttdswc720100 where t_item = '" + ProductId + "'", con);
             cmd.CommandType = CommandType.Text;
             cmd.CommandTimeout = 300;
             con.Open();
@@ -295,12 +336,11 @@ namespace SWQuotation.Models
                 while (dr.Read())
                 {
                     Product NCust = new Product();
-                    NCust.Position = dr.GetValue(0).ToString();
-                    NCust.ProductId = dr.GetValue(1).ToString();
+                    NCust.ProductId = dr.GetValue(0).ToString();
+                    NCust.Position = dr.GetValue(1).ToString();
                     NCust.Pic = dr.GetValue(2).ToString();
                     NCust.filePath = dr.GetValue(3).ToString();
                     NCList.Add(NCust);
-                    
                 }
             }
             catch (Exception ex)
@@ -317,7 +357,7 @@ namespace SWQuotation.Models
             String message = "";
             List<Product> ProductList = new List<Product>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("SWQuot_UserProductList", con);
+            SqlCommand cmd = new SqlCommand("QA_UserProductList", con);
             cmd.CommandType = CommandType.Text;
             cmd.CommandTimeout = 300;
             con.Open();

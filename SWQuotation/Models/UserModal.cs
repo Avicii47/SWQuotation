@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 
 namespace SWQuotation.Models
 {
@@ -22,13 +20,26 @@ namespace SWQuotation.Models
         public string Return { get; set; }
         public string Id { get; set; }
         public string Role { get; set; }
+        public string QuotId { get; set; }
+        public string CustId { get; set; }
+        public string QuDt { get; set; }
+        public string BillTo { get; set; }
+        public string ShipTo { get; set; }
+        public string Gross { get; set; }
+        public string Discount { get; set; }
+        public string NetAmt { get; set; }
+        public string Tax { get; set; }
+        public string Total { get; set; }
+        public string Adv { get; set; }
+        public string Balance { get; set; }
+        public string Status { get; set; }
 
         public String AddUser(UserModal modal)
         {
             String message = "";
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
             var ReturnValue = "";
-            SqlCommand cmd = new SqlCommand("SWQuot_AddUser", con);
+            SqlCommand cmd = new SqlCommand("QA_AddUser", con);
             cmd.CommandType = CommandType.StoredProcedure;
             try
             {
@@ -37,7 +48,7 @@ namespace SWQuotation.Models
                 cmd.Parameters.AddWithValue("@username", modal.Id);
                 cmd.Parameters.AddWithValue("@mobno", modal.Mob);
                 cmd.Parameters.AddWithValue("@role", modal.Role);
-                cmd.Parameters.Add("@Return", SqlDbType.Int,50);
+                cmd.Parameters.Add("@Return", SqlDbType.Int, 50);
                 cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
                 cmd.Parameters.AddWithValue("@choice", "Add");
 
@@ -50,7 +61,7 @@ namespace SWQuotation.Models
                 if (Return == null)
                 {
                     return ReturnValue;
-                    
+
                 }
                 else
                 {
@@ -91,5 +102,100 @@ namespace SWQuotation.Models
             con.Close();
             return PList;
         }
+
+        public List<UserModal> GetAllQuot()
+        {
+            String message = "";
+            List<UserModal> PList = new List<UserModal>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("QA_AllQuotList", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            //cmd.Parameters.AddWithValue("@choice", "AllQuotList");
+            cmd.CommandTimeout = 300;
+            con.Open();
+            try
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    UserModal Role = new UserModal();
+                    Role.QuotId = dr.GetValue(0).ToString();
+                    Role.CustId = dr.GetValue(1).ToString();
+                    Role.QuDt = dr.GetValue(2).ToString();
+                    Role.Total = dr.GetValue(3).ToString();
+                    Role.Adv = dr.GetValue(4).ToString();
+                    Role.Balance = dr.GetValue(5).ToString();
+                    Role.Status = dr.GetValue(6).ToString();
+
+                    PList.Add(Role);
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            con.Close();
+            return PList;
+        }
+
+        public List<UserModal> userDetails(string Id)
+        {
+            String message = "";
+            List<UserModal> PList = new List<UserModal>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("select * from swlive.dbo.ttdswc716100 where t_usid = '" + Id + "'", con);
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandTimeout = 300;
+            con.Open();
+            try
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    UserModal Role = new UserModal();
+                    Role.Username = dr.GetValue(0).ToString();
+                    Role.Password = dr.GetValue(1).ToString();
+                    Role.Name = dr.GetValue(2).ToString();
+                    Role.Mob = dr.GetValue(3).ToString();
+                    PList.Add(Role);
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            con.Close();
+            return PList;
+        }
+
+        public string changepassword(UserModal customer)
+        {
+            String message = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            var ReturnValue = "";
+            SqlCommand cmd = new SqlCommand("QA_ChangePassword", con);
+            //cmd.Parameters.Add("@P", SqlDbType.Int, 10);
+            cmd.CommandType = CommandType.StoredProcedure;
+            try
+            {
+                cmd.Parameters.AddWithValue("@Username", customer.Username);
+                cmd.Parameters.AddWithValue("@name", customer.Name);
+                cmd.Parameters.AddWithValue("@mob", customer.Mob);
+                cmd.Parameters.AddWithValue("@Pass", customer.Password);
+
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+                return ReturnValue;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            return ReturnValue;
+        }
+
+
     }
 }

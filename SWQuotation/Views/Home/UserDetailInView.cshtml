@@ -9,7 +9,7 @@
             <img src="~/images/user-img.png" class="img-circle elevation-2" alt="User Image"/>
         </div>
         <div class="info">
-            <label ID="username" class="d-block" style="color:white"></label>
+        <label @*ID="username"*@ class="d-block" style="color:white">@ViewBag.Prod</label>
         </div>
     </div>
 
@@ -22,11 +22,10 @@
                 <a href="#" class="nav-link active">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
                     <p>
-                        Dashboard
+                        Menu
                         <i class="right fas fa-angle-left"></i>
                     </p>
                 </a>
-
                 <ul class="nav nav-treeview" id="menu">
                     <li class="nav-item">
                         @if (Model != null)

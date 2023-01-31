@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 
 namespace SWQuotation.Models
 {
@@ -30,7 +31,8 @@ namespace SWQuotation.Models
         public string fileName { get; set; }
         public string MenuName { get; set; }
         public string MenuPath { get; set; }
-
+        public string UserRole { get; set; }
+        
 
         public static void ClearAspNetCache(HttpContext context)
         {
@@ -46,21 +48,26 @@ namespace SWQuotation.Models
             String message = "";
             //my connection string
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("SWQuot_UserLogin", con);
+            //SqlCommand cmd = new SqlCommand("[SWQuot_UserLogin]", con);
+            SqlCommand cmd = new SqlCommand("[QA_UserLogin]", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@t_usid", strUsername);
             cmd.Parameters.AddWithValue("@t_pass", strPassword);
+            
             try
             {
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    Boolean login = (strPassword.Equals(reader["Password"].ToString(), StringComparison.InvariantCulture)) ? true : false;
+                    Boolean login = (strPassword.Equals(reader["t_pass"].ToString(), StringComparison.InvariantCulture)) ? true : false;
+                    //Boolean login = (strPassword.Equals(reader["Password"].ToString(), StringComparison.InvariantCulture)) ? true : false;
                     if (login)
                     {
                         message = "1";
-                        UserName = reader["UserName"].ToString();
+                        //UserName = reader["UserName"].ToString();
+                        UserName = reader["t_usid"].ToString();
+                        UserRole = reader["t_role"].ToString();
                     }
                     else
                         message = "Invalid Credentials";

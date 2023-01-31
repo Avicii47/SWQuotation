@@ -1,15 +1,47 @@
 ﻿$(document).ready(function () {
-    BindRole();
+   /* BindRole();*/
 });
 
 
 var AddUser = function () {
     debugger
-    var username = $("#UserName").val();
-    var mob = $("#MobNo").val();
-    var id = $("#UserId").val();
-    var password = $("#Password").val();
-    var role = $("#ddlrole").val();
+
+    if ($("#UserName").val() != "") {
+        var username = $("#UserName").val();
+    }
+    else {
+        toastr.error('Enter UserName');
+        return false;
+    }
+    if ($("#MobNo").val() != "") {
+        var mob = $("#MobNo").val();
+    }
+    else {
+        toastr.error('Enter Mobile No.');
+        return false;
+    }
+    if ($("#UserId").val() != "") {
+        var id = $("#UserId").val();
+    }
+    else {
+        toastr.error('Enter UserId');
+        return false;
+    }
+    if ($("#Password").val() != "") {
+        var password = $("#Password").val();
+    }
+    else {
+        toastr.error('Enter Password');
+        return false;
+    }
+    if ($("#ddlrole").val() != 0) {
+        var role = $("#ddlrole").val();
+    }
+    else {
+        toastr.error('Select Role');
+        return false;
+    }
+
     
 
     var data = {
@@ -31,8 +63,7 @@ var AddUser = function () {
             if (model.model == '0') {
                Swal.fire({
                    icon: 'success',
-                    title: 'User Added',
-                    
+                    title: 'User Added', 
                 });
             } else {
                 Swal.fire({
@@ -63,6 +94,7 @@ function BindRole() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
+            debugger
             if (response != null) {
                 $("#ddlrole").empty();
                 $("#ddlrole").append($("<option></option>").val("0").html("Select Role"));
@@ -84,7 +116,6 @@ function BindRole() {
 }
 
 function CheckValidPhoneno() {
-
     var txtCustPhon = "";
     var txtCustPhon = $("#MobNo").val()
     var ValidPhoneno = /^(\+\d{1,3}[- ]?)?\d{10}$/;

@@ -48,7 +48,6 @@
 
     <!-- DataTables -->
     <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-
     <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
@@ -108,7 +107,7 @@
         <!-- Preloader -->
         <div class="loader flex-column justify-content-center align-items-center" style="display:none;" id="divLoader">
             <div class="strip-holder">
-                <img class="animation__shake" src="~/Images/SLoading.gif" alt="SpacewoodLogo" height="80" width="80">
+                <img class="animation__shake" src="~/images/SLoading.gif" alt="SpacewoodLogo" height="80" width="80">
             </div>
         </div>
 
@@ -122,9 +121,6 @@
 
             </ul>
 
-
-
-
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
                 <!-- Navbar Search -->
@@ -132,7 +128,7 @@
 
                     @using (Html.BeginForm("Logout", "Home", FormMethod.Post))
                     {
-                        <button class="btn btn-warning" type="submit">
+                        <button class="btn btn-secondary" type="submit">
                             <i class="fas fa-sign-out-alt"></i> Logout
                         </button>
                     }
@@ -145,12 +141,11 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="/home/Index" class="brand-link">
+            <a href="/home/Dashboard" class="brand-link">
                 @*<img src="~/images/logo3.png" />*@
                 <img src="~/dist/img/SWLogo.png" alt="Spacewood Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">Spacewood Furnishers</span>
             </a>
-
             <!-- Sidebar -->
             @*@Html.Partial("~/Views/Home/UserDetailInView.cshtml")*@
             @{Html.RenderAction("UserDetailInView", "Home");}
@@ -162,7 +157,6 @@
                     <div>
                         @RenderBody()
                         <hr />
-
                     </div>
                 </div><!-- /.container-fluid -->
             </section>
@@ -190,24 +184,25 @@
     <script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
-        $.widget.bridge('uibutton', $.ui.button)
+        $.widget.bridge('uibutton', $.ui.button);
     </script>
-
 
     <!-- date-range-picker -->
     <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
     <!-- bootstrap color picker -->
     <script src="~/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
-
+    <script src="~/Scripts/Dashboard/Dashboard.js"></script>
 
     <script>
         $(document)
             .ajaxStart(function () {
-                $('#divLoader').show();
-            })
-            .ajaxStop(function () {
-                $('#divLoader').hide();
-            });
+            debugger
+            $('#divLoader').show();
+        })
+            .ajaxStop(function() {
+            debugger
+            $('#divLoader').hide();
+        });
     </script>
 
     @Scripts.Render("~/bundles/jquery")
@@ -216,7 +211,7 @@
 
 
     <script type="text/javascript">
-        debugger
+
         var userid = '';
         var UserName = '';
         var encurl = window.location.href;
@@ -238,7 +233,7 @@
             }
             else {
 
-                 var someSessionVariable = '@Session["userName"]';
+                var someSessionVariable = '@Session["userName"]';
                 if (someSessionVariable != "")
                 {
                      $("#username").html(someSessionVariable);

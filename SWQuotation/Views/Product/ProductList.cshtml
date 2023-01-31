@@ -14,28 +14,75 @@
 <!-- Theme style -->
 <link href="~/dist/css/adminlte.min.css" rel="stylesheet" />
 
-
-<center><h2>All Product List</h2></center>
-
-<div class="card card-warning card-outline">
-    <div class="tab-content" id="custom-tabs-three-tabContent">
-        <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
-            &nbsp;
-            <table id="tblProducts" class="table table-bordered table-striped"></table>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Product List</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="~/Home/Dashboard">Product</a></li>
+                    <li class="breadcrumb-item active">Product List</li>
+                </ol>
+            </div>
         </div>
     </div>
+</section>
+
+<div class="row">
+
 </div>
 
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fa fa-list"></i>&nbsp;
+            Product List
+        </h3>
+        <div class="card-tools">
+            <div class="row" style="padding-right: 7px">
+                <ul class="nav nav-pills ml-auto">
+                    <li class="nav-item">
+                        <a class="btn  bg-gradient-secondary" onclick="prodPrice();" style="height: 34px; width: 110px;">
+                            <i class="fa fa-fw fa-history"></i>&nbsp;History
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <form>
+        <div class="card-body">
+            <div class="tab-content" id="custom-tabs-three-tabContent">
+                <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                    &nbsp;
+                    <table id="tblProducts" class="table table-bordered table-striped"></table>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+    
 <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="row">
-                <div class="modal-header col-md-6">
-                    <center><h5><label class="modal-title">Product Image</label></h5></center>
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Product Image
+                    </h3>
+                    <div class="card-tools">
+                        <ul class="nav nav-pills ml-auto">
+                            <li class="nav-item">
+                                <i class="fa fa-window-close" aria-hidden="true" data-dismiss="modal" style="padding-top: 6px;"></i>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <input type="hidden" id="ProductId" />
-            <div class="card card-warning card-outline">
                 <input type="hidden" id="prod" />
                 <div class="tab-content" id="custom-tabs-three-tabContent">
                     <center>
@@ -45,12 +92,11 @@
                         </div>
                     </center>
                 </div>
-            </div>
             <div class="card-footer">
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-12">
-                            <center><button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">Cancel</button></center>
+                            <button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true" style="margin-left: 7px;">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -58,6 +104,60 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="ProductPrice" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="card-title">Product Price History</h3>
+                        </div>
+                        <div class="col-sm-6" style="padding-left: 530px;">
+                            <i class="fa fa-window-close" aria-hidden="true" data-dismiss="modal"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="custom-tabs-three-tabContent" style="margin-left: 16px;">
+                    <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                        &nbsp;
+                        <table id="tblprodPrice" class="table table-bordered table-striped" style="width:97%"><thead></thead></table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="form-group">
+                        <div class="row" style="margin-left: -2px">
+                            <button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="form-group">
+    <div class="row">
+        <input id="Btnsuccess" class="btn btn-secondary" type="button" value="Back" href="~/Home/Dashboard" onclick="back();" style="margin-left: 30px" />&ensp;
+    </div>
+    <div class="row" style="visibility:hidden">
+        fdsfdsf
+    </div>
+</div>
+
+<script>
+    function back() {
+       debugger
+       window.location.href = "/Customers/Index";
+    }
+
+    function prodPrice() {
+       getProdPriceList();
+       $("#ProductPrice").modal('show');
+    };
+</script>
 
 <script src="~/Scripts/Product/ProductList.js"></script>
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
@@ -81,3 +181,67 @@
         });
     });
 </script>
+
+<script>
+    function getProdPriceList() {
+        $.ajax({
+            type: "POST",
+            url: "/Customers/PricetList",
+            data: "{}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: PriceList,
+            failure: function (response) {
+                alert(response.d);
+            },
+            error: function (response) {
+                alert(response.d);
+            }
+        });
+    }
+
+    function PriceList(response) {
+        var datatableVariable = $("#tblprodPrice").DataTable(
+            {
+                "responsive": false, "lengthChange": true, "autoWidth": false,
+                "deferRender": true,
+                paging: true,
+                searching: true,
+                destroy: true,
+                buttons: [
+                    { extend: 'copyHtml5', footer: true, header: true },
+                    { extend: 'excelHtml5', footer: true, header: true },
+                    { extend: 'csvHtml5', footer: true, header: true },
+                    { extend: 'pdfHtml5', footer: true, header: true }
+                ],
+
+                initComplete: function () {
+                    // Apply the search
+                    this.api()
+                        .columns()
+                        .every(function () {
+                            var that = this;
+
+                            $('input', this.header()).on('keyup change clear', function () {
+                                if (that.search() !== this.value) {
+                                    that.search(this.value).draw();
+                                }
+                            });
+                        });
+                },
+
+                data: response,
+                columns: [
+
+                    { 'data': 'SID', 'title': 'Product Id', "visible": false },
+                    { 'data': 'PId', 'title': 'Product Id' },
+                    { 'data': 'PName', 'title': 'Product Name' },
+                    { 'data': 't_catm', 'title': 'Product Catogery' },
+                    { 'data': 'FDate', 'title': 'From Date' },
+                    { 'data': 'TDate', 'title': 'To Date' },
+                    { 'data': 'PPrice', 'title': 'Product Price' },
+                    /*{ 'data': 'PPrice', 'title': 'Product Price' },*/
+                ]
+            }).buttons().container().appendTo('#tblprodPrice_wrapper .col-md-6:eq(0)');
+    };
+    </script>

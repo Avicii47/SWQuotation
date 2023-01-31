@@ -74,7 +74,7 @@ namespace SWQuotation.Controllers
 
                     Session["userId"] = users.LoginId;
                     Session["userName"] = users.UserName;
-                    //Session["userLavel"] = users.Lavel;
+                    Session["UserRole"] = users.UserRole;
                     //Session["LoginType"] = users.LoginType;
 
                     HttpCookie cookie = new HttpCookie("crm");
@@ -86,19 +86,31 @@ namespace SWQuotation.Controllers
                         cookie["password"] = EncryptedPassword;
                         cookie.Expires = DateTime.Now.AddDays(7);
                         HttpContext.Response.Cookies.Add(cookie);
-                        return RedirectToAction("Index", "Customers");
+                        //return RedirectToAction("Index", "Customers");
                     }
                     else
                     {
                         cookie.Expires = DateTime.Now.AddDays(-1);
                         HttpContext.Response.Cookies.Add(cookie);
-                        return RedirectToAction("Index", "Customers");
+                        //return RedirectToAction("Index", "Customers");
                     }
+                    if (users.UrlLink == null)
+                    {
+                        if (users.UserRole == "Admin")
+                        {
+                            return RedirectToAction("Dashboard", "Home");
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "Customers");
+                        }
+                    }
+                    else
+                        return Redirect(users.UrlLink);
                 }
                 else
                     ViewBag.ErrorMessage = message;
             }
-            //return RedirectToAction("Index", "Customers");
             return View(users);
         }
     }

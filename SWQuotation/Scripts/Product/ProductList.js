@@ -20,7 +20,6 @@ function getProductList() {
     });
 }
 
-
 function ProductList(response) {
     debugger
 
@@ -55,18 +54,33 @@ function ProductList(response) {
 
             data: response,
             columns: [
+                {
+                    "data": "id", "title": "SNo.",
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
                 { 'data': 'ProductId', 'title': 'Product Id'/*, "visible": false*/ },
                 { 'data': 'ProductName', 'title': 'Product Name' },
                 { 'data': 'ProductCatogery', 'title': 'Product Catogery' },
+                { 'data': 'UOM', 'title': 'UOM' },
+                { 'data': 'Height', 'title': 'Height' },
+                { 'data': 'Width', 'title': 'Width' },
+                { 'data': 'Depth', 'title': 'Depth' },
+                { 'data': 'Thickness', 'title': 'Thickness' },
                 { 'data': 'ProductPrice', 'title': 'Product Price' },
                 {
                     'data': null, title: 'Product Image', wrap: true, "render": function (item) {
-                        return '<center><div class="btn-group"><button type="button" onclick="ImageDetails(' + "'" + item.ProductId + "'" + ');Modal1()" value="0" class="btn btn-warning btn-sm" id="btn-sa-confirm"><i class="fas fa-file-image"></i></button></div></center>'
+                        return '<center><div class="btn-group"><button type="button" onclick="ImageDetails(' + "'" + item.ProductId + "'" + ');Modal1()" value="0" class="btn btn-secondary btn-sm" id="btn-sa-secondary"><i class="fas fa-file-image"></i></button></div></center>'
                     },
                 },
             ]
         }).buttons().container().appendTo('#tblProducts_wrapper .col-md-6:eq(0)');
 };
+
+
+
+
 
 function Modal1() {
     debugger
@@ -93,7 +107,6 @@ function ImageDetails(ProductId) {
         error: function (response) {
             alert(response.d);
         }
-
     });
 }
 
@@ -106,7 +119,6 @@ function ImgTable(response) {
             paging: false,
             searching: false,
             destroy: true,
-
             initComplete: function () {
                 // Apply the search
                 this.api()

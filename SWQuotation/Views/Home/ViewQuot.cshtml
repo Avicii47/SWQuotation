@@ -1,0 +1,313 @@
+﻿
+@{
+    ViewBag.Title = "ViewQuot";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/Dashboard/ViewQuot.js"></script>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>All Quotation</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="~/Home/Dashboard">Home</a></li>
+                    <li class="breadcrumb-item active">ViewQuot</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="row" style="margin-left: -27px">
+                    <center><h5><label class="col-sm-10 col-form-label" style="margin-top: -20px; padding-left: 150px; margin-right: -87px; margin-top: -3px; margin-top: -4px; margin-left: -181px ">Quot.Id</label></h5></center>
+                    <input type="text" class="form-control" autocomplete="off" maxlength="50" id="QuotId" style="margin-right: -60px; margin-top: -5px; position: absolute; width: 132px; margin-left: 105px" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="content">
+    <div class="container-fluid" id="Container">
+        <div class="col-sm-12">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Customer Details</h3>
+                </div>
+                <div class="form-group">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-10 col-form-label">Customer Name</label>
+                                        <div class="col-sm-11">
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Address" id="Txtname" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-10 col-form-label">Date of Birth</label>
+                                        <div class="col-sm-11">
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Address" id="Txtdob" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-10 col-form-label">Mobile No</label>
+                                        <div class="col-sm-11">
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Address" id="Txtmob" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-10 col-form-label">Alter No.</label>
+                                        <div class="col-sm-11">
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Address" id="Txtamob" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-10 col-form-label">GST No.</label>
+                                        <div class="col-sm-11">
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Address" id="Gst" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-10 col-form-label">Email Id</label>
+                                        <div class="col-sm-11">
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Address" id="Email" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-10 col-form-label" style="margin-left: 3px">Bill To</label>
+                                        <div class="col-sm-4">
+                                            <div class="row">
+                                                <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Bill To Address" id="ExtBill" style="margin-left: 7px; width: 210px " readonly>
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label id="EBTo" style="padding-left: 30px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-10 col-form-label" style="margin-left: 9px">Ship To</label>
+                                    <div class="col-sm-4">
+                                        <div class="row">
+                                            <input type="text" class="form-control" autocomplete="off" placeholder="Ship To Address" id="ExtShip" style="margin-left: 17px; width: 210px " readonly>
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label id="ESTo" style="padding-left: 30px; margin-left: 10px;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-12">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fa fa-list"></i>&nbsp;
+                                    Product List
+                                </h3>
+                                <div class="card-tools">
+                                    <ul class="nav nav-pills ml-auto">
+                                    </ul>
+                                </div>
+                            </div>
+                            <form>
+                                <div class="tab-content" id="custom-tabs-three-tabContent">
+                                    <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab" style="margin-top: -15px;">
+                                        &nbsp;
+                                        <center>
+                                            <table id="tblQuotation" class="table table-bordered table-striped" width="98%">
+                                                <thead>
+                                                    <tr>
+                                                        <th><center>SrNo.</center></th>
+                                                        <th><center>Product Name</center></th>
+                                                        <th><center>Quantity</center></th>
+                                                        <th><center>ProductPrice</center></th>
+                                                        <th><center>DiscountedPrice</center></th>
+                                                        <th><center>Position</center></th>
+                                                    </tr>
+                                                </thead>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th>Total</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </center>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Taxes and Others</h3>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-10 col-form-label">Taxes</label>
+                                            <div class="col-sm-11">
+                                                <input class="form-control" autocomplete="off" maxlength="50" id="ddlTaxes" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6" id="GST">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="col-sm-10 col-form-label">CGST</label>
+                                                    <div class="col-sm-11">
+                                                        <input class="form-control" autocomplete="off" maxlength="50" id="Txt_CGST" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="col-sm-10 col-form-label">SGST</label>
+                                                    <div class="col-sm-11">
+                                                        <input class="form-control" autocomplete="off" maxlength="50" id="Txt_SGST" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6" id="IGST">
+                                        <div class="form-group">
+                                            <label class="col-sm-10 col-form-label">IGST</label>
+                                            <div class="col-sm-11">
+                                                <input class="form-control" autocomplete="off" maxlength="50" id="Txt_IGST" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label class="col-sm-10 col-form-label">Total Tax</label>
+                                        <div class="col-sm-11">
+                                            <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="Txt_totaltax" readonly>
+                                            <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="Txt_Tc" style="display:none">
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="col-sm-10 col-form-label">Transport Cost</label>
+                                        <div class="col-sm-11">
+                                            <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" placeholder="Transport Cost" id="Txttrasport" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label class="col-sm-10 col-form-label">Installation Cost</label>
+                                        <div class="col-sm-11">
+                                            <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" placeholder="Installation Cost" id="TxtInstall" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="col-sm-10 col-form-label">Total Price(Included Taxes)</label>
+                                        <div class="col-sm-11">
+                                            <input class="form-control" autocomplete="off" maxlength="50" id="Txt_Th" readonly>
+                                            <input class="form-control" autocomplete="off" maxlength="50" id="Txt_FPrice1" style="display:none">
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="display:none">
+                                        <label class="col-sm-10 col-form-label">Total Price</label>
+                                        <div class="col-sm-11">
+                                            <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="Total" readonly>
+                                            <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="Ex" readonly>
+                                            <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="Txt_GPri" readonly>
+                                            <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="Txt_DisAmt" style="display:none">
+                                            <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="TxtPER" style="display:none">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label class="col-sm-10 col-form-label">Advance</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-11">
+                                                <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="Advance" id="Txtt_adva" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="col-sm-10 col-form-label">Balance</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-11">
+                                                <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="Txtt_bala" readonly>
+                                                <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="" id="bala" style="display:none">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true" onclick="location.href='/Home/Dashboard'" >Back</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

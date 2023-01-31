@@ -1,155 +1,250 @@
-﻿//Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
-var previewNode = document.querySelector("#template")
-previewNode.id = ""
-var previewTemplate = previewNode.parentNode.innerHTML
-previewNode.parentNode.removeChild(previewNode)
-debugger
-var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-    url: "/Product/Addimg",// Set the url
-    uploadMultiple: true,
-    maxFiles: 3,
-    maxFilesize: 3.0,
-    thumbnailWidth: 80,
-    thumbnailHeight: 80,
-    parallelUploads: 20,
-    previewTemplate: previewTemplate,
-    autoProcessQueue: false, // Make sure the files aren't queued until manually added
-    previewsContainer: "#previews", // Define the container to display the previews
-    clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
-})
-debugger
+﻿import { useEffect, useMemo, useRef, useState } from "react";
+import "./styles.css";
+import pdfMake from "pdfmake";
+import html2canvas from "html2canvas";
+import vfs from "../fonts/vfs_fonts";
+import { lookAheadData } from "./test-data";
+pdfMake.vfs = vfs;
 
+pdfMake.fonts = {
+    NimbusSans: {
+        normal: "NimbusSanL-Reg.otf",
+        bold: "NimbusSanL-Bol.otf",
+        italics: "NimbusSanL-RegIta.otf",
+        bolditalics: "NimbusSanL-BolIta.otf"
+    }
+};
 
-myDropzone.on("addedfile", function (file) {
-    // hookup the start button
-    debugger
+const parseLookAheadData = ({ scheduleData }) => {
+    return scheduleData
+        .map((d) => {
+            const milestoneData = d.recentMilestones.map((m) => {
+                return {
+                    projectName: d.projectName,
+                    phaseName: d.phaseName,
+                    completionDate: d.completionDate,
+                    totalDelay: d.totalDelay,
+                    ...m
+                };
+            });
+            return milestoneData;
+        })
+        .flat();
+};
 
-    debugger
+const parseToPdfData = (data) => {
+    return data.map((d) => {
+        const status = d.status === "IP" ? "In Progress" : "Not Started";
+        return [
+            d.projectName,
+            d.phaseName,
+            d.name,
+            d.baselineDate,
+            status,
+            d.plannedDate,
+            d.completionDate,
+            d.totalDelay
+        ];
+    });
+};
 
-    var photo = file;// attach dropzone image element
+const headers = [
+    "Project",
+    "Project Phase",
+    "Recent Milestone",
+    "Baseline",
+    "Status",
+    "Planned",
+    "Completion",
+    "Total Delay"
+];
 
-    console.log(photo)
+const docDefinitionDefault = {
+    pageSize: "A4",
+    pageOrientation: "landscape",
+    pageMargins: [40, 60, 40, 60],
+    content: [
+        {
+            text: "Look Ahead Table",
+            style: "header",
+            alignment: "center"
+        },
+        {
+            text:
+                "Input your description here, Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            style: "textBody",
+            alignment: "justify"
+        },
+        {
+            layout: "lightHorizontalLines",
+            style: "withMargin",
+            table: {
+                // headers are automatically repeated if the table spans over multiple pages
+                // you can declare how many rows should be treated as headers
+                headerRows: 1,
+                widths: ["*", "auto", 100, "*", "*", "*", "*", "*"],
 
-    debugger
-})
-
-// Update the total progress bar
-myDropzone.on("totaluploadprogress", function (progress) {
-    document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
-})
-
-myDropzone.on("sending", function (file) {
-    // Show the total progress bar when upload starts
-    document.querySelector("#total-progress").style.opacity = "1"
-    // And disable the start button
-    file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
-})
-
-// Hide the total progress bar when nothing's uploading anymore
-myDropzone.on("queuecomplete", function (progress) {
-    document.querySelector("#total-progress").style.opacity = "0"
-})
-
-// Setup the buttons for all transfers
-// The "add files" button doesn't need to be setup because the config
-// `clickable` has already been specified.
-//document.querySelector(".post .start").onclick = function () {
-//    myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
-//}
-document.querySelector("#actions .cancel").onclick = function () {
-    myDropzone.removeAllFiles(true)
-}
-
-// submit button configuration
-debugger
-//function getValues() {
-//    debugger
-
-
-//    debugger
-
-
-
-
-//    return formData;
-//}
-
-var saveProduct = function () {
-    debugger
-    var Photo = myDropzone.files;
-    console.log(photo);
-    var message = "";
-    $formData = new FormData();
-    debugger
-
-    //var Photo = document.getElementById('FileUpload');
-    //var Photo = myDropzone.files;
-    debugger
-    if (Photo.length > 0) {
-        for (var i = 0; i < Photo.length; i++) {
-            $formData.append('file-' + i, Photo.files[i]);
+                body: [
+                    [],
+                    ["Value 1", "Value 2", "Value 3", "Value 4", "", "", "", ""],
+                    [
+                        { text: "Bold value", bold: true },
+                        "Val 2",
+                        "Val 3",
+                        "Val 4",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ]
+                ]
+            }
+        }
+    ],
+    defaultStyle: {
+        font: "NimbusSans"
+    },
+    styles: {
+        withMargin: {
+            margin: [20, 20, 20, 20]
+        },
+        alignCenter: {
+            alignment: "center"
+        },
+        header: {
+            fontSize: 18,
+            bold: true
+        },
+        textBody: {
+            fontSize: 12
+        },
+        subheader: {
+            fontSize: 15,
+            bold: true
+        },
+        quote: {
+            italics: true
+        },
+        small: {
+            fontSize: 8
         }
     }
-    debugger
-    var productname = $("#txtproduct").val();
-    var productcatogery = $("#ddlcatogery option:selected").html();
-    var productcolour = $("#txtcolour").val();
-    var productprice = $("#txtprice").val();
+};
 
-    $formData.append('ProductName', productname);
-    $formData.append('ProductCatogery', productcatogery);
-    $formData.append('PC', productcolour);
-    $formData.append('ProductPrice', productprice);
+export default function App() {
+    const [url, setUrl] = useState(null);
+    const [data, setData] = useState([]);
+    const [pdfData, setPdfData] = useState([]);
+    const [docDefinition, setDocDefinition] = useState({});
 
-    $.ajax({
-        url: "/Product/SaveProduct",
-        method: "post",
-        data: $formData,
-        contentType: "application/json;charset=utf-8",
-        contentType: false,
-        processData: false,
-        success: function (response) {
-            alert("Success");
-            getProductList();
-        }
-    });
+    useEffect(() => {
+        return () => {
+            if (url !== null) {
+                URL.revokeObjectURL(url);
+            }
+        };
+    }, [url]);
+
+    const setTableBodyData = () => {
+        const template = { ...docDefinitionDefault };
+        template.content[2].table.body = [headers, ...pdfData];
+        setDocDefinition(template);
+    };
+
+    useEffect(() => {
+        const parsed = parseLookAheadData(lookAheadData);
+        const pdfData = parseToPdfData(parsed);
+        setPdfData(pdfData);
+        setData(parsed);
+    }, []);
+
+    useEffect(() => {
+        setTableBodyData();
+    }, [data]);
+
+    const create = () => {
+        const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+        pdfDocGenerator.download();
+    };
+
+    const genPdf = () => {
+        //get table html
+        const pdfTable = document.getElementById("divToPrint");
+        html2canvas(pdfTable).then(function (canvas) {
+            const imgObj = {
+                image: canvas.toDataURL(),
+                width: 600,
+                style: {
+                    alignment: "center"
+                }
+            };
+            const documentDefinition = {
+                content: [imgObj],
+                defaultStyle: {
+                    font: "NimbusSans"
+                },
+                pageSize: "A4",
+                pageOrientation: "landscape",
+                pageMargins: [40, 60, 40, 60]
+            };
+            const pdfDocGenerator = pdfMake.createPdf(documentDefinition);
+            pdfDocGenerator.download();
+        });
+    };
+
+    return (
+        <div className="App">
+            <h1>Hello CodeSandbox</h1>
+            <h2>Start editing to see some magic!</h2>
+            <button onClick={create}>Generate PDF using PDF Make</button>
+            <div>{url}</div>
+            {url && (
+                <div>
+                    <object
+                        style={{
+                            width: "100%",
+                            height: "50vh"
+                        }}
+                        data={url}
+                        type="application/pdf"
+                    >
+                        <embed src={url} type="application/pdf" />
+                    </object>
+                </div>
+            )}
+            <>
+                <div id="divToPrint">
+                    <table>
+                        <tr>
+                            {headers.map((h) => {
+                                return <th>{h}</th>;
+                            })}
+                        </tr>
+                        <tbody>
+                            {data.map((d) => {
+                                const status =
+                                    d.status === "IP" ? "In Progress" : "Not Started";
+
+                                return (
+                                    <tr>
+                                        <td>{d.projectName}</td>
+                                        <td>{d.phaseName}</td>
+                                        <td>{d.name}</td>
+                                        <td>{d.baselineDate}</td>
+                                        <td>
+                                            <div className="status-chip">{status}</div>
+                                        </td>
+                                        <td>{d.plannedDate}</td>
+                                        <td>{d.completionDate}</td>
+                                        <td>{d.totalDelay}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            </>
+            <button onClick={genPdf}>Generate PDF for Table</button>
+        </div>
+    );
 }
-//myDropzone.element.querySelector("#submit").addEventListener("click", function (e) {
-//    debugger
-//    // make sure that the form isn't actually being sent.
-//    e.preventDefault();
-//    e.stopPropagation();
-
-
-//    debugger
-//    var photo = myDropzone.files;
-//    console.log(photo);
-//    var formData = new FormData();
-//    // these image appends are getting dropzones instances
-//    formData.append("productid", $("#prodId").val()); // regular text form attachment
-//    formData.append("imgname", $("#imgName").val());// regular text form attachment
-
-//    formData.append("file", photo)
-
-//    if (photo.length > 0) {
-//        for (var i = 0; i < photo.length; i++) {
-//            formData.append("file" + i, photo[i]);
-//        }
-//    }
-//    for (var pair of formData.entries()) {
-//        console.log(pair[0] + ', ' + pair[1]);
-//    }
-//    //display formData
-
-//    $.ajax({
-//        type: 'POST',
-//        url: "/Product/Addimg",
-//        data: formData,
-//        processData: false, // required for formdata with jquery
-//        contentType: false, // required for formdata with jquery
-//        success: function (response) {
-//            console.log(response)
-//        }
-//    });
-
-//});

@@ -39,9 +39,9 @@
 <body class="hold-transition login-page">
     <div class="login-box">
 
-        <div class="card card-outline card-warning">
+        <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <a href="#" class="h1"><b>Spacewood</b> &nbsp; &nbsp;<img src="~/images/favicon.png" alt="Spacewood Logo" style="height: 40px" ;class="brand_logo" /> </a>
+                <a href="#" class="h1"><b>Spacewood</b> &nbsp; &nbsp;<img src="~/images/favicon.png" alt="Spacewood Logo" style="height: 40px " ;class="brand_logo" /> </a>
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
@@ -85,7 +85,6 @@
                             </label>
                         </div>
                     </div>
-
                 </div>
                 <div class="input-group mb-3" style="color:red">
                     @Html.ValidationMessageFor(m => m.Password)
@@ -100,7 +99,7 @@
                     </div>
                 </div>
                 <div class="social-auth-links text-center mt-2 mb-3">
-                    <b><input type="submit" value="Login" id="btnLogins" class="btn btn-warning btn-block" /></b>
+                    <b><input type="submit" value="Login" id="btnLogins" class="btn btn-secondary btn-block" /></b>
                 </div>
             </form>
                 }
@@ -111,9 +110,7 @@
 
     </div>
 
-
     <script src="~/plugins/jquery/jquery.min.js"></script>
-
     <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script src="~/dist/js/adminlte.min.js?v=3.2.0"></script>
@@ -138,7 +135,6 @@
                 $("#LoginId").val(dcrmuid);
                 $("#Password").val(dcrmpwd);
                 $("#urllink").val(url);
-
                 document.getElementById("btnLogins").click();
             }
             else {

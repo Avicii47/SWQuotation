@@ -1,15 +1,10 @@
-﻿using Newtonsoft.Json;
-using SWQuotation.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Web;
-using System.Web.UI.WebControls;
+
 
 namespace SWQuotation.Models
 {
@@ -17,6 +12,8 @@ namespace SWQuotation.Models
     {
         public string t_cuid { get; set; }
         public string t_cnam { get; set; }
+        public string To { get; set; }
+        public string Attachment { get; set; }
         public string t_cadd { get; set; }
         public string t_cmob { get; set; }
         public string t_catm { get; set; }
@@ -36,16 +33,14 @@ namespace SWQuotation.Models
         public string QuID { get; set; }
         public string Prod { get; set; }
         public string Topr { get; set; }
+
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "Cannot be in decimal")]
         public string Nou { get; set; }
         public string Diso { get; set; }
         public string ProdId { get; set; }
-        public string Position { get; set; }
-        public string SId { get; set; }
         public string TotalPrice { get; set; }
         public string Advance { get; set; }
         public string Balance { get; set; }
-        public string Catogery { get; set; }
-        public string Id { get; set; }
         public string Img { get; set; }
         public string Pincode { get; set; }
         public string City { get; set; }
@@ -73,26 +68,33 @@ namespace SWQuotation.Models
         public string DiscAmt { get; set; }
         public string NetAmt { get; set; }
         public string QuotDt { get; set; }
-        public string BCity { get; set; }
-        public string BDistrict { get; set; }
-        public string BState { get; set; }
-        public string BCountry { get; set; }
-        public string Bt_cadd { get; set; }
-        public string BAddress2 { get; set; }
-        public string BAddress3 { get; set; }
-
+        public string MobNo { get; set; }
+        public string Display1 { get; set; }
+        public string MobNo1 { get; set; }
+        public string Email1 { get; set; }
+        public string ShipCost { get; set; }
+        public string InstallCost { get; set; }
+        public string address { get; set; }
+        public string gross { get; set; }
+        public string custId { get; set; }
+        public string QuDt { get; set; }
+        public string Position { get; set; }
+        public string FDate { get; set; }
+        public string TDate { get; set; }
+        public string StateId { get; set; }
+        public string Tax { get; set; }
+      
         public string CheakCustomer(string t_cmob)
         {
             String message = "";
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
             var ReturnValue = "";
-            SqlCommand cmd = new SqlCommand("SWQuot_AddCustomer", con);
+            SqlCommand cmd = new SqlCommand("QA_AddCustomer", con);
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.AddWithValue("@t_cmob", t_cmob);
             cmd.Parameters.AddWithValue("@choice", "check");
             cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
-
 
             cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
             try
@@ -101,6 +103,39 @@ namespace SWQuotation.Models
                 con.Open();
                 cmd.ExecuteNonQuery();
 
+                Return = Convert.ToString(cmd.Parameters["@Return"].Value);
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            finally
+            {
+                con.Close();
+                ReturnValue = Return;
+            }
+            return ReturnValue;
+        }
+
+        public string cheakTaxes(string billto, string shipto)
+        {
+            String message = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            var ReturnValue = "";
+            SqlCommand cmd = new SqlCommand("QA_AddCustomer", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@billto", billto);
+            cmd.Parameters.AddWithValue("@shipto", shipto);
+            cmd.Parameters.AddWithValue("@choice", "cheakTaxes");
+            cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
+
+            cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
+            try
+            {
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
 
                 Return = Convert.ToString(cmd.Parameters["@Return"].Value);
             }
@@ -118,11 +153,12 @@ namespace SWQuotation.Models
 
         public String AddCustomer(CustomerModel customer)
         {
+            string Outparam="";
             String message = "";
             //return null;
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
             var ReturnValue = "";
-            SqlCommand cmd = new SqlCommand("SWQuot_AddCustomer", con);
+            SqlCommand cmd = new SqlCommand("QA_AddCustomer", con);
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.AddWithValue("@t_cnam", customer.t_cnam);
@@ -135,8 +171,7 @@ namespace SWQuotation.Models
             cmd.Parameters.AddWithValue("@billto", customer.Billto);
             cmd.Parameters.AddWithValue("@shipto", customer.Shipto);
             cmd.Parameters.AddWithValue("@choice", "Insert");
-            cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
-
+            cmd.Parameters.Add("@Return", SqlDbType.NVarChar,50);
             cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
             try
             {
@@ -144,8 +179,7 @@ namespace SWQuotation.Models
                 con.Open();
                 cmd.ExecuteNonQuery();
 
-                Return = cmd.Parameters["@Return"].Value.ToString();
-
+                Outparam = cmd.Parameters["@Return"].Value.ToString();
             }
             catch (Exception ex)
             {
@@ -154,7 +188,7 @@ namespace SWQuotation.Models
             finally
             {
                 con.Close();
-                ReturnValue = Return;
+                ReturnValue = Outparam;
             }
             return ReturnValue;
         }
@@ -165,7 +199,8 @@ namespace SWQuotation.Models
             //return null;
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
             var ReturnValue = "";
-            SqlCommand cmd = new SqlCommand("SWQuot_AddCustomer", con);
+            SqlCommand cmd = new SqlCommand("QA_AddCustomer", con);
+            //cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.AddWithValue("@t_cnam", customer.t_cnam);
@@ -173,13 +208,13 @@ namespace SWQuotation.Models
             cmd.Parameters.AddWithValue("@Add2", customer.Address2);
             cmd.Parameters.AddWithValue("@Add3", customer.Address3);
             cmd.Parameters.AddWithValue("@Pincode", customer.Pincode);
-            cmd.Parameters.AddWithValue("@City", customer.Landmark);
+            cmd.Parameters.AddWithValue("@City", customer.City);
             cmd.Parameters.AddWithValue("@District", customer.District); 
             cmd.Parameters.AddWithValue("@Landmark", customer.Landmark);
             cmd.Parameters.AddWithValue("@Country", customer.Country); 
             cmd.Parameters.AddWithValue("@State", customer.State);
             cmd.Parameters.AddWithValue("@choice", "AddAddress");
-            cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
+            cmd.Parameters.Add("@Return", SqlDbType.NVarChar, 50);
 
             cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
             try
@@ -209,14 +244,14 @@ namespace SWQuotation.Models
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
             var ReturnValue = "";
             //var message = "error";
-            SqlCommand cmd = new SqlCommand("SWQuot_AddtoQuot", con);
+            SqlCommand cmd = new SqlCommand("QA_AddtoQuot", con);
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.AddWithValue("@t_cuid", customer.t_cuid);
             cmd.Parameters.AddWithValue("@billto", customer.Billto);
             cmd.Parameters.AddWithValue("@shipto", customer.Shipto);
             cmd.Parameters.AddWithValue("@choice", "InsertIntoQuot");
-            cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
+            cmd.Parameters.Add("@Return", SqlDbType.NVarChar, 50);
 
             cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
 
@@ -246,7 +281,7 @@ namespace SWQuotation.Models
             List<CustomerModel> NCList = new List<CustomerModel>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
             var MobNo = t_cmob;
-            SqlCommand cmd = new SqlCommand("select * from tbl_Customers where MobNo = '" + MobNo + "'", con);
+            SqlCommand cmd = new SqlCommand("select * from swlive.dbo.ttdswc722100 where t_telp = '" + MobNo + "'", con);
             cmd.CommandType = CommandType.Text;
             cmd.CommandTimeout = 300;
             con.Open();
@@ -277,14 +312,48 @@ namespace SWQuotation.Models
             return NCList;
         }
 
-        public List<CustomerModel> GetAddress()
+        public List<CustomerModel> GetCustAdd(string AddressCode)
         {
             String message = "";
             List<CustomerModel> NCList = new List<CustomerModel>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("select * from tbl_CustomerAddress ", con);
-            cmd.CommandType = CommandType.Text;
+            var MobNo = t_cmob;
+            SqlCommand cmd = new SqlCommand("QA_Address", con);
+            cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandTimeout = 300;
+            cmd.Parameters.AddWithValue("@addresscode", AddressCode);
+            con.Open();
+            try
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    CustomerModel NCust = new CustomerModel();
+                    NCust.address = dr.GetValue(0).ToString();
+
+                    NCList.Add(NCust);
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            con.Close();
+            return NCList;
+        }
+
+        public List<CustomerModel> GetAddress(string custid)
+        {
+            String message = "";
+            List<CustomerModel> NCList = new List<CustomerModel>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("QA_AddCustomer", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 300;
+            cmd.Parameters.AddWithValue("@choice", "GetAddress");
+            cmd.Parameters.AddWithValue("@t_cnam", custid);
+            cmd.Parameters.AddWithValue("@Return", 0);
+
             con.Open();
             try
             {
@@ -301,6 +370,7 @@ namespace SWQuotation.Models
                     NCust.t_cadd = dr.GetValue(6).ToString();
                     NCust.Address2 = dr.GetValue(7).ToString();
                     NCust.Address3 = dr.GetValue(8).ToString();
+                    NCust.Pincode = dr.GetValue(9).ToString();
                     NCList.Add(NCust);
                 }
             }
@@ -317,7 +387,7 @@ namespace SWQuotation.Models
             String message = "";
             List<CustomerModel> PList = new List<CustomerModel>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("SWQuot_ProductDDL", con);
+            SqlCommand cmd = new SqlCommand("QA_ProductDDL", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandTimeout = 300;
             con.Open();
@@ -340,12 +410,45 @@ namespace SWQuotation.Models
             return PList;
         }
 
+        public List<CustomerModel> PricetList()
+        {
+            String message = "";
+            List<CustomerModel> PList = new List<CustomerModel>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("QA_ProdPriceHistory", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 300;
+            con.Open();
+            try
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    CustomerModel Product = new CustomerModel();
+                    Product.SID = dr.GetValue(0).ToString();
+                    Product.PId = dr.GetValue(1).ToString();
+                    Product.FDate = dr.GetValue(2).ToString();
+                    Product.TDate = dr.GetValue(3).ToString();
+                    Product.PPrice = dr.GetValue(4).ToString();
+                    Product.PName = dr.GetValue(5).ToString();
+                    Product.t_catm = dr.GetValue(6).ToString();
+                    PList.Add(Product);
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            con.Close();
+            return PList;
+        }
+
         public List<CustomerModel> GetCountry()
         {
             String message = "";
             List<CustomerModel> PList = new List<CustomerModel>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("select * from tbl_Country", con);
+            SqlCommand cmd = new SqlCommand("select t_ccty, t_dsca from swlive.dbo.ttcmcs010100 order by t_dsca asc", con);
             cmd.CommandType = CommandType.Text;
             cmd.CommandTimeout = 300;
             con.Open();
@@ -368,13 +471,13 @@ namespace SWQuotation.Models
             return PList;
         }
 
-        public List<CustomerModel> StateList()
+        public List<CustomerModel> StateList(string countID)
         {
             String message = "";
             List<CustomerModel> PList = new List<CustomerModel>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("SWQuot_StateDDL", con);
-            cmd.CommandType = CommandType.StoredProcedure;
+            SqlCommand cmd = new SqlCommand("select t_cste,t_dsca from swlive.dbo.ttcmcs143100 where t_ccty = '" + countID + "' order by t_dsca", con);
+            cmd.CommandType = CommandType.Text;
             cmd.CommandTimeout = 300;
             con.Open();
             try
@@ -401,7 +504,7 @@ namespace SWQuotation.Models
             String message = "";
             List<CustomerModel> PList = new List<CustomerModel>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("select TaxCode, TaxName , TaxPer from tbl_Taxes ", con);
+            SqlCommand cmd = new SqlCommand("select t_txcd, t_name , t_perc from swlive.dbo.ttdswc726100 ", con);
             //SqlCommand cmd = new SqlCommand("select TaxName , TaxPer from tbl_Taxes ", con);
             cmd.CommandType = CommandType.Text;
             cmd.CommandTimeout = 300;
@@ -431,7 +534,7 @@ namespace SWQuotation.Models
             String message = "";
             List<CustomerModel> Price = new List<CustomerModel>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("SWQuot_Taxes", con);
+            SqlCommand cmd = new SqlCommand("QA_Taxes", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandTimeout = 300;
             cmd.Parameters.AddWithValue("@getcode", tax);
@@ -459,9 +562,8 @@ namespace SWQuotation.Models
             String message = "";
             List<CustomerModel> PList = new List<CustomerModel>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("select CityName from tbl_City where StateId = '" + StateId + "'", con);
-            //SqlCommand cmd = new SqlCommand("select * from tbl_Customers where MobNo = '" + MobNo + "'", con);
-            
+            SqlCommand cmd = new SqlCommand("select t_city,t_cste from swlive.dbo.ttccom139100 where t_cste = '" + StateId + "' order by t_city", con);
+           
             cmd.CommandType = CommandType.Text;
             cmd.CommandTimeout = 300;
             con.Open();
@@ -472,6 +574,7 @@ namespace SWQuotation.Models
                 {
                     CustomerModel Product = new CustomerModel();
                     Product.City = dr.GetValue(0).ToString();
+                    Product.SID = dr.GetValue(1).ToString();
                     PList.Add(Product);
                 }
             }
@@ -489,7 +592,7 @@ namespace SWQuotation.Models
             List<CustomerModel> Price = new List<CustomerModel>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
             //var ProductId = PId;
-            SqlCommand cmd = new SqlCommand("SWQuot_GetProductPrice", con);
+            SqlCommand cmd = new SqlCommand("QA_GetProductPrice", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandTimeout = 300;
             con.Open();
@@ -513,12 +616,48 @@ namespace SWQuotation.Models
             return Price;
         }
 
+        public List<CustomerModel> AddressDetails(string AddressCode)
+        {
+            String message = "";
+            List<CustomerModel> Price = new List<CustomerModel>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("select * from swlive.dbo.ttdswc723100 where t_cadr = '" + AddressCode + "'", con);
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandTimeout = 300;
+            con.Open();
+            try
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    CustomerModel PPrice = new CustomerModel();
+                    PPrice.AddressCode = dr.GetValue(0).ToString();
+                    PPrice.t_cnam = dr.GetValue(1).ToString();
+                    PPrice.City = dr.GetValue(2).ToString();
+                    PPrice.District = dr.GetValue(3).ToString();
+                    PPrice.Country = dr.GetValue(4).ToString();
+                    PPrice.address = dr.GetValue(5).ToString();
+                    PPrice.Address2 = dr.GetValue(6).ToString();
+                    PPrice.Address3 = dr.GetValue(7).ToString();
+                    PPrice.Pincode = dr.GetValue(8).ToString();
+                    PPrice.Country = dr.GetValue(9).ToString();
+                    Price.Add(PPrice);
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            con.Close();
+            return Price;
+        }
+
         public String AddtoLiner(CustomerModel customer)
         {
             String message = "";
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
             var ReturnValue = "";
-            SqlCommand cmd = new SqlCommand("SWQuot_AddtoLiner", con);
+            SqlCommand cmd = new SqlCommand("QA_AddtoLiner", con);
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.AddWithValue("@QuotID", customer.QuID);
@@ -529,12 +668,8 @@ namespace SWQuotation.Models
             cmd.Parameters.AddWithValue("@Discount", customer.Diso);
             cmd.Parameters.AddWithValue("@DiscountN", customer.DisoN);
             cmd.Parameters.AddWithValue("@Amt", customer.Disoprice);
-            cmd.Parameters.AddWithValue("@TaxCode", customer.TaxesCode);
-            cmd.Parameters.AddWithValue("@CGST", customer.CGST);
-            cmd.Parameters.AddWithValue("@SGST", customer.SGST);
-            cmd.Parameters.AddWithValue("@IGST", customer.IGST);
-            cmd.Parameters.AddWithValue("@Taxes", customer.Taxes);
             cmd.Parameters.AddWithValue("@FinalPrice", customer.FinalPrice);
+            cmd.Parameters.AddWithValue("@choice","add");
 
             try
             {
@@ -560,10 +695,13 @@ namespace SWQuotation.Models
             var QuatId = QuotId;
             List<CustomerModel> APList = new List<CustomerModel>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("select Position,ProductName,Qty,DicountPrice,Taxes,FinalPrice from tbl_QuotLiner where QuatId = '" + QuatId + "'", con);
-            cmd.CommandType = CommandType.Text;
+            SqlCommand cmd = new SqlCommand("QA_AddtoQuot", con);
+            cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandTimeout = 300;
             con.Open();
+            cmd.Parameters.AddWithValue("@QuotID", QuotId);
+            cmd.Parameters.AddWithValue("@choice", "AddedProdList");
+            cmd.Parameters.AddWithValue("@Return", "");
             try
             {
                 SqlDataReader dr = cmd.ExecuteReader();
@@ -571,12 +709,12 @@ namespace SWQuotation.Models
                 {
                     CustomerModel AdPo = new CustomerModel();
 
-                    AdPo.Position = dr.GetValue(0).ToString();
-                    AdPo.PName = dr.GetValue(1).ToString();
+                    AdPo.PName = dr.GetValue(0).ToString();
+                    AdPo.Position = dr.GetValue(1).ToString();
                     AdPo.PQty = dr.GetValue(2).ToString();
-                    AdPo.Diso = dr.GetValue(3).ToString();
-                    AdPo.Taxes = dr.GetValue(4).ToString();
-                    AdPo.TPrice = dr.GetValue(5).ToString();
+                    AdPo.PPrice = dr.GetValue(3).ToString();
+                    AdPo.TPrice = dr.GetValue(4).ToString();
+                    AdPo.Nou = dr.GetValue(5).ToString();
 
                     APList.Add(AdPo);
                 }
@@ -586,7 +724,48 @@ namespace SWQuotation.Models
                 message = ex.Message.ToString() + "Error.";
             }
             con.Close();
-            //return dr;
+            return APList;
+        }
+
+        public List<CustomerModel> Details(string QuotId ,string Position)
+        {
+            String message = "";
+            var QuatId = QuotId;
+            List<CustomerModel> APList = new List<CustomerModel>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("QA_AddtoQuot", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 300;
+            con.Open();
+            cmd.Parameters.AddWithValue("@QuotID", QuotId);
+            cmd.Parameters.AddWithValue("@pono", Position);
+            cmd.Parameters.AddWithValue("@choice", "getDetails");
+            cmd.Parameters.AddWithValue("@Return", "");
+            try
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    CustomerModel AdPo = new CustomerModel();
+
+                    AdPo.PName = dr.GetValue(0).ToString();
+                    AdPo.Position = dr.GetValue(1).ToString();
+                    AdPo.ProdId = dr.GetValue(2).ToString();
+                    AdPo.PQty = dr.GetValue(3).ToString();
+                    AdPo.PPrice = dr.GetValue(4).ToString();
+                    AdPo.TPrice = dr.GetValue(5).ToString();
+                    AdPo.Diso = dr.GetValue(6).ToString();
+                    AdPo.DisoN = dr.GetValue(7).ToString();
+                    AdPo.FinalPrice = dr.GetValue(8).ToString();
+
+                    APList.Add(AdPo);
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            con.Close();
             return APList;
         }
 
@@ -595,14 +774,21 @@ namespace SWQuotation.Models
             String message = "";
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
             var ReturnValue = "";
-            SqlCommand cmd = new SqlCommand("SWQuot_AddtoQuot", con);
+            SqlCommand cmd = new SqlCommand("QA_AddtoQuot", con);
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.AddWithValue("@QuotID", customer.QuotId);
             cmd.Parameters.AddWithValue("@advance", customer.Advance);
             cmd.Parameters.AddWithValue("@balance", customer.Balance);
-            cmd.Parameters.AddWithValue("@totalAmount", customer.TotalPrice);
-            cmd.Parameters.AddWithValue("@tax", customer.Taxes);
+            cmd.Parameters.AddWithValue("@cgst", customer.CGST);
+            cmd.Parameters.AddWithValue("@sgst", customer.SGST);
+            cmd.Parameters.AddWithValue("@igst", customer.IGST);
+            cmd.Parameters.AddWithValue("@taxcode", customer.Taxper);
+            cmd.Parameters.AddWithValue("@taxprice", customer.Taxes);
+            cmd.Parameters.AddWithValue("@DiscAmt", customer.Diso);
+            cmd.Parameters.AddWithValue("@shipCost", customer.ShipCost);
+            cmd.Parameters.AddWithValue("@InstallCost", customer.InstallCost);
+            cmd.Parameters.AddWithValue("@Total", customer.Topr); 
             cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
             cmd.Parameters.AddWithValue("@choice", "Update");
             cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
@@ -613,8 +799,6 @@ namespace SWQuotation.Models
                 con.Open();
                 cmd.ExecuteNonQuery();
 
-                Return = cmd.Parameters["@Return"].Value.ToString();
-
             }
             catch (Exception ex)
             {
@@ -623,20 +807,22 @@ namespace SWQuotation.Models
             finally
             {
                 con.Close();
+                Return = customer.QuotId;
                 ReturnValue = Return;
             }
             return ReturnValue;
         }
 
-        public List<CustomerModel> CustQuot(string QuotId)
+        public List<CustomerModel> CustQuot(string QuotId, string Test)
         {
             String message = "";
             List<CustomerModel> NList = new List<CustomerModel>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("SWQuot_CustomerQuot", con);
+            SqlCommand cmd = new SqlCommand("QA_CustomerQuot", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandTimeout = 300;
             cmd.Parameters.AddWithValue("@Quat", QuotId);
+            cmd.Parameters.AddWithValue("@Id", Test);
             cmd.Parameters.AddWithValue("@choice", "GetList");
             con.Open();
             try
@@ -649,19 +835,24 @@ namespace SWQuotation.Models
                     NCList.t_cuid = dr.GetValue(1).ToString();
                     NCList.QuotDt = dr.GetValue(2).ToString();
                     NCList.NetAmt = dr.GetValue(3).ToString();
-                    NCList.Taxes = dr.GetValue(4).ToString();
-                    NCList.GAmt = dr.GetValue(5).ToString();
-                    NCList.Diso = dr.GetValue(6).ToString();
-                    NCList.TotalPrice = dr.GetValue(7).ToString();
-                    NCList.Advance = dr.GetValue(8).ToString();
-                    NCList.Balance = dr.GetValue(9).ToString();
-                    NCList.t_cnam = dr.GetValue(10).ToString();
-                    NCList.t_cmob = dr.GetValue(11).ToString();
-                    NCList.t_cmai = dr.GetValue(12).ToString();
-                    NCList.t_cdob = dr.GetValue(13).ToString();
-                    NCList.GST = dr.GetValue(14).ToString();
-                    NCList.Billto = dr.GetValue(15).ToString();
-                    NCList.Shipto = dr.GetValue(16).ToString();
+                    NCList.GAmt = dr.GetValue(4).ToString();
+                    NCList.Diso = dr.GetValue(5).ToString();
+                    NCList.Taxes = dr.GetValue(6).ToString();
+                    NCList.ShipCost = dr.GetValue(7).ToString();
+                    NCList.InstallCost = dr.GetValue(8).ToString();
+                    NCList.TotalPrice = dr.GetValue(9).ToString();
+                    NCList.Advance = dr.GetValue(10).ToString();
+                    NCList.Balance = dr.GetValue(11).ToString();
+                    NCList.t_cnam = dr.GetValue(12).ToString();
+                    NCList.t_cmob = dr.GetValue(13).ToString();
+                    NCList.t_cmai = dr.GetValue(14).ToString();
+                    NCList.t_cdob = dr.GetValue(15).ToString();
+                    NCList.GST = dr.GetValue(16).ToString();
+                    NCList.MobNo = dr.GetValue(17).ToString();
+                    NCList.Billto = dr.GetValue(18).ToString();
+                    NCList.Shipto = dr.GetValue(19).ToString();
+                    NCList.MobNo1 = dr.GetValue(20).ToString();
+
 
                     NList.Add(NCList);
                 }
@@ -680,7 +871,7 @@ namespace SWQuotation.Models
             String message = "";
             List<CustomerModel> NList = new List<CustomerModel>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("SWQuot_CustomerQuot", con);
+            SqlCommand cmd = new SqlCommand("QA_CustomerQuot", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandTimeout = 300;
             cmd.Parameters.AddWithValue("@Quat", QuotId);
@@ -697,10 +888,10 @@ namespace SWQuotation.Models
                     NCList.Img = dr.GetValue(2).ToString();
                     NCList.PCol = dr.GetValue(3).ToString();
                     NCList.PQty = dr.GetValue(4).ToString();
-                    NCList.Diso = dr.GetValue(5).ToString();
-                    NCList.Taxes = dr.GetValue(6).ToString();
-                    NCList.TotalPrice = dr.GetValue(7).ToString();
-
+                    NCList.TotalPrice = dr.GetValue(5).ToString();
+                    NCList.Position = dr.GetValue(6).ToString();
+                    NCList.Prod = dr.GetValue(7).ToString();
+                    NCList.Nou = dr.GetValue(8).ToString(); ;
                     NList.Add(NCList);
                 }
             }
@@ -712,5 +903,351 @@ namespace SWQuotation.Models
             con.Close();
             return NList;
         }
+
+        public List<CustomerModel> GetFooter()
+        {
+            String message = "";
+            List<CustomerModel> NList = new List<CustomerModel>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("select t_dnam,t_telp,t_emai from swlive.dbo.ttdswc728100  ", con);
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandTimeout = 300;
+            con.Open();
+            try
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    CustomerModel NCList = new CustomerModel();
+
+                    NCList.Display1 = dr.GetValue(0).ToString();
+                    NCList.MobNo1 = dr.GetValue(1).ToString();
+                    NCList.Email1 = dr.GetValue(2).ToString();
+                    NList.Add(NCList);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            con.Close();
+            return NList;
+        }
+
+        public List<CustomerModel> QuotDetail(string QuotId)
+        {
+            String message = "";
+            List<CustomerModel> PList = new List<CustomerModel>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("[QA_CustomerQuot]", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 300;
+            cmd.Parameters.AddWithValue("@Quat", QuotId);
+            cmd.Parameters.AddWithValue("@choice", "Details");
+            con.Open();
+            try
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    CustomerModel Role = new CustomerModel();
+                    Role.QuotId = dr.GetValue(0).ToString();
+                    Role.custId = dr.GetValue(1).ToString();
+                    Role.QuDt = dr.GetValue(2).ToString();
+                    Role.Billto = dr.GetValue(3).ToString();
+                    Role.Shipto = dr.GetValue(4).ToString();
+                    Role.gross = dr.GetValue(5).ToString();
+                    Role.DiscAmt = dr.GetValue(6).ToString();
+                    Role.NetAmt = dr.GetValue(7).ToString();
+                    Role.TotalPrice = dr.GetValue(8).ToString();
+                    Role.Advance = dr.GetValue(9).ToString();
+                    Role.Balance = dr.GetValue(10).ToString();
+                    Role.TaxCode = dr.GetValue(11).ToString();
+                    Role.Tax = dr.GetValue(12).ToString();
+                    Role.CGST = dr.GetValue(13).ToString();
+                    Role.SGST = dr.GetValue(14).ToString();
+                    Role.IGST = dr.GetValue(15).ToString();
+                    Role.Taxes = dr.GetValue(16).ToString();
+                    Role.ShipCost = dr.GetValue(17).ToString();
+                    Role.InstallCost = dr.GetValue(18).ToString();
+                    Role.t_cnam = dr.GetValue(19).ToString();
+                    Role.t_cmob = dr.GetValue(20).ToString();
+                    Role.MobNo = dr.GetValue(21).ToString();
+                    Role.Email1 = dr.GetValue(22).ToString();
+                    Role.t_cdob = dr.GetValue(23).ToString();
+                    Role.GST = dr.GetValue(24).ToString();
+                    Role.TaxName = dr.GetValue(25).ToString();
+
+
+                    PList.Add(Role);
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            con.Close();
+            return PList;
+        }
+
+        public string DeleteQuotProduct(CustomerModel model)
+        {
+            String message = "";
+            QuotId = model.QuotId;
+            Position = model.Position;
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("QA_CustomerQuot", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 300;
+            cmd.Parameters.AddWithValue("@Quat", QuotId);
+            cmd.Parameters.AddWithValue("@Position", Position);
+            cmd.Parameters.AddWithValue("@choice", "DeleteProduct");
+            try
+            {
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            finally
+            {
+                con.Close();
+            }
+            return message;
+        }
+
+        public string DeleteADD(string AddressCode)
+        {
+            String message = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("QA_EditAddress", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 300;
+            cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
+            cmd.Parameters.AddWithValue("@Address", AddressCode);
+            cmd.Parameters.AddWithValue("@choice", "Delete");
+
+            cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
+            try
+            {
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+
+                Return = Convert.ToString(cmd.Parameters["@Return"].Value);
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            finally
+            {
+                con.Close();
+            }
+            return Return;
+        }
+
+        public string EditQuot(CustomerModel customer)
+        {
+            String message = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            var ReturnValue = "";
+            SqlCommand cmd = new SqlCommand("QA_AddtoQuot", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            try
+            {
+                cmd.Parameters.AddWithValue("@QuotID", customer.QuotId);
+                cmd.Parameters.AddWithValue("@advance", customer.Advance);
+                cmd.Parameters.AddWithValue("@balance", customer.Balance);
+                cmd.Parameters.AddWithValue("@cgst", customer.CGST);
+                cmd.Parameters.AddWithValue("@sgst", customer.SGST);
+                cmd.Parameters.AddWithValue("@igst", customer.IGST);
+                cmd.Parameters.AddWithValue("@taxcode", customer.Taxper);
+                cmd.Parameters.AddWithValue("@taxprice", customer.Taxes);
+                cmd.Parameters.AddWithValue("@DiscAmt", customer.Diso);
+                cmd.Parameters.AddWithValue("@shipCost", customer.ShipCost);
+                cmd.Parameters.AddWithValue("@InstallCost", customer.InstallCost);
+                cmd.Parameters.AddWithValue("@Total", customer.Topr);
+                cmd.Parameters.AddWithValue("@billto", customer.Billto);
+                cmd.Parameters.AddWithValue("@shipto", customer.Shipto);
+                cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
+                cmd.Parameters.AddWithValue("@choice", "Edit");
+                cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
+
+
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+                return ReturnValue;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            return ReturnValue;
+        }
+
+        public string EditADD(string Add1, string Add2, string Add3, string Country, string City, string Dist, string Pin, string State)
+        {
+            String message = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            var ReturnValue = "";
+            SqlCommand cmd = new SqlCommand("[QA_EditAddress]", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            try
+            {
+                cmd.Parameters.AddWithValue("@city", City);
+                cmd.Parameters.AddWithValue("@district", Dist);
+                cmd.Parameters.AddWithValue("@state", State);
+                cmd.Parameters.AddWithValue("@country", Country);
+                cmd.Parameters.AddWithValue("@Add1", Add1);
+                cmd.Parameters.AddWithValue("@Add2", Add2);
+                cmd.Parameters.AddWithValue("@Add3", Add3);
+                cmd.Parameters.AddWithValue("@Pincode",Pin);
+                cmd.Parameters.AddWithValue("@choice", "Edit");
+
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+                return ReturnValue;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            return ReturnValue;
+        }
+
+        public string Editproduct(string QuotId, string Postion,string Discprice,string No,string Diso,string DisoN, string dis, string price)
+        {
+            String message = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            var ReturnValue = "";
+            SqlCommand cmd = new SqlCommand("QA_EditProduct", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Quat", QuotId);
+            cmd.Parameters.AddWithValue("@position", Postion);
+     
+            try
+            {
+                cmd.Parameters.AddWithValue("@DicoPer", Diso);
+                cmd.Parameters.AddWithValue("@Qty", Discprice);
+                cmd.Parameters.AddWithValue("@totalprice", No);
+                cmd.Parameters.AddWithValue("@DiscountN", DisoN);
+                cmd.Parameters.AddWithValue("@Discount", dis);
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+                return ReturnValue;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            return ReturnValue;
+        }
+
+        public string Approved(string QuotId)
+        {
+            String message = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("QA_AddtoQuot", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 300;
+            cmd.Parameters.AddWithValue("@QuotId", QuotId);
+            cmd.Parameters.AddWithValue("@choice", "Approved");
+            cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
+            cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
+            try
+            {
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            finally
+            {
+                con.Close();
+            }
+            return message;
+        }
+
+        public string DeleteQuot(string QuotId)
+        {
+            String ReturnValue = "";
+            String message = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("QA_AddtoQuot", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 300;
+            cmd.Parameters.AddWithValue("@QuotId", QuotId);
+            cmd.Parameters.AddWithValue("@choice", "Delete");
+            cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
+            cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
+            try
+            {
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+
+                Return = Convert.ToString(cmd.Parameters["@Return"].Value);
+
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            finally
+            {
+                con.Close();
+                ReturnValue = Return;
+            }
+            return ReturnValue;
+        }
+
+        public string cheakforedit(string QuotId)
+        {
+            String ReturnValue = "";
+            String message = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("QA_AddtoQuot", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 300;
+            cmd.Parameters.AddWithValue("@QuotId", QuotId);
+            cmd.Parameters.AddWithValue("@choice", "CheckEdit");
+            cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
+            cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
+            try
+            {
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+
+                Return = Convert.ToString(cmd.Parameters["@Return"].Value);
+
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            finally
+            {
+                con.Close();
+                ReturnValue = Return;
+            }
+            return ReturnValue;
+        }
+
+        
     }
 }
