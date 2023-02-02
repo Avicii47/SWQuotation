@@ -91,8 +91,7 @@ namespace SWQuotation.Controllers
 
                     ViewBag.Prod = Prod.Name;
                     //return PartialView("UserDetailInView", Prod);
-                }
-                
+                }        
             }
             catch (Exception ex)
             {
@@ -178,9 +177,5 @@ namespace SWQuotation.Controllers
                 return Json(new { ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
-
-
-
-
     }
 }

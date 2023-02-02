@@ -415,23 +415,22 @@ namespace SWQuotation.Controllers
 
             if (file.Exists)//check file exsit or not  
             {
-                
                 using (var fsa = new FileStream(fileName, FileMode.Create))
                 using (var writer = new BinaryWriter(fsa))
                 {
                     writer.Write(pdfBinary, 0, pdfBinary.Length);
                     writer.Close();
                 }
-
                 var messages = "Mail Send!";
                 try
                 {
-
-
                     //var img= "<img src='~/images/loginlogo.png' />";
                     MailMessage mail = new MailMessage();
-                    SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-                    mail.From = new MailAddress("gadpayarel@gmail.com");
+                    SmtpClient SmtpServer = new SmtpClient("mail.spacewood.in");
+                    
+                    //SmtpServer.EnableSsl = false;
+                    SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    mail.From = new MailAddress("exp.ngp@spacewood.in");
                     mail.To.Add(data.Email);
                     mail.Subject = "Spacewood Quotation";
                     mail.Body = "Hi " + data.Name + "," + " This is the requested Quotation " + " Thanks And Regards " + " Spacewood ";
@@ -441,8 +440,8 @@ namespace SWQuotation.Controllers
                     mail.Attachments.Add(attachment);
 
                     SmtpServer.Port = 587;
-                    SmtpServer.Credentials = new System.Net.NetworkCredential("gadpayarel@gmail.com", "jmbfdonvvmostemb");
-                    SmtpServer.EnableSsl = true;
+                    SmtpServer.Credentials = new System.Net.NetworkCredential("exp.ngp@spacewood.in", "dYVK^Mbe8q#m");
+                    SmtpServer.EnableSsl = false;
 
                     SmtpServer.Send(mail);
                     return Json(new { Response = messages }, JsonRequestBehavior.AllowGet);
@@ -454,39 +453,42 @@ namespace SWQuotation.Controllers
             }
             else
             {
-            using (var fsa = new FileStream(fileName, FileMode.Create))
-            using (var writer = new BinaryWriter(fsa))
-            {
-               writer.Write(pdfBinary, 0, pdfBinary.Length);
-               writer.Close();
-            }
+                 using (var fsa = new FileStream(fileName, FileMode.Create))
+                 using (var writer = new BinaryWriter(fsa))
+                 {
+                    writer.Write(pdfBinary, 0, pdfBinary.Length);
+                    writer.Close();
+                 }
             
-            var message = "Mail Send!";
-            try
-            {
-                //var img= "<img src='~/images/loginlogo.png' />";
-                MailMessage mail = new MailMessage();
-                SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-                mail.From = new MailAddress("gadpayarel@gmail.com");
-                mail.To.Add(data.Email);
-                mail.Subject = "Spacewood Quotation";
-                mail.Body = "Hi " + data.Name +","+" This is the requested Quotation " + " Thanks And Regards " + " Spacewood ";
-                
-                System.Net.Mail.Attachment attachment;
-                attachment = new Attachment(dir + "/" + data.quot);
-                mail.Attachments.Add(attachment);
+                 var messages = "Mail Send!";
+                 try
+                 {
+                    //var img= "<img src='~/images/loginlogo.png' />";
+                    MailMessage mail = new MailMessage();
+                    SmtpClient SmtpServer = new SmtpClient("mail.spacewood.in");
 
-                SmtpServer.Port = 587;
-                SmtpServer.Credentials = new System.Net.NetworkCredential("gadpayarel@gmail.com", "jmbfdonvvmostemb");
-                SmtpServer.EnableSsl = true;
+                    //SmtpServer.EnableSsl = false;
+                    SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    mail.From = new MailAddress("exp.ngp@spacewood.in");
+                    mail.To.Add(data.Email);
+                    mail.Subject = "Spacewood Quotation";
+                    mail.Body = "Hi " + data.Name + "," + " This is the requested Quotation " + " Thanks And Regards " + " Spacewood ";
 
-                SmtpServer.Send(mail);
-                return Json(new { Response = message }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception Ex)
-            {
-                return Json(new { Ex.Message }, JsonRequestBehavior.AllowGet);
-            }
+                    System.Net.Mail.Attachment attachment;
+                    attachment = new Attachment(dir + "/" + data.quot);
+                    mail.Attachments.Add(attachment);
+
+                    SmtpServer.Port = 587;
+                    SmtpServer.Credentials = new System.Net.NetworkCredential("exp.ngp@spacewood.in", "dYVK^Mbe8q#m");
+                    SmtpServer.EnableSsl = false;
+
+                    SmtpServer.Send(mail);
+                    return Json(new { Response = messages }, JsonRequestBehavior.AllowGet);
+                 }
+                    catch (Exception Ex)
+                 {
+                    return Json(new { Ex.Message }, JsonRequestBehavior.AllowGet);
+                 }
             }
         }
 
@@ -564,73 +566,6 @@ namespace SWQuotation.Controllers
             }
         }
 
-
-        [HttpPost]
-        public ActionResult Export(CustomerModel data)
-        {
-            //create pdf
-            var pdfBinary = Convert.FromBase64String(data.Attachment);
-            var dir = Server.MapPath("~/PDF");
-
-            if (!Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
-
-            var fileName = dir + "\\PDFnMail-" + DateTime.Now.ToString("yyyyMMdd-HHMMss") + ".pdf";
-
-            // write content to the pdf
-            using (var fs = new FileStream(fileName, FileMode.Create))
-            using (var writer = new BinaryWriter(fs))
-            {
-                writer.Write(pdfBinary, 0, pdfBinary.Length);
-                writer.Close();
-            }
-
-            //Send mail
-            var status = SendMail(fileName, data.To);
-
-            //Delete file from file system
-            //System.IO.File.Delete(fileName);
-
-            //Return result to client
-            return Json(status ? new { result = "success" } : new { result = "failed" });
-        }
-
-        private static bool SendMail(string filePath, string recipient)
-        {
-
-            using (var client = new SmtpClient())
-            using (var mail = new MailMessage())
-            {
-                mail.To.Add(recipient);
-                mail.Subject = "Hi";
-                mail.Body = "PFA";
-                var attachment = new Attachment(filePath);
-                mail.Attachments.Add(attachment);
-
-                //MailMessage mail = new MailMessage();
-                SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-                //System.Net.Mail.Attachment attachment;
-                //attachment = new Attachment(dir + "/" + data.quot);
-                mail.Attachments.Add(attachment);
-
-                SmtpServer.Port = 587;
-                SmtpServer.Credentials = new System.Net.NetworkCredential("gadpayarel@gmail.com", "jmbfdonvvmostemb");
-                SmtpServer.EnableSsl = true;
-
-                SmtpServer.Send(mail);
-                //return Json(new { Response = message }, JsonRequestBehavior.AllowGet);
-                try
-                {
-                    client.Send(mail);
-                    return true;
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-
-            }
-
-        }
+        
     }
 }

@@ -1,4 +1,5 @@
 ﻿$(document).ready(function () {
+    debugger
     var url = window.location.href;
     var split = url.split("QuotId=");
     var currentURL = split[1];
@@ -11,6 +12,7 @@
 });
 
 function getQueryParams(url) {
+    debugger
     const paramArr = url.slice(url.indexOf('?') + 1).split('&');
     const params = {};
     paramArr.map(param => {
@@ -27,7 +29,6 @@ function getQueryParams(url) {
 function CustQuot(p,ID) {
     debugger
     let url = "../Customers/CustQuots";
-    /*let url = "../Customers/CustQuot";*/
     $.ajax({
         type: "POST",
         url: url,
@@ -73,7 +74,6 @@ function CustQuot(p,ID) {
 
 function Footer() {
     let url = "../Customers/GetFooter";
-   /* let url = "../Customers/GetFooter";*/
     $.ajax({
         type: "POST",
         url: url,
@@ -106,7 +106,6 @@ function Footer() {
 function GetQuotProduct(p) {
     debugger
     let url = "../Customers/GetQuotProduct";
-    /*let url = "../Customers/GetQuotProduct";*/
     $.ajax({
         type: "POST",
         url: url,
