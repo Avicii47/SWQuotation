@@ -53,7 +53,6 @@ namespace SWQuotation.Models
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@t_usid", strUsername);
             cmd.Parameters.AddWithValue("@t_pass", strPassword);
-            
             try
             {
                 con.Open();

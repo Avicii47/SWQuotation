@@ -12,6 +12,7 @@ function getQuotList() {
         dataType: "json",
         success: QuotList,
         failure: function (response) {
+            
             alert(response.d);
         },
         error: function (response) {
@@ -21,6 +22,8 @@ function getQuotList() {
 }
 
 function QuotList(response) {
+    debugger
+    var dt = response[0].QuDt;
     var datatableVariable = $("#tblQuot").DataTable(
         {
             "responsive": false, "lengthChange": true, "autoWidth": false,
@@ -62,7 +65,12 @@ function QuotList(response) {
                 },
                 { 'data': 'QuotId', 'title': 'Quotation Id' },
                 { 'data': 'CustId', 'title': 'Customer Name' },
-                { 'data': 'QuDt', 'title': 'Quotation Date' },
+                {
+                    'data': 'QuDt', 'title': 'Quotation Date', "render": function (QuDt) {
+                        return QuDt = dt.split(" ")[0];
+                    },
+
+                },
                 { 'data': 'Total', 'title': 'Total Amount' },
                 { 'data': 'Adv', 'title': 'Advance' },
                 { 'data': 'Balance', 'title': 'Balance' },

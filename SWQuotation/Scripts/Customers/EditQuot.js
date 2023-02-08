@@ -390,7 +390,7 @@ function bindtotable(response) {
                 { 'data': 'Nou', 'title': 'Units' },
                 { 'data': 'PQty', 'title': 'Quantity' },
                 
-                { 'data': 'PPrice', 'title': 'Product Price' },
+                { 'data': 'PPrice', 'title': 'Per Product Price' },
                 { 'data': 'TPrice', 'title': 'Discounted Price' },
                
                 
@@ -1887,7 +1887,15 @@ var EditP = function () {
     debugger
     var quotId = $("#QuotId").val()
     var postion = $("#postion").val()
-    var noofunits = $("#No").val();
+    /*var noofunits = $("#No").val();*/
+    if ($("#No").val() == "0" || $("#No").val() == "") {
+        toastr.error('Select no of units');
+        $("#No").val();
+        return false;
+    }
+    else
+        var noofunits = $("#No").val();
+
     var price = $("#TPrice").val();
     if ($("#Txt_Disprice").val() != "")
         var discprice = $("#Txt_Disprice").val();

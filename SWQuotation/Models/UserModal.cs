@@ -23,6 +23,7 @@ namespace SWQuotation.Models
         public string QuotId { get; set; }
         public string CustId { get; set; }
         public string QuDt { get; set; }
+        public string QuDte { get; set; }
         public string BillTo { get; set; }
         public string ShipTo { get; set; }
         public string Gross { get; set; }
@@ -122,6 +123,8 @@ namespace SWQuotation.Models
                     Role.QuotId = dr.GetValue(0).ToString();
                     Role.CustId = dr.GetValue(1).ToString();
                     Role.QuDt = dr.GetValue(2).ToString();
+                    //Role.QuDte = String.Format($"{QuDt:d}");
+
                     Role.Total = dr.GetValue(3).ToString();
                     Role.Adv = dr.GetValue(4).ToString();
                     Role.Balance = dr.GetValue(5).ToString();

@@ -113,10 +113,8 @@ function SendMail() {
     };
 
     html2pdf().set(opt).from(element).toPdf().output('datauristring').then(function (pdfAsString) {
-        debugger
         var pdfData = pdfAsString.trim();
         var base64result = pdfData.split(',')[1];
-        debugger
         var email = $("#Email").html();
         var quotId = $('#QuotId').html();
         var name = $('#CustName').html();
@@ -166,14 +164,14 @@ function GetQuotProduct(QuotId) {
             $("#tblQuotProduts tbody").empty();
             $.each(response, function (index, elementValue) {
                 debugger
-                html += "<tr><td>" + "</td><td>" + elementValue.PName + "</td><td>" +
-                    '<center>' + elementValue.PPrice + '</center>' +
-                    "</td><td>" + '<center>' + elementValue.PCol + '</center>' +
-                    "</td><td>" + '<center>' + elementValue.Nou + '</center>' +
-                    "</td><td>" + '<center>' + elementValue.PQty + '</center>' +
-                    "</td><td>" + '<center>' + elementValue.TotalPrice + '</center>' +
-                    "</td><td>" + '<center><img src="/Uploads/' + elementValue.Img +
-                    '" style="height:120px;width:120px;"' + "</td></tr>";
+                html += "<tr><td>" + "</td><td>" + elementValue.PName +
+                                     "</td><td>" + '<center>' + elementValue.PPrice + '</center>' +
+                                     "</td><td>" + '<center>' + elementValue.PCol + '</center>' +
+                                     "</td><td>" + '<center>' + elementValue.Nou + '</center>' +
+                                     "</td><td>" + '<center>' + elementValue.PQty + '</center>' +
+                                     "</td><td>" + '<center>' + elementValue.TotalPrice + '</center>' +
+                                     "</td><td>" + '<center><img src="/Uploads/' + elementValue.Img +
+                                     '" style="height:120px;width:120px;"' + "</td></tr>";
             });
             $("#tblQuotProduts tbody").append(html);
         }

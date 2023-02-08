@@ -9,6 +9,7 @@
     BindECountry();
     BindEState();
     BindState();
+    BindTaxes();
     
     $("#QuotId1").hide();
     $('#tblQuotation').DataTable(
@@ -1749,7 +1750,6 @@ var EditP = function () {
             $('#Dis').val('');
             $('#DisN').val('');
             $('#DisP').val('');
-
         },
         error: function (response) {
             Swal.fire({
@@ -1849,8 +1849,6 @@ var FinalQuot = function (QuotId) {
     else {
         var totalprice = $("#Txt_GPri").val();
     }
-
-    
 
     if ($("#Txtt_adva").val() > $("#Txtt_bala").val()) {
         toastr.error('Advance cannot be more than Balance');

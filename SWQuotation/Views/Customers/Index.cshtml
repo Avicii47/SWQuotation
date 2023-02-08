@@ -288,7 +288,7 @@
                     <div class="form-group">
                         <label class="col-sm-10 col-form-label">Taxes</label>
                         <div class="col-sm-11">
-                            <select class="form-control select2" id="ddlTaxes" onclick="BindTaxes();" onselect="this.value"></select>
+                            <select class="form-control select2" id="ddlTaxes" @*onclick="BindTaxes();"*@ onselect="Tax();"></select>
                         </div>
                     </div>
                     <div id="GST">
@@ -1205,7 +1205,7 @@
 
 <script>
     $(document).on("change keyup blur", "#Txt_DisN", function () {
-
+        debugger
         var main = $('#Txt_TPrice').val();
         var disN = $('#Txt_DisN').val();
         var netprice = main - disN;
@@ -1214,7 +1214,7 @@
 </script>
 
 <script>
-    $(document).on("change keyup blur", "#ddlTaxes", function () {
+    var Tax = function () {
         debugger
         $('#Txt_SGST').val("");
         $('#Txt_CGST').val("");
@@ -1240,7 +1240,7 @@
         var value = parseFloat(totalprice).toFixed(2);
         $('#Txt_FPrice1').val(value).focus;
         $('#ex').val(value);
-    });
+    };
 </script>
 
 <script>
@@ -1329,4 +1329,16 @@
         $('#Txtt_bala').val(value);
         
     })
+</script>
+
+
+<script>
+    var up = document.getElementById('GFG_UP');
+    var d = '12/05/2019 12:00:00 AM';
+    up.innerHTML = d;
+    var down = document.getElementById('GFG_DOWN');
+
+    function GFG_Fun() {
+        down.innerHTML = d.split(' ')[0];
+    }
 </script>

@@ -7,7 +7,7 @@
     <meta property="og:description" id="metasalesname" content="">
     <meta property="og:image" itemprop="image" content="https://bla123.neocities.org/mp/images/thumbs/IMG_327.JPG" />
     <meta property="og:locale" content="en_GB" />
-
+    <link rel="icon" type="image/svg" href="~/images/facvicon.png">
     <title id="usrname"></title>
 
     <!-- iCheck for checkboxes and radio inputs -->
@@ -194,8 +194,7 @@
     <script src="~/Scripts/Dashboard/Dashboard.js"></script>
 
     <script>
-        $(document)
-            .ajaxStart(function () {
+        jQuery(document).ajaxStart(function () {
             debugger
             $('#divLoader').show();
         })
@@ -227,8 +226,8 @@
         var dcrmpwd = atob(mp);
 
             if (mu != null && mp != null) {
-            window.location.href = "http://localhost:50721/Login/Login?DT=" + udate + "!USR=" + uid + "!MU=" + mu + "!MP=" + mp;
-            // window.location.href = "https://crm.spacewood.in/Home/Login?DT=" + udate + "!USR=" + uid + "!MU=" + mu + "!MP=" + mp;
+            //window.location.href = "http://localhost:50721/Login/Login?DT=" + udate + "!USR=" + uid + "!MU=" + mu + "!MP=" + mp;
+            window.location.href = "https://qtn.spacewood.in/Login/Login?DT=" + udate + "!USR=" + uid + "!MU=" + mu + "!MP=" + mp;
 
             }
             else {
@@ -251,7 +250,7 @@
 
             }
             else {
-                 var someSessionVariable = '@Session["userName"]';
+                var someSessionVariable = '@Session["userName"]';
                 if (someSessionVariable != "")
                 {
                      $("#username").html(someSessionVariable);

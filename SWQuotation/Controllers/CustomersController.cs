@@ -55,8 +55,6 @@ namespace SWQuotation.Controllers
             }
         }
 
-        
-
         [HttpPost]
 
         public ActionResult AddCust(string Name, string mobile, string alterMobile, string dob, string Mail, string GstNo, string BillTo, string ShipTo)

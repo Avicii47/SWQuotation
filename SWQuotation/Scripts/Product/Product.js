@@ -207,6 +207,8 @@ function getProdPriceList() {
 }
 
 function PriceList(response) {
+    var fdt = response[0].FDate;
+    var tdt = response[0].TDate;
     var datatableVariable = $("#tblprodPrice").DataTable(
         {
             "responsive": false, "lengthChange": true, "autoWidth": false,
@@ -243,8 +245,16 @@ function PriceList(response) {
                 { 'data': 'PId', 'title': 'Product Id' },
                 { 'data': 'PName', 'title': 'Product Name' },
                 { 'data': 't_catm', 'title': 'Product Catogery' },
-                { 'data': 'FDate', 'title': 'From Date' },
-                { 'data': 'TDate', 'title': 'To Date' },
+                {
+                    'data': 'FDate', 'title': 'From Date', "render": function (QuDt) {
+                        return QuDt = fdt.split(" ")[0];
+                    },
+                },
+                {
+                    'data': 'TDate', 'title': 'To Date', "render": function (QuDt) {
+                        return QuDt = tdt.split(" ")[0];
+                    },
+                },
                 { 'data': 'PPrice', 'title': 'Product Price' },
                 /*{ 'data': 'PPrice', 'title': 'Product Price' },*/
             ]

@@ -9,8 +9,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
-
+    <title>QTN Login</title>
+    <link rel="icon" type="image/svg" href="~/images/facvicon.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
     <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
@@ -129,8 +129,8 @@
             var dcruid = atob(uid);
             var dcrmuid = atob(mu);
             var dcrmpwd = atob(mp);
-            var url = "http://localhost:50721/Customer/Index?DT=" + dcrdate + "&USR=" + dcruid;
-            //var url = "https://crm.spacewood.in/Home/SalesActivityDetail?DT=" + dcrdate + "&USR=" + dcruid;
+            //var url = "http://localhost:50721/Customer/Index?DT=" + dcrdate + "&USR=" + dcruid;
+            var url = "https://qtn.spacewood.in/Customer/Index?DT=" + dcrdate + "&USR=" + dcruid;
             if (mu != null && mp != null) {
                 $("#LoginId").val(dcrmuid);
                 $("#Password").val(dcrmpwd);

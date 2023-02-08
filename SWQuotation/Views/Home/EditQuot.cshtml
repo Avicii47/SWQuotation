@@ -1038,10 +1038,14 @@
 
 
 <script>
-    var main = $('#Txt_TPrice').val();
-    var disN = $('#Txt_DisN').val();
-    var discont = main - disN;
-    $('#Txt_DisP').val(discont);
+    $(document).on("change keyup blur", "#DisN", function () {
+        debugger
+        var main = $('#TPrice').val();
+        var disN = $('#DisN').val();
+        var discont = main - disN;
+        $('#Txt_Disprice').val(discont);
+        
+    });
 </script>
 
 <script>
@@ -1069,7 +1073,6 @@
         $("#Txtt_bala").val(i);
         $("#bala").val(i);
         var bala = $("#bala").val();
-        //$("#bala").val(bala);
         var bal = $("#bala").val();
         var adv = $("#Txtt_adva").val();
         var total = bal - adv;
@@ -1100,7 +1103,43 @@
             var y = Number($("#No").val());
             var total = x * y;
             $("#TPrice").val(total);
+            $("#Txt_Disprice").val(total);
+            if ($('#Dis').val() == '0' && $('#DisN').val() == '0') {
+                
+            }
+            else if ($('#Dis').val() != '0') {
+                var main = $('#TPrice').val();
+                var disc = $('#Dis').val();
+                var dec = (disc / 100).toFixed(2);
+                var mult = main * dec;
+                var discont = main - mult;
+                $('#DisP').val(discont);
+                $('#Txt_Disprice').val(discont);
 
+                if (parseInt($("#Dis").val()) == "") {
+                    var disN = $('#DisN').val();
+                    var netprice = main - disN;
+                    $('#Txt_netamount').val(netprice);
+
+                 } else {
+                    var netprice = main - discont;
+                    $('#Txt_netamount').val(netprice);
+
+                 }
+
+            }
+            else {
+                var main = $('#TPrice').val();
+                var disN = $('#DisN').val();
+                var discont = main - disN;
+                $('#Txt_Disprice').val(discont)
+            }
+
+            if (parseInt($("#Txt_Disprice").val()) < 0) {
+                $("#Txt_Disprice").val('0');
+                $("#DisN").val('0');
+                $("#Dis").val('0');
+            }
         });
     });
 </script>
@@ -1141,12 +1180,9 @@
             debugger
             if ($("#Txt_Dis").val().length == 0) {
                 $("#Txt_DisN").attr("disabled", false);
-                
-               
             }
             else {
                 $("#Txt_DisN").attr("disabled", true);
-                
             }
         });
     });
@@ -1180,7 +1216,6 @@
                 $("#DisN").val("");
                 $("#Dis").attr("disabled", false);
             }
-
         });
     });
     $(document).ready(function () {
