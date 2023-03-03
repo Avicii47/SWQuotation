@@ -216,6 +216,7 @@
     <Content Include="Content\sweetalert\docs.css" />
     <Content Include="Content\sweetalert\sweet-alert.css" />
     <Content Include="Content\sweetalert\thumbs-up.jpg" />
+    <Content Include="Content\Test.css" />
     <Content Include="css\demo.css" />
     <Content Include="css\style.css" />
     <Content Include="dist\css\adminlte.css" />
@@ -2268,6 +2269,9 @@
     <Content Include="Scripts\jsPDF\dist\polyfills.es.js" />
     <Content Include="Scripts\jsPDF\dist\polyfills.umd.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\Product\AddProdColour.js" />
+    <Content Include="Scripts\Product\AddProdSubCate.js" />
+    <Content Include="Scripts\Product\AddProductGrp.js" />
     <Content Include="Scripts\Product\Product.js" />
     <Content Include="Scripts\Product\ProductList.js" />
     <Content Include="Scripts\Product\test.js" />
@@ -2324,6 +2328,9 @@
     <Content Include="Views\Home\ViewQuot.cshtml" />
     <Content Include="Views\Home\WhatsappQuot.cshtml" />
     <Content Include="Views\Home\Changepassword.cshtml" />
+    <Content Include="Views\Product\ProductGrp.cshtml" />
+    <Content Include="Views\Product\ProductSubCate.cshtml" />
+    <Content Include="Views\Product\ProductColour.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -4,8 +4,6 @@
 
 
 var AddUser = function () {
-    debugger
-
     if ($("#UserName").val() != "") {
         var username = $("#UserName").val();
     }
@@ -59,7 +57,7 @@ var AddUser = function () {
         contentType: "application/json;charset=utf-8",
         dataType: "json",
         success: function (model) {
-            debugger
+            
             if (model.model == '0') {
                Swal.fire({
                    icon: 'success',
@@ -94,7 +92,7 @@ function BindRole() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            debugger
+            
             if (response != null) {
                 $("#ddlrole").empty();
                 $("#ddlrole").append($("<option></option>").val("0").html("Select Role"));

@@ -44,7 +44,6 @@ namespace SWQuotation.Controllers
             return View();
         }
 
-
         public ActionResult UserDetailInView()
         {
             String message = "";
@@ -113,7 +112,6 @@ namespace SWQuotation.Controllers
         {
             FormsAuthentication.SignOut();
             Session.Abandon();
-
             return RedirectToAction("Login", "Login");
         }
 
@@ -153,6 +151,17 @@ namespace SWQuotation.Controllers
             List<CustomerModel> obj = db.QuotDetail(QuotId);
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
+
+
+        [HttpPost]
+        public ActionResult Qdetail(string QuotId)
+        {
+            CustomerModel db = new CustomerModel();
+            List<CustomerModel> obj = db.Qdetail(QuotId);
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
+
         public ActionResult userDetails(string Id)
         {
             UserModal db = new UserModal();

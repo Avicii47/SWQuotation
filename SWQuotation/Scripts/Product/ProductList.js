@@ -11,7 +11,7 @@ function getProductList() {
         dataType: "json",
         success: ProductList,
         failure: function (response) {
-            debugger
+    
             alert(response.d);
         },
         error: function (response) {
@@ -21,7 +21,7 @@ function getProductList() {
 }
 
 function ProductList(response) {
-    debugger
+    
 
     var datatableVariable = $("#tblProducts").DataTable(
         {
@@ -62,7 +62,10 @@ function ProductList(response) {
                 },
                 { 'data': 'ProductId', 'title': 'Product Id'/*, "visible": false*/ },
                 { 'data': 'ProductName', 'title': 'Product Name' },
-                { 'data': 'ProductCatogery', 'title': 'Product Catogery' },
+                { 'data': 'GrpName', 'title': 'Product Group' },
+                { 'data': 'ProductCatogery', 'title': 'Product Category' },
+                { 'data': 'SubCateId', 'title': 'Sub Category' },
+                { 'data': 'Finish', 'title': 'Type of Finish' },
                 { 'data': 'UOM', 'title': 'UOM' },
                 { 'data': 'Height', 'title': 'Height' },
                 { 'data': 'Width', 'title': 'Width' },
@@ -78,17 +81,13 @@ function ProductList(response) {
         }).buttons().container().appendTo('#tblProducts_wrapper .col-md-6:eq(0)');
 };
 
-
-
-
-
 function Modal1() {
-    debugger
+    
     $("#myModal2").modal('show');
 };
 
 function ImageDetails(ProductId) {
-    debugger
+    
     $("#prod").val(ProductId);
     var model = { ProductId: ProductId };
     let url = "../Product/ProductImage";
@@ -111,7 +110,7 @@ function ImageDetails(ProductId) {
 }
 
 function ImgTable(response) {
-    debugger
+    
     var datatableVariable = $("#tblProdImg").DataTable(
         {
             "responsive": false, "lengthChange": true, "autoWidth": true,
@@ -146,7 +145,7 @@ function ImgTable(response) {
                 { 'data': 'filePath', 'title': 'filePath', "visible": false },
             ]
         }).buttons().container().appendTo('#tblProdImg_wrapper .col-md-6:eq(0)');
-    debugger
+
     $("#t_nwbp1").val(response.ProductId);
     $("#postion").val(response.Position);
 };

@@ -4,7 +4,7 @@
 });
 
 function ProductDetails() {
-    debugger
+   
     var ID = '@Session["userId"].ToString()';
     let url = "../Product/ProductDetails";
     $.ajax({
@@ -15,7 +15,7 @@ function ProductDetails() {
         dataType: "json",
         async: false,
         success: function (response) {
-            debugger
+           
             if (response != null) {
                 $("#ProductId").val(response[0].ProductId);
                 $("#Txt_Prod").val(response[0].ProductName);

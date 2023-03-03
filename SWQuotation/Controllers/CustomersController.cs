@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Mail;
-using System.Web;
 using System.Web.Mvc;
-using System.Windows.Media.Imaging;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 using SWQuotation.Models;
 
 namespace SWQuotation.Controllers
@@ -270,11 +266,11 @@ namespace SWQuotation.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditADD(string Add1, string Add2, string Add3, string Country, string City, string Dist, string Pin, string State)
+        public ActionResult EditADD(string Add1, string Add2, string Add3, string Country, string City, string Dist, string Pin, string State, string addcode)
         {
             try
             {
-                return Json(new CustomerModel().EditADD(Add1, Add2, Add3, Country, City, Dist, Pin, State), JsonRequestBehavior.AllowGet);
+                return Json(new CustomerModel().EditADD(Add1, Add2, Add3, Country, City, Dist, Pin, State, addcode), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -431,7 +427,7 @@ namespace SWQuotation.Controllers
                     mail.From = new MailAddress("exp.ngp@spacewood.in");
                     mail.To.Add(data.Email);
                     mail.Subject = "Spacewood Quotation";
-                    mail.Body = "Hi " + data.Name + "," + " This is the requested Quotation " + " Thanks And Regards " + " Spacewood ";
+                    mail.Body = "Dear " + data.Name + "," + " This is the requested Quotation " + " Thanks And Regards " + " Spacewood ";
 
                     System.Net.Mail.Attachment attachment;
                     attachment = new Attachment(dir + "/" + data.quot);
@@ -490,23 +486,67 @@ namespace SWQuotation.Controllers
             }
         }
 
-        
+
+        public void send(SendMail data)
+        {
+            var dir = Server.MapPath("~/PDF/");
+            var fileName = dir + data.quot;
+
+            var pdfBinary = Convert.FromBase64String(data.Attachment);
+            dir = Server.MapPath("~/PDF/");
+            if (!Directory.Exists(dir))
+            {
+                Directory.Delete(dir);
+            }
+            else
+            {
+                Directory.CreateDirectory(dir);
+            }
+            Directory.CreateDirectory(dir);
+
+            fileName = dir + data.quot;
+            string paths = Server.MapPath("~/PDF/" + data.quot);
+            FileInfo file = new FileInfo(paths);
+
+            if (file.Exists)//check file exsit or not  
+            {
+                using (var fsa = new FileStream(fileName, FileMode.Create))
+                using (var writer = new BinaryWriter(fsa))
+                {
+                    writer.Write(pdfBinary, 0, pdfBinary.Length);
+                    writer.Close();
+                }
+                string attachmnet = (dir + "/" + data.quot);
+                //return Json(new { attachmnet }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                using (var fsa = new FileStream(fileName, FileMode.Create))
+                using (var writer = new BinaryWriter(fsa))
+                {
+                    writer.Write(pdfBinary, 0, pdfBinary.Length);
+                    writer.Close();
+                }
+                string attachmnet = (dir + "/" + data.quot);
+                //return Json(new { attachmnet }, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
+
 
         [HttpPost]
-        public ActionResult EditQuot(string QuotId, string Advance, string Balance, string TotalPrice, string Tax, string GAmt, string DiscAmt, string NetAmt,
-                                          string Taxes, string Taxesinno, string TaxCode, string CGST, string SGST, string IGST, string Transport, string Intsall, string DiscountPrice, string Tprice, string Billto, string Shipto)
+        public ActionResult EditQuot(string CustId, string QuotId, string Advance, string Balance, string TotalPrice, string Tax, string Taxesinno, string TaxCode, string CGST, string SGST, string IGST, string Transport, string Intsall, string DiscountPrice, string Tprice, string Billto, string Shipto)
         {
             try
             {
                 CustomerModel customerModel = new CustomerModel();
                 customerModel.QuotId = QuotId;
+                customerModel.t_cuid = CustId;
                 customerModel.Advance = Advance;
                 customerModel.Balance = Balance;
                 customerModel.TotalPrice = TotalPrice;
                 customerModel.Taxes = Tax;
-                customerModel.GAmt = GAmt;
-                customerModel.DiscAmt = DiscAmt;
-                customerModel.NetAmt = NetAmt;
                 customerModel.Taxper = TaxCode;
                 customerModel.NetAmt = Taxesinno;
                 customerModel.CGST = CGST;

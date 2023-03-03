@@ -2,13 +2,34 @@
     getProductList();
     UOM();
     UOM1();
-/*    ProductCategory();*/
-    Catogery1();
+    ProdGroup();
+    ProdGroup1();
+    FinishList();
+    FinishList1();
+    ColourList();
     $("#Edit").hide();
 });
 
+
 var saveProduct = function () {
     debugger
+    
+    if ($("#txtproduct").val() != "") {
+        var productname = $("#txtproduct").val();
+    }
+    else {
+        toastr.error('Enter Product Name');
+        $("#txtproduct").focus();
+        return false;
+    }
+    if ($("#txtproductID").val() != "") {
+        var id = $("#txtproductID").val();
+    }
+    else {
+        toastr.error('Invalid Product ID');
+        return false;
+    }
+
     if (myDropzone.files != "") {
         var Photo = myDropzone.files;
         console.log(Photo);
@@ -27,37 +48,51 @@ var saveProduct = function () {
         toastr.error('Please Select Product Image');
         return false;
     }
-    if ($("#txtproduct").val() != "") {
-        var productname = $("#txtproduct").val();
+
+    if ($("#ddlPG option:selected").val() != 0) {
+        var prodgrp = $("#ddlPG option:selected").val();
     }
     else {
-        toastr.error('Enter Product Name');
-        $("#txtproduct").focus();
+        toastr.error('Select Product Group');
+        $("#ddlPG").focus();
         return false;
     }
-    if ($("#ddlCatogery option:selected").val() != 0) {
-        var productcatogery = $("#ddlCatogery option:selected").html();
+
+    if ($("#ddlPCat option:selected").val() != 0) {
+        var productcatogery = $("#ddlPCat option:selected").val();
     }
     else {
-        toastr.error('Select Catogery');
-        $("#ddlCatogery").focus();
+        toastr.error('Select Category');
+        $("#ddlPCat").focus();
+        return false;
+    }
+
+    if ($("#ddlPSCat option:selected").val() != 0) {
+        var prodscate = $("#ddlPSCat option:selected").val();
+    }
+    else {
+        toastr.error('Select Sub Catogery');
+        $("#ddlPSCat").focus();
+        return false;
+    }
+
+    if ($("#ddlPFinish option:selected").val() != 0) {
+        var prodfinish = $("#ddlPFinish option:selected").val();
+    }
+    else {
+        toastr.error('Select Type Of Finish');
+        $("#ddlPFinish").focus();
         return false;
     }
     
-    if ($("#txtcolour").val() != "") {
-        var productcolour = $("#txtcolour").val();
-    }
-    else {
+    if ($("#ddlcolour").val() == "0") {
         toastr.error('Enter Product Colour');
         return false;
     }
-    if ($("#txtprice").val() != "") {
-        var productprice = $("#txtprice").val();
-    }
     else {
-        toastr.error('Enter Product Price');
-        return false;
+        var productcolour = $("#ddlcolour").val();
     }
+    
     if ($("#ddlUOM option:selected").val() != 0) {
         var uom = $("#ddlUOM option:selected").val();
     }
@@ -68,7 +103,6 @@ var saveProduct = function () {
     }
     if ($("#txtHt").val() != "") {
         var height = $("#txtHt").val();
-        
     }
     else {
         toastr.error('Enter Height of Product');
@@ -76,7 +110,6 @@ var saveProduct = function () {
     }
     if ($("#txtWdt").val() != "") {
         var width = $("#txtWdt").val();
-
     }
     else {
         toastr.error('Enter Width of Product');
@@ -98,15 +131,19 @@ var saveProduct = function () {
         toastr.error('Enter Thickness of Product');
         return false;
     }
-    if ($("#txtproductID").val() != "") {
-        var id = $("#txtproductID").val();
+    
+    if ($("#txtprice").val() != "") {
+        var productprice = $("#txtprice").val();
     }
     else {
-        toastr.error('Invalid Product ID');
+        toastr.error('Enter Product Price');
         return false;
     }
     $formData.append('ProductName', productname);
     $formData.append('ProductCatogery', productcatogery);
+    $formData.append('GrpId', prodgrp);
+    $formData.append('SubCateId', prodscate);
+    $formData.append('FinishID', prodfinish);
     $formData.append('PC', productcolour);
     $formData.append('ProductPrice', productprice);
     $formData.append('UOM', uom);
@@ -115,7 +152,7 @@ var saveProduct = function () {
     $formData.append('Width', width);
     $formData.append('Depth', depth);
     $formData.append('Thickness', thickness);
-    debugger
+    
     $.ajax({
         url: "/Product/SaveProduct",
         method: "post",
@@ -124,12 +161,9 @@ var saveProduct = function () {
         contentType: false,
         processData: false,
         success: function (response) {
-            debugger
             toastr.success('Product Added Succesfully');
-            debugger
             UOM();
             UOM1();
-/*            ProductCategory();*/
             clearfunction(); 
         },
         error: function (response) {
@@ -143,7 +177,6 @@ var saveProduct = function () {
 }
 
 function cheakforId() {
-    debugger
     var id = $("#txtproductID").val();
     $.ajax({
         type: "POST",
@@ -152,7 +185,6 @@ function cheakforId() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (model) {
-            debugger
             if (model.model == '0') {
                 toastr.error('Product ID already Exist!');
                 $("#txtproductID").focus();
@@ -171,19 +203,51 @@ function cheakforId() {
     });
 }
 
+function cheakforId1() {
+
+    var id = $("#ProductId").val();
+    $.ajax({
+        type: "POST",
+        url: "/Product/cheakforId",
+        data: '{ id: "' + id + '" }',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (model) {
+
+            if (model.model == '0') {
+                toastr.error('Product ID already Exist!');
+                $("#ProductId").focus();
+                return false;
+            } else {
+                return true;
+            }
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
+    });
+}
+
 var clearfunction = function () {
-    debugger
     getProductList();
     $('#txtproduct').val("");
     $('#txtproductID').val("");
-    $('#ddlcatogery').val("");
+    $('#ddlcatogery').val("0");
+    $('#ddlPCat').val("0");
+    $('#ddlPSCat').val("0");
+    $('#ddlcatogery').val("0");
+    $('#ddlPFinish').val("0");
     $('#previews').val("");
     $('#ddlUOM').val("");
     $('#txtHt').val("");
     $('#txtWdt').val("");
     $('#txtDpt').val("");
     $('#txtTh').val("");
-    $('#txtcolour').val("");
+    $('#ddlcolour').val("0");
     $('#txtprice').val("");
     $("#addproduct").modal('hide');
     myDropzone.removeAllFiles(true);
@@ -207,8 +271,6 @@ function getProdPriceList() {
 }
 
 function PriceList(response) {
-    var fdt = response[0].FDate;
-    var tdt = response[0].TDate;
     var datatableVariable = $("#tblprodPrice").DataTable(
         {
             "responsive": false, "lengthChange": true, "autoWidth": false,
@@ -245,18 +307,10 @@ function PriceList(response) {
                 { 'data': 'PId', 'title': 'Product Id' },
                 { 'data': 'PName', 'title': 'Product Name' },
                 { 'data': 't_catm', 'title': 'Product Catogery' },
-                {
-                    'data': 'FDate', 'title': 'From Date', "render": function (QuDt) {
-                        return QuDt = fdt.split(" ")[0];
-                    },
-                },
-                {
-                    'data': 'TDate', 'title': 'To Date', "render": function (QuDt) {
-                        return QuDt = tdt.split(" ")[0];
-                    },
-                },
+                { 'data': 'FDate', 'title': 'From Date' },
+                { 'data': 'TDate', 'title': 'To Date' },
                 { 'data': 'PPrice', 'title': 'Product Price' },
-                /*{ 'data': 'PPrice', 'title': 'Product Price' },*/
+                
             ]
         }).buttons().container().appendTo('#tblprodPrice_wrapper .col-md-6:eq(0)');
 };
@@ -316,7 +370,10 @@ function ProductList(response) {
                 },
                 { 'data': 'ProductId', 'title': 'Product Id'/*, "visible": false*/ },
                 { 'data': 'ProductName', 'title': 'Product Name' },
-                { 'data': 'ProductCatogery', 'title': 'Product Catogery' },
+                { 'data': 'GrpName', 'title': 'Product Group' },
+                { 'data': 'ProductCatogery', 'title': 'Product Category' },
+                { 'data': 'SubCateId', 'title': 'Sub Category' },
+                { 'data': 'Finish', 'title': 'Type of Finish' },
                 { 'data': 'PC', 'title': 'Product Colour' },
                 { 'data': 'UOM', 'title': 'UOM' },
                 { 'data': 'Height', 'title': 'Height' },
@@ -332,26 +389,110 @@ function ProductList(response) {
                 {
                     'data': null, title: 'Delete/Edit', wrap: true, "bAutoWidth": false, "render": function (item) {
                         return '<center><div class="btn-group"><button type="button" data-toggle="modal" onclick = "Delete0(' + "'" + item.ProductId + "'" + ')" value="0" class="btn btn-danger btn-sm" id="btn-sa-confirm" > <i class="nav-icon fas fa-trash"></i></button></div>&nbsp;' +
-                            '&nbsp;&nbsp;&nbsp;<div class="btn-group"><button type="button" onclick="ProductDetails(' + "'" + item.ProductId + "'" + ');Modal2()" class="btn btn-secondary btn-sm"><i class="nav-icon fas fa-edit"></i></button></div></center>'
+                            '&nbsp;&nbsp;&nbsp;<div class="btn-group"><button type="button" onclick="ProductDetails(' + "'" + item.ProductId + "'" + ');Modal2();" class="btn btn-secondary btn-sm"><i class="nav-icon fas fa-edit"></i></button></div></center>'
                     },
                 },
             ]
         }).buttons().container().appendTo('#tblProducts_wrapper .col-md-6:eq(0)');
 };
 
-var Editdata = function (ProductId) {
-    debugger
+var Editdata = function () {
     var pid = $("#ProductId").val()
-    var pNmae = document.getElementById("Txt_Prod").value;
-    /*var cat = document.getElementById("ddlCatogery1 option:selected").value;*/
-    var cat = document.getElementById("cata").value;
-    var uom = document.getElementById("ddlUOM1").value;
-    var ht = document.getElementById("Txt_Ht").value;
-    var wdt = document.getElementById("Txt_Wdt").value;
-    var dpt = document.getElementById("Txt_Dpt").value;
-    var th = document.getElementById("Txt_Th").value; 
-    var price = document.getElementById("Txt_Price").value;
-    var col = document.getElementById("Txt_PCol").value;
+    if ($("#Txt_Prod").val() != "") {
+        var pNmae = document.getElementById("Txt_Prod").value;
+    }
+    else {
+        toastr.error('Enter Product Name');
+        return false;
+    }
+
+    if ($("#ddlPG1").val() != "") {
+        var grp = document.getElementById("ddlPG1").value
+    }
+    else {
+        toastr.error('Select Product Group');
+        return false;
+    }
+
+    if ($("#ddlPCat1").val() != "") {
+        var cat = document.getElementById("ddlPCat1").value;
+    }
+    else {
+        toastr.error('Select Product Category');
+        return false;
+    }
+
+    if ($("#ddlUOM1").val() != "") {
+        var uom = document.getElementById("ddlUOM1").value;
+    }
+    else {
+        toastr.error('Select UOM');
+        return false;
+    }
+
+    if ($("#Txt_Ht").val() != "") {
+        var ht = document.getElementById("Txt_Ht").value;
+    }
+    else {
+        toastr.error('Select Product Height');
+        return false;
+    }
+
+    if ($("#Txt_Wdt").val() != "") {
+        var wdt = document.getElementById("Txt_Wdt").value;
+    }
+    else {
+        toastr.error('Select Product Width');
+        return false;
+    }
+
+    if ($("#Txt_Dpt").val() != "") {
+        var dpt = document.getElementById("Txt_Dpt").value;
+    }
+    else {
+        toastr.error('Select Product Depth');
+        return false;
+    }
+
+    if ($("#Txt_Th").val() != "") {
+        var th = document.getElementById("Txt_Th").value;
+    }
+    else {
+        toastr.error('Select Product Thickness');
+        return false;
+    }
+
+    if ($("#Txt_Price").val() != "") {
+        var price = document.getElementById("Txt_Price").value;
+    }
+    else {
+        toastr.error('Enter Product Price');
+        return false;
+    }
+    if ($("#EditColour").val() != '0') {
+        var col = document.getElementById("EditColour").value;
+    }
+    else {
+        toastr.error('Enter Product Colour');
+        return false;
+    }
+
+    if ($("#ddlProdSubCate").val() !="0" ) {
+        var scat = document.getElementById("ddlProdSubCate").value;
+    }
+    else {
+        toastr.error('Select Product Sub-Category');
+        return false;
+    }
+    debugger
+    if ($("#ddlPFinish1").val() == "0") {
+        toastr.error('Select Product Finish');
+        return false;
+    }
+    else {
+        var fin = document.getElementById("ddlPFinish1").value;
+    }
+    var category = document.getElementById("EditColour").value;
 
     var model = {
         Pid: pid,
@@ -361,8 +502,12 @@ var Editdata = function (ProductId) {
         Ht: ht,
         Wdt: wdt,
         Dpt: dpt,
+        Grp: grp,
         Th: th,
         Price: price,
+        Category: category,
+        SubCategory: scat,
+        Finish: fin,
         Col: col
     };
 
@@ -377,6 +522,7 @@ var Editdata = function (ProductId) {
             console.log(response);
             toastr.success('Changes Completed');
             getProductList();
+            $('#modal').modal('toggle');
         },
         error: function (model) {
             Swal.fire({
@@ -395,35 +541,6 @@ function Modal1() {
 function Modal2() {
     $("#modal").modal('show');
 };
-
-function Catogery1() {
-    let url = "../Product/GetCategory";
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: "{}",
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (response) {
-            if (response != null) {
-                $("#cat").empty();
-                $("#cat").append($("<option></option>").val("0").html("Select Category"));
-                $.each(response, function (data, value) {
-                    $("#cat").append($("<option></option>").val(value.Category).html(value.Category));
-                });
-            }
-            else {
-                $("#cat").empty();
-                $("#cat").append($("<option disabled></option>").val(0).html("Select Category"));
-            }
-            return $("#cat option:selected").text();
-        },
-        failure: function (response) {
-            alert(response.responseText);
-            alert("Failure");
-        },
-    });
-}
 
 function UOM() {
     let url = "../Product/UOM";
@@ -508,31 +625,23 @@ function ImgTable(response) {
             },
             data: response,
             columns: [
-                { 'data': 'Position', 'title': 'Position' },
+                { 'data': 'Position', 'title': 'Sr No.' },
                 { 'data': 'ProductId', 'title': 'Product Id'/*, "visible": false*/ },
                 {
-                    'title': 'Product Image',
+                    'title': 'Images',
                     "render": function (data, type, JsonResultRow, meta) {
                         return '<center><a href="/Uploads/' + JsonResultRow.Pic + '" data-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4"><img src="/Uploads/' + JsonResultRow.Pic + '" style="height:100px;width:100px;"/></center>';
                     }
                 },
                 { 'data': 'filePath', 'title': 'filePath', "visible": false }, 
-                {
-                    'data': null, title: 'Delete/Edit', wrap: true, "bAutoWidth": false, "render": function (item) {
-
-                        return '<center><div class="btn-group"><button type="button" data-toggle="modal" onclick = "DeleteI(' + "'" + item.Pic + "'" + ',' + "'" + item.Position + "'" + ')" value="0" class="btn btn-danger btn-sm" id="btn-sa-confirm" > <i class="nav-icon fas fa-trash"></i></button></div>&nbsp;' +
-                            '&nbsp;&nbsp;&nbsp;<div class="btn-group"><button type="button" onclick="EditImg(' + "'" + item.Position + "'" + ')" class="btn btn-secondary btn-sm"><i class="nav-icon fas fa-edit"></i></button></div></center>'
-                    },
-                },
             ]
         }).buttons().container().appendTo('#tblProdImg_wrapper .col-md-6:eq(0)');
-    debugger
+    
     $("#t_nwbp1").val(response.ProductId);
     $("#postion").val(response.Position);
 };
 
 function EditImg(Position) {
-    debugger
     $("#PP").val(Position)
     $("#Edit").modal('show');
 };
@@ -554,8 +663,7 @@ var Delete0 = function (ProductId) {
     });
 };
 
-var DeleteProduct = function (ProductId) {
-    debugger
+var DeleteProduct = function (ProductId) {  
     var model = {
         ProductId: ProductId
     };
@@ -606,8 +714,8 @@ var DeleteI = function (ProductId, Pic, Position) {
 };
 
 var DeleteImg = function (ProductId, Pic, Position) {
-    Position = Pic;
     debugger
+    Position = Pic;
     if (Position == 1) {
         toastr.error('This Photo Cannot Be Deleted');
         return false;
@@ -615,7 +723,7 @@ var DeleteImg = function (ProductId, Pic, Position) {
     else {
        
     }
-    ProdId = $('#prod').val();
+    ProdId = $('#ProductId').val();
     var model = {
         ProductId: ProdId,
         filename: ProductId,
@@ -631,7 +739,7 @@ var DeleteImg = function (ProductId, Pic, Position) {
         success: function (model) {
             toastr.success('Image Delete');
             var prod=$("#prod").val();
-            ImageDetails(prod);
+            Imag(prod);
         },
         error: function (model) {
             Swal.fire({
@@ -644,7 +752,6 @@ var DeleteImg = function (ProductId, Pic, Position) {
 };
 
 function ProductDetails(ProductId) {
-    debugger
     var model = { ProductId: ProductId };
     let url = "../Product/ProductDetails";
     $.ajax({
@@ -655,21 +762,30 @@ function ProductDetails(ProductId) {
         dataType: "json",
         async: false,
         success: function (response) {
-            debugger
             if (response != null) {
+                debugger
                 $("#ProductId").val(response[0].ProductId);
                 $("#Txt_Prod").val(response[0].ProductName);
-                $("#cat").val(response[0].ProductCatogery);
                 $("#ddlUOM1").val(response[0].UOM);
                 $("#Txt_Ht").val(response[0].Height);
                 $("#Txt_Wdt").val(response[0].Width);
                 $("#Txt_Dpt").val(response[0].Depth);
                 $("#Txt_Th").val(response[0].Thickness);
-                $("#Txt_PCol").val(response[0].colour);
+                var colo = response[0].colour;
+                ColourList1(colo);
+                //$("#EditColour").val(response[0].colour);
                 $("#Txt_Price").val(response[0].ProductPrice);
-                
+                $("#ddlPG1").val(response[0].GrpName);
+                var cate = response[0].ProductCatogery;
+                ProdCategory1(cate);
+                $("#ddlPCat1").val(response[0].ProductCatogery);
+                var ddl = response[0].ProductCatogery;
+                var scat = response[0].SubCateId;
+                ProdSubCategory1(ddl, scat);
+                $("#ddlProdSubCate").val(response[0].SubCateId);
+                $("#ddlPFinish1").val(response[0].Finish);
+                Imag();
                 return response;
-                
             }
             else {
                 return false;
@@ -686,8 +802,76 @@ function ProductDetails(ProductId) {
     });
 }
 
-function ImageDetails(ProductId) {
+function Imag() {
+    var ProductId = $("#ProductId").val();
+    let url = "../Product/ProductImage";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: '{ProductId:"' + ProductId + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: ImgTbl,
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
+    });
+}
+
+function ImgTbl(response) {
     debugger
+    var datatableVariable = $("#tblPImg").DataTable(
+        {
+            "responsive": false, "lengthChange": true, "autoWidth": true,
+            "deferRender": true,
+            paging: false,
+            "bInfo": false,
+            searching: false,
+            destroy: true,
+
+            initComplete: function () {
+                // Apply the search
+                this.api()
+                    .columns()
+                    .every(function () {
+                        var that = this;
+
+                        $('input', this.header()).on('keyup change clear', function () {
+                            if (that.search() !== this.value) {
+                                that.search(this.value).draw();
+                            }
+                        });
+                    });
+            },
+            data: response,
+            columns: [
+                {
+                    'title': 'Images',
+                    "render": function (data, type, JsonResultRow, meta) {
+                        return '<center><a href="/Uploads/' + JsonResultRow.Pic + '" data-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4"><img src="/Uploads/' + JsonResultRow.Pic + '" style="height:100px;width:100px;"/></center>';
+                    }
+                },
+                {
+                    'data': null, title: "Delete/Edit", wrap: true, "bAutoWidth": false, "render": function (item) {
+
+                        return '<center><div class="btn-group"><button type="button" data-toggle="modal" onclick = "DeleteI(' + "'" + item.Pic + "'" + ',' + "'" + item.Position + "'" + ')" value="0" class="btn btn-danger btn-sm" id="btn-sa-confirm" > <i class="nav-icon fas fa-trash"></i></button></div>&nbsp;' +
+                            '&nbsp;&nbsp;&nbsp;<div class="btn-group"><button type="button" onclick="EditImg(' + "'" + item.Position + "'" + ')" class="btn btn-secondary btn-sm"><i class="nav-icon fas fa-edit"></i></button></div></center>'
+                    },
+                },
+            ]
+        }).buttons().container().appendTo('#tblPImg_wrapper .col-md-6:eq(0)');
+
+    $("#t_nwbp1").val(response.ProductId);
+    $("#postion").val(response.Position);
+};
+
+function ImageDetails(ProductId) {
+    
     $("#prod").val(ProductId);
     let url = "../Product/ProductImage";
     $.ajax({
@@ -709,7 +893,7 @@ function ImageDetails(ProductId) {
 
 var AddImage = function (ProductId) {
     debugger
-    ProductId = $('#prod').val();
+    ProductId = $('#ProductId').val();
     $formData = new FormData();
 
     if ($('#Img').val() == "") {
@@ -737,7 +921,7 @@ var AddImage = function (ProductId) {
         processData: false,
         success: function (model) {
             toastr.success('Image Added');
-            ImageDetails(ProductId);
+            Imag(ProductId);
             $('#Img').val("");
         },
         error: function (model) {
@@ -752,7 +936,7 @@ var AddImage = function (ProductId) {
 
 var editImage = function () {
     debugger
-    ProductId = $('#prod').val();
+    ProductId = $('#ProductId').val();
     Position = $('#PP').val();
     $formData = new FormData();
 
@@ -782,9 +966,9 @@ var editImage = function () {
         contentType: false,
         processData: false,
         success: function (model) {
-            debugger
+            
             toastr.success('Image Added');
-            ImageDetails(ProductId);
+            Imag(ProductId);
             $('#EditImg').val();
             $("#Edit").modal('hide');
             $("#myModal2").focus();
@@ -811,4 +995,357 @@ function pageRedirect() {
     ProdId = $('#prod').val();
     window.location.href = "/Product/ViewImage?ProdId=" + ProdId;
     $("#ProdId").val(ProdId);
+}
+
+function ProdGroup() {
+
+    let url = "../Product/GrpList";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: "{}",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response != null) {
+                $("#ddlPG").empty();
+                $("#ddlPG").append($("<option></option>").val("0").html("Select Group"));
+                $.each(response, function (data, value) {
+                    $("#ddlPG").append($("<option></option>").val(value.GrpId).html(value.GrpName));
+                });
+            }
+            else {
+                $("#ddlPG").empty();
+                $("#ddlPG").append($("<option disabled></option>").val(0).html("Select Unit"));
+            }
+            return $("#ddlPG option:selected").text();
+        },
+        failure: function (response) {
+            alert(response.responseText);
+            alert("Failure");
+        },
+    });
+}
+
+function ProdCategory() {
+    debugger
+    var GrpId = $('#ddlPG option:selected').val();
+    let url = "../Product/ProdCate";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: '{GrpId:"' + GrpId + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response != null) {
+                $("#ddlPCat").empty();
+                $("#ddlPCat").append($("<option></option>").val("0").html("Select Category"));
+                $.each(response, function (data, value) {
+                    $("#ddlPCat").append($("<option></option>").val(value.CategoryID).html(value.CategoryName));
+                });
+            }
+            else {
+                $("#ddlPCat").empty();
+                $("#ddlPCat").append($("<option disabled></option>").val(0).html("Select Category"));
+            }
+            return $("#ddlPCat option:selected").text();
+        },
+        failure: function (response) {
+            alert(response.responseText);
+            alert("Failure");
+        },
+    });
+}
+
+function ProdSubCategory() {
+    debugger
+    var CategoryID = $('#ddlPCat option:selected').val();
+    let url = "../Product/ProdSubCate";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: '{CategoryID:"' + CategoryID + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response != null) {
+                $("#ddlPSCat").empty();
+                $("#ddlPSCat").append($("<option></option>").val("0").html("Select SubCategory"));
+                $.each(response, function (data, value) {
+                    $("#ddlPSCat").append($("<option></option>").val(value.SubCateId).html(value.SCategory));
+                });
+            }
+            else {
+                $("#ddlPSCat").empty();
+                $("#ddlPSCat").append($("<option disabled></option>").val(0).html("Select Unit"));
+            }
+            return $("#ddlPSCat option:selected").text();
+        },
+        failure: function (response) {
+            alert(response.responseText);
+            alert("Failure");
+        },
+    });
+}
+
+function FinishList() {
+    let url = "../Product/FinishList";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: "{}",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response != null) {
+                $("#ddlPFinish").empty();
+                $("#ddlPFinish").append($("<option></option>").val("0").html("Select Type of Finish"));
+                $.each(response, function (data, value) {
+                    $("#ddlPFinish").append($("<option></option>").val(value.FinishID).html(value.Finish));
+                });
+            }
+            else {
+                $("#ddlPFinish").empty();
+                $("#ddlPFinish").append($("<option disabled></option>").val(0).html("Select Type of Finish"));
+            }
+            return $("#ddlPFinish option:selected").text();
+        },
+        failure: function (response) {
+            alert(response.responseText);
+            alert("Failure");
+        },
+    });
+}
+
+function ProdGroup1() {
+    let url = "../Product/GrpList";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: "{}",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response != null) {
+                $("#ddlPG1").empty();
+                $("#ddlPG1").append($("<option></option>").val("0").html("Select Group"));
+                $.each(response, function (data, value) {
+                    $("#ddlPG1").append($("<option></option>").val(value.GrpId).html(value.GrpName));
+                });
+            }
+            else {
+                $("#ddlPG1").empty();
+                $("#ddlPG1").append($("<option disabled></option>").val(0).html("Select Unit"));
+            }
+            return $("#ddlPG1 option:selected").text();
+        },
+        failure: function (response) {
+            alert(response.responseText);
+            alert("Failure");
+        },
+    });
+}
+
+function ProdCategory1(cate) {
+
+    var GrpId = $('#ddlPG1 option:selected').val();
+    let url = "../Product/ProdCate";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: '{GrpId:"' + GrpId + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response != null) {
+                $("#ddlPCat1").empty();
+                $("#ddlPCa1t").append($("<option></option>").val("0").html("Select Category"));
+                $.each(response, function (data, value) {
+                    $("#ddlPCat1").append($("<option></option>").val(value.CategoryID).html(value.CategoryName));
+                });
+            }
+            else {
+                $("#ddlPCat1").empty();
+                $("#ddlPCat1").append($("<option disabled></option>").val(0).html("Select Category"));
+            }
+
+
+            $("#ddlPCat1").val(cate);
+            return $("#ddlPCat1 option:selected").text();
+            ProdSubCategory1();
+        },
+        failure: function (response) {
+            alert(response.responseText);
+            alert("Failure");
+        },
+    });
+}
+
+function ProdSubCategory1(ddl,scat) {
+    if ($('#ddlPCat1 option:selected').val() ==='undefined') {
+        var CategoryID = $('#ddlPCat1 option:selected').val();
+    }
+    else {
+        var CategoryID = ddl;
+    }
+    let url = "../Product/ProdSubCate";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: '{CategoryID:"' + CategoryID + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response != null) {
+                $("#ddlProdSubCate").empty();
+                $("#ddlProdSubCate").append($("<option></option>").val("0").html("Select SubCategory"));
+                $.each(response, function (data, value) {
+                    $("#ddlProdSubCate").append($("<option></option>").val(value.SubCateId).html(value.SCategory));
+                });
+            }
+            else {
+                $("#ddlProdSubCate").empty();
+                $("#ddlProdSubCate").append($("<option disabled></option>").val(0).html("Select Unit"));
+            }
+            $("#ddlProdSubCate").val(scat);
+            return $("#ddlProdSubCate option:selected").text();
+        },
+        failure: function (response) {
+            alert(response.responseText);
+            alert("Failure");
+        },
+    });
+}
+
+function ProdSubCategory2() {
+    var CategoryID = $('#ddlPCat1 option:selected').val();
+    let url = "../Product/ProdSubCategory";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: '{CategoryID:"' + CategoryID + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response != null) {
+                $("#ddlProdSubCate").empty();
+                $("#ddlProdSubCate").append($("<option></option>").val("0").html("Select SubCategory"));
+                $.each(response, function (data, value) {
+                    $("#ddlProdSubCate").append($("<option></option>").val(value.SubCateId).html(value.SCategory));
+                });
+            }
+            else {
+                $("#ddlProdSubCate").empty();
+                $("#ddlProdSubCate").append($("<option disabled></option>").val(0).html("Select Unit"));
+            }
+            //$("#ddlProdSubCate").val(scat);
+            return $("#ddlProdSubCate option:selected").text();
+        },
+        failure: function (response) {
+            alert(response.responseText);
+            alert("Failure");
+        },
+    });
+}
+
+function FinishList1() {
+    let url = "../Product/FinishList";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: "{}",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response != null) {
+                $("#ddlPFinish1").empty();
+                $("#ddlPFinish1").append($("<option></option>").val("0").html("Select Type of Finish"));
+                $.each(response, function (data, value) {
+                    $("#ddlPFinish1").append($("<option></option>").val(value.FinishID).html(value.Finish));
+                });
+            }
+            else {
+                $("#ddlPFinish1").empty();
+                $("#ddlPFinish1").append($("<option disabled></option>").val(0).html("Select Type of Finish"));
+            }
+            return $("#ddlPFinish1 option:selected").text();
+        },
+        failure: function (response) {
+            alert(response.responseText);
+            alert("Failure");
+        },
+    });
+}
+
+//add=ddlcolour
+//edit=EditColour
+
+
+function ColourList() {
+    let url = "../Product/ColourList";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: "{}",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response != null) {
+                $("#ddlcolour").empty();
+                $("#ddlcolour").append($("<option></option>").val("0").html("Select Colour"));
+                $.each(response, function (data, value) {
+                    $("#ddlcolour").append($("<option></option>").val(value.ColourID).html(value.colour));
+                });
+            }
+            else {
+                $("#ddlcolour").empty();
+                $("#ddlcolour").append($("<option disabled></option>").val(0).html("Select Colour"));
+            }
+            return $("#ddlcolour option:selected").text();
+        },
+        failure: function (response) {
+            alert(response.responseText);
+            alert("Failure");
+        },
+    });
+}
+
+function ColourList1(colo) {
+    debugger
+    let url = "../Product/ColourList";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: "{}",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            debugger
+            if (response != null) {
+                $("#EditColour").empty();
+                $("#EditColour").append($("<option></option>").val("0").html("Select Colour"));
+                $.each(response, function (data, value) {
+                    $("#EditColour").append($("<option></option>").val(value.ColourID).html(value.colour));
+                });
+            }
+            else {
+                $("#EditColour").empty();
+                $("#EditColour").append($("<option disabled></option>").val(0).html("Select Colour"));
+            }
+
+            if (colo == "" || colo == "0") {
+           
+                return $("#EditColour option:selected").text();
+            }
+            else {
+                return $("#EditColour").val(colo);
+            }
+            
+        },
+        failure: function (response) {
+            alert(response.responseText);
+            alert("Failure");
+        },
+    });
 }

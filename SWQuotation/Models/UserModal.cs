@@ -8,8 +8,6 @@ namespace SWQuotation.Models
 {
     public class UserModal
     {
-        public string LinkName { get; set; }
-        public string Link { get; set; }
         public string MenuName { get; set; }
         public string MenuPath { get; set; }
         public string LoginId { get; set; }
@@ -23,13 +21,6 @@ namespace SWQuotation.Models
         public string QuotId { get; set; }
         public string CustId { get; set; }
         public string QuDt { get; set; }
-        public string QuDte { get; set; }
-        public string BillTo { get; set; }
-        public string ShipTo { get; set; }
-        public string Gross { get; set; }
-        public string Discount { get; set; }
-        public string NetAmt { get; set; }
-        public string Tax { get; set; }
         public string Total { get; set; }
         public string Adv { get; set; }
         public string Balance { get; set; }
@@ -123,8 +114,6 @@ namespace SWQuotation.Models
                     Role.QuotId = dr.GetValue(0).ToString();
                     Role.CustId = dr.GetValue(1).ToString();
                     Role.QuDt = dr.GetValue(2).ToString();
-                    //Role.QuDte = String.Format($"{QuDt:d}");
-
                     Role.Total = dr.GetValue(3).ToString();
                     Role.Adv = dr.GetValue(4).ToString();
                     Role.Balance = dr.GetValue(5).ToString();
@@ -198,7 +187,6 @@ namespace SWQuotation.Models
             }
             return ReturnValue;
         }
-
 
     }
 }

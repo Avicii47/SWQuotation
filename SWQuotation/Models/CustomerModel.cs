@@ -83,7 +83,8 @@ namespace SWQuotation.Models
         public string TDate { get; set; }
         public string StateId { get; set; }
         public string Tax { get; set; }
-      
+        public string addcode { get; set; }
+
         public string CheakCustomer(string t_cmob)
         {
             String message = "";
@@ -155,7 +156,6 @@ namespace SWQuotation.Models
         {
             string Outparam="";
             String message = "";
-            //return null;
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
             var ReturnValue = "";
             SqlCommand cmd = new SqlCommand("QA_AddCustomer", con);
@@ -196,7 +196,6 @@ namespace SWQuotation.Models
         public String AddAddress(CustomerModel customer)
         {
             String message = "";
-            //return null;
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
             var ReturnValue = "";
             SqlCommand cmd = new SqlCommand("QA_AddCustomer", con);
@@ -640,7 +639,7 @@ namespace SWQuotation.Models
                     PPrice.Address2 = dr.GetValue(6).ToString();
                     PPrice.Address3 = dr.GetValue(7).ToString();
                     PPrice.Pincode = dr.GetValue(8).ToString();
-                    PPrice.Country = dr.GetValue(9).ToString();
+                    PPrice.State = dr.GetValue(9).ToString();
                     Price.Add(PPrice);
                 }
             }
@@ -659,7 +658,6 @@ namespace SWQuotation.Models
             var ReturnValue = "";
             SqlCommand cmd = new SqlCommand("QA_AddtoLiner", con);
             cmd.CommandType = CommandType.StoredProcedure;
-
             cmd.Parameters.AddWithValue("@QuotID", customer.QuID);
             cmd.Parameters.AddWithValue("@ProductID", customer.ProdId);
             cmd.Parameters.AddWithValue("@ProductName", customer.Prod);
@@ -670,7 +668,6 @@ namespace SWQuotation.Models
             cmd.Parameters.AddWithValue("@Amt", customer.Disoprice);
             cmd.Parameters.AddWithValue("@FinalPrice", customer.FinalPrice);
             cmd.Parameters.AddWithValue("@choice","add");
-
             try
             {
                 cmd.Connection = con;
@@ -709,12 +706,16 @@ namespace SWQuotation.Models
                 {
                     CustomerModel AdPo = new CustomerModel();
 
-                    AdPo.PName = dr.GetValue(0).ToString();
-                    AdPo.Position = dr.GetValue(1).ToString();
-                    AdPo.PQty = dr.GetValue(2).ToString();
-                    AdPo.PPrice = dr.GetValue(3).ToString();
-                    AdPo.TPrice = dr.GetValue(4).ToString();
-                    AdPo.Nou = dr.GetValue(5).ToString();
+                    AdPo.PId = dr.GetValue(0).ToString();
+                    AdPo.PName = dr.GetValue(1).ToString();
+                    AdPo.Position = dr.GetValue(2).ToString();
+                    AdPo.PQty = dr.GetValue(3).ToString();
+                    AdPo.PPrice = dr.GetValue(4).ToString();
+                    AdPo.Diso = dr.GetValue(5).ToString();
+                    AdPo.DisoN = dr.GetValue(6).ToString();
+                    AdPo.DiscAmt = dr.GetValue(7).ToString();
+                    AdPo.TPrice = dr.GetValue(8).ToString();
+                    AdPo.Nou = dr.GetValue(9).ToString();
 
                     APList.Add(AdPo);
                 }
@@ -798,7 +799,6 @@ namespace SWQuotation.Models
                 cmd.Connection = con;
                 con.Open();
                 cmd.ExecuteNonQuery();
-
             }
             catch (Exception ex)
             {
@@ -852,8 +852,6 @@ namespace SWQuotation.Models
                     NCList.Billto = dr.GetValue(18).ToString();
                     NCList.Shipto = dr.GetValue(19).ToString();
                     NCList.MobNo1 = dr.GetValue(20).ToString();
-
-
                     NList.Add(NCList);
                 }
             }
@@ -891,7 +889,10 @@ namespace SWQuotation.Models
                     NCList.TotalPrice = dr.GetValue(5).ToString();
                     NCList.Position = dr.GetValue(6).ToString();
                     NCList.Prod = dr.GetValue(7).ToString();
-                    NCList.Nou = dr.GetValue(8).ToString(); ;
+                    NCList.Diso = dr.GetValue(8).ToString();
+                    NCList.DisoN = dr.GetValue(9).ToString();
+                    NCList.DiscAmt = dr.GetValue(10).ToString();
+                    NCList.Nou = dr.GetValue(11).ToString(); ;
                     NList.Add(NCList);
                 }
             }
@@ -955,29 +956,34 @@ namespace SWQuotation.Models
                     Role.QuotId = dr.GetValue(0).ToString();
                     Role.custId = dr.GetValue(1).ToString();
                     Role.QuDt = dr.GetValue(2).ToString();
-                    Role.Billto = dr.GetValue(3).ToString();
-                    Role.Shipto = dr.GetValue(4).ToString();
-                    Role.gross = dr.GetValue(5).ToString();
-                    Role.DiscAmt = dr.GetValue(6).ToString();
-                    Role.NetAmt = dr.GetValue(7).ToString();
-                    Role.TotalPrice = dr.GetValue(8).ToString();
-                    Role.Advance = dr.GetValue(9).ToString();
-                    Role.Balance = dr.GetValue(10).ToString();
-                    Role.TaxCode = dr.GetValue(11).ToString();
-                    Role.Tax = dr.GetValue(12).ToString();
-                    Role.CGST = dr.GetValue(13).ToString();
-                    Role.SGST = dr.GetValue(14).ToString();
-                    Role.IGST = dr.GetValue(15).ToString();
-                    Role.Taxes = dr.GetValue(16).ToString();
-                    Role.ShipCost = dr.GetValue(17).ToString();
-                    Role.InstallCost = dr.GetValue(18).ToString();
-                    Role.t_cnam = dr.GetValue(19).ToString();
-                    Role.t_cmob = dr.GetValue(20).ToString();
-                    Role.MobNo = dr.GetValue(21).ToString();
-                    Role.Email1 = dr.GetValue(22).ToString();
-                    Role.t_cdob = dr.GetValue(23).ToString();
-                    Role.GST = dr.GetValue(24).ToString();
-                    Role.TaxName = dr.GetValue(25).ToString();
+                    Role.t_cmob = dr.GetValue(3).ToString();
+                    Role.Billto = dr.GetValue(4).ToString();
+                    Role.Shipto = dr.GetValue(5).ToString();
+                    Role.ShipCost = dr.GetValue(6).ToString();
+                    Role.InstallCost = dr.GetValue(7).ToString();
+                    Role.Advance = dr.GetValue(8).ToString();
+                    Role.t_cnam = dr.GetValue(9).ToString();
+                    //Role.gross = dr.GetValue(5).ToString();
+                    //Role.DiscAmt = dr.GetValue(6).ToString();
+                    //Role.NetAmt = dr.GetValue(7).ToString();
+                    //Role.TotalPrice = dr.GetValue(8).ToString();
+                    //Role.Advance = dr.GetValue(9).ToString();
+                    //Role.Balance = dr.GetValue(10).ToString();
+                    //Role.TaxCode = dr.GetValue(11).ToString();
+                    //Role.Tax = dr.GetValue(12).ToString();
+                    //Role.CGST = dr.GetValue(13).ToString();
+                    //Role.SGST = dr.GetValue(14).ToString();
+                    //Role.IGST = dr.GetValue(15).ToString();
+                    //Role.Taxes = dr.GetValue(16).ToString();
+                    //Role.ShipCost = dr.GetValue(17).ToString();
+                    //Role.InstallCost = dr.GetValue(18).ToString();
+                    //Role.t_cnam = dr.GetValue(19).ToString();
+                    //Role.t_cmob = dr.GetValue(20).ToString();
+                    //Role.MobNo = dr.GetValue(21).ToString();
+                    //Role.Email1 = dr.GetValue(22).ToString();
+                    //Role.t_cdob = dr.GetValue(23).ToString();
+                    //Role.GST = dr.GetValue(24).ToString();
+                    //Role.TaxName = dr.GetValue(25).ToString();
 
 
                     PList.Add(Role);
@@ -990,6 +996,48 @@ namespace SWQuotation.Models
             con.Close();
             return PList;
         }
+
+        public List<CustomerModel> Qdetail(string QuotId)
+        {
+            String message = "";
+            List<CustomerModel> PList = new List<CustomerModel>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("[QA_CustomerQuot]", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 300;
+            cmd.Parameters.AddWithValue("@Quat", QuotId);
+            cmd.Parameters.AddWithValue("@choice", "Qdetail");
+            con.Open();
+            try
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    CustomerModel Role = new CustomerModel();
+                    Role.Tax = dr.GetValue(0).ToString();
+                    Role.CGST = dr.GetValue(1).ToString();
+                    Role.SGST = dr.GetValue(2).ToString();
+                    Role.IGST = dr.GetValue(3).ToString();
+                    Role.Taxes = dr.GetValue(4).ToString();
+                    Role.ShipCost = dr.GetValue(5).ToString();
+                    Role.InstallCost = dr.GetValue(6).ToString();
+                    Role.TotalPrice = dr.GetValue(7).ToString();
+                    Role.Advance = dr.GetValue(8).ToString();
+                    Role.Balance = dr.GetValue(9).ToString();
+
+                    PList.Add(Role);
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            con.Close();
+            return PList;
+        }
+
+
+
 
         public string DeleteQuotProduct(CustomerModel model)
         {
@@ -1019,7 +1067,7 @@ namespace SWQuotation.Models
             }
             return message;
         }
-
+         
         public string DeleteADD(string AddressCode)
         {
             String message = "";
@@ -1062,6 +1110,7 @@ namespace SWQuotation.Models
             {
                 cmd.Parameters.AddWithValue("@QuotID", customer.QuotId);
                 cmd.Parameters.AddWithValue("@advance", customer.Advance);
+                cmd.Parameters.AddWithValue("@CustId", customer.t_cuid);
                 cmd.Parameters.AddWithValue("@balance", customer.Balance);
                 cmd.Parameters.AddWithValue("@cgst", customer.CGST);
                 cmd.Parameters.AddWithValue("@sgst", customer.SGST);
@@ -1075,24 +1124,51 @@ namespace SWQuotation.Models
                 cmd.Parameters.AddWithValue("@billto", customer.Billto);
                 cmd.Parameters.AddWithValue("@shipto", customer.Shipto);
                 cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
-                cmd.Parameters.AddWithValue("@choice", "Edit");
+                cmd.Parameters.AddWithValue("@choice", "Editdata");
                 cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
-
 
                 cmd.Connection = con;
                 con.Open();
                 cmd.ExecuteNonQuery();
                 con.Close();
-                return ReturnValue;
+                //return ReturnValue;
             }
             catch (Exception ex)
             {
                 message = ex.Message.ToString() + "Error.";
             }
+            
+            SqlCommand cmd1 = new SqlCommand("QA_AddtoQuot", con);
+            cmd1.CommandType = CommandType.StoredProcedure;
+            try
+            {
+                cmd1.Parameters.AddWithValue("@billto", customer.Billto);
+                cmd1.Parameters.AddWithValue("@shipto", customer.Shipto);
+                cmd1.Parameters.AddWithValue("@CustId", customer.t_cuid);
+
+                cmd1.Parameters.Add("@Return", SqlDbType.Int, 10);
+                cmd1.Parameters.AddWithValue("@choice", "EAdd");
+                cmd1.Parameters["@Return"].Direction = ParameterDirection.Output;
+
+                cmd1.Connection = con;
+                con.Open();
+                cmd1.ExecuteNonQuery();
+                con.Close();
+                //return ReturnValue;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+
             return ReturnValue;
+
+
+
+
         }
 
-        public string EditADD(string Add1, string Add2, string Add3, string Country, string City, string Dist, string Pin, string State)
+        public string EditADD(string Add1, string Add2, string Add3, string Country, string City, string Dist, string Pin, string State, string addcode)
         {
             String message = "";
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
@@ -1109,7 +1185,9 @@ namespace SWQuotation.Models
                 cmd.Parameters.AddWithValue("@Add2", Add2);
                 cmd.Parameters.AddWithValue("@Add3", Add3);
                 cmd.Parameters.AddWithValue("@Pincode",Pin);
+                cmd.Parameters.AddWithValue("@Address", addcode);
                 cmd.Parameters.AddWithValue("@choice", "Edit");
+                cmd.Parameters.AddWithValue("@Return", "");
 
                 cmd.Connection = con;
                 con.Open();
@@ -1157,6 +1235,7 @@ namespace SWQuotation.Models
         public string Approved(string QuotId)
         {
             String message = "";
+            var ReturnValue = "";
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
             SqlCommand cmd = new SqlCommand("QA_AddtoQuot", con);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -1170,6 +1249,8 @@ namespace SWQuotation.Models
                 cmd.Connection = con;
                 con.Open();
                 cmd.ExecuteNonQuery();
+
+                Return = Convert.ToString(cmd.Parameters["@Return"].Value);
             }
             catch (Exception ex)
             {
@@ -1178,8 +1259,9 @@ namespace SWQuotation.Models
             finally
             {
                 con.Close();
+                ReturnValue = Return;
             }
-            return message;
+            return ReturnValue;
         }
 
         public string DeleteQuot(string QuotId)

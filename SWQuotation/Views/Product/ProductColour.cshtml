@@ -1,0 +1,157 @@
+﻿
+@{
+    ViewBag.Title = "ProductColour";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/Product/AddProdColour.js"></script>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<!-- Sweet Alert JS -->
+<link href="~/plugins/sweetalert2/sweetalert2.css" rel="stylesheet" />
+<script src="~/plugins/sweetalert2/sweetalert2.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+
+@*<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jqc-1.12.4/dt-1.13.3/b-2.3.5/sl-1.6.1/datatables.min.css" />
+<link rel="stylesheet" type="text/css" href="Editor-2.1.1/css/editor.dataTables.css">
+
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jqc-1.12.4/dt-1.13.3/b-2.3.5/sl-1.6.1/datatables.min.js"></script>
+<script type="text/javascript" src="Editor-2.1.1/js/dataTables.editor.js"></script>*@
+
+
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Product Colour</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="~/Home/Dashboard">Home</a></li>
+                    <li class="breadcrumb-item active">Add Product Colour</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Product Colour</h3>
+                <div class="card-tools">
+                    <div class="row" style="padding-right: 7px">
+                        <ul class="nav nav-pills ml-auto">
+                            <li class="nav-item">
+                                <a class="btn  bg-gradient-secondary" onclick="AddColomodal();" style="height: 34px; width: 110px;">
+                                    <i class="fa fa-fw fa-plus-circle"></i>&nbsp;Add New
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <form>
+                <div class="card-body">
+                    <div class="tab-content" id="custom-tabs-three-tabContent">
+                        <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                            &nbsp;
+                            <table id="tblColour" class="table table-bordered table-striped"></table>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="card-footer">
+                <div class="form-group">
+                    <div class="row">
+                        <button class="btn btn-secondary" onclick="back();" data-dismiss="modal" aria-hidden="true" style="margin-left: 14px">Back</button>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Addcolour" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fa fa-plus" style="font-size:18px"></i>
+                        &nbsp; Add Colour
+                    </h3>
+                    <div class="card-tools">
+                        <ul class="nav nav-pills ml-auto">
+                            <li class="nav-item">
+                                <i class="fa fa-window-close" aria-hidden="true" data-dismiss="modal" style="padding-top: 6px;"></i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-10 col-form-label">Colour ID</label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Colour ID" onchange="" id="ColrId">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-10 col-form-label">Colour Name</label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Colour" onchange="" id="Colr">
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <input id="Btnsuccess" class="btn btn-secondary" type="button" value="Add" onclick="addColour()" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Editcolour" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Edit Cateogry
+                    </h3>
+                    <div class="card-tools">
+                        <ul class="nav nav-pills ml-auto">
+                            <li class="nav-item">
+                                <i class="fa fa-window-close" aria-hidden="true" data-dismiss="modal" style="padding-top: 6px;"></i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-10 col-form-label">Colour ID</label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Category" onchange="" id="IdColr" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-10 col-form-label">Product Colour</label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Category" onchange="" id="EditColr">
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <input id="Btnsuccess" class="btn btn-secondary" type="button" value="Save" onclick="EditColor()" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function back() {
+        window.location.href = "/Home/Dashboard";
+    }
+</script>

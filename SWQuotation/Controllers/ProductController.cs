@@ -29,6 +29,21 @@ namespace SWQuotation.Controllers
             return View();
         }
 
+        public ActionResult ProductGrp()
+        {
+            return View();
+        }
+
+        public ActionResult ProductSubCate()
+        {
+            return View();
+        }
+
+        public ActionResult ProductColour()
+        {
+            return View();
+        }
+
         public ActionResult SaveProduct(Product model)
         {
             String message = "";
@@ -70,6 +85,9 @@ namespace SWQuotation.Controllers
                     cmd.Parameters.AddWithValue("@ProdCatogery", model.ProductCatogery);
                     cmd.Parameters.AddWithValue("@ImgPath", filePath);
                     cmd.Parameters.AddWithValue("@PColour", model.PC);
+                    cmd.Parameters.AddWithValue("@PGrp", model.GrpId);
+                    cmd.Parameters.AddWithValue("@PSubGrp", model.SubCateId);
+                    cmd.Parameters.AddWithValue("@PFinish", model.FinishID);
                     cmd.Parameters.AddWithValue("@ImgName", sysFileName);
                     cmd.Parameters.AddWithValue("@PPrice", model.ProductPrice);
                     cmd.Parameters.AddWithValue("@UOM", model.UOM);
@@ -78,13 +96,11 @@ namespace SWQuotation.Controllers
                     cmd.Parameters.AddWithValue("@Depth", model.Depth);
                     cmd.Parameters.AddWithValue("@Thickness", model.Thickness);
                     cmd.Parameters.AddWithValue("@P", "");
-
                     try
                     {
                         cmd.Connection = con;
                         con.Open();
                         cmd.ExecuteNonQuery();
-
                     }
                     catch (Exception ex)
                     {
@@ -185,14 +201,66 @@ namespace SWQuotation.Controllers
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
 
+        
+
         [HttpPost]
-        public ActionResult GetCategory()
+        public ActionResult GrpList()
         {
             Product db = new Product();
-            List<Product> obj = db.GetCategory();
+            List<Product> obj = db.GrpList();
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public ActionResult ProdCategory(string GrpId)
+        {
+            Product db = new Product();
+            List<Product> obj = db.ProdCategory(GrpId);
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult ProdCate(string GrpId)
+        {
+            Product db = new Product();
+            List<Product> obj = db.ProdCate(GrpId);
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public ActionResult AddProdCategory()
+        {
+            Product db = new Product();
+            List<Product> obj = db.AddProdCategory();
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult ProdSubCategory(string CategoryID)
+        {
+            Product db = new Product();
+            List<Product> obj = db.ProdSubCategory(CategoryID);
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult ProdSubCate(string CategoryID)
+        {
+            Product db = new Product();
+            List<Product> obj = db.ProdSubCate(CategoryID);
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult FinishList()
+        {
+            Product db = new Product();
+            List<Product> obj = db.FinishList();
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
         public JsonResult UserProductList(Product model)
         {
             try
@@ -236,7 +304,7 @@ namespace SWQuotation.Controllers
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Editdata(string PName, string Cat, string UOM, string Ht, string Wdt, string Dpt, string Th, string Price,string Pid, string Col)
+        public ActionResult Editdata(string PName, string Cat, string UOM, string Ht, string Wdt, string Dpt, string Th, string Price,string Pid, string Col, string SubCategory, string Finish, string Category, string Grp)
         {
             try
             {
@@ -251,8 +319,11 @@ namespace SWQuotation.Controllers
                 customerModel.Thickness = Th;
                 customerModel.ProductPrice = Price;
                 customerModel.colour = Col;
+                customerModel.SubCateId = SubCategory;
+                customerModel.Finish = Finish;
+                customerModel.Category = Category;
+                customerModel.GrpId = Grp;
                 return Json(new { model = (new Product().Editdata(customerModel)) }, JsonRequestBehavior.AllowGet);
-
             }
             catch (Exception ex)
             {
@@ -266,6 +337,26 @@ namespace SWQuotation.Controllers
             List<Product> obj = db.ProductImage(ProductId);
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult Colourlist()
+        {
+            Product db = new Product();
+            List<Product> obj = db.Colourlist();
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult EditColor(string ColourID, string colour)
+        {
+            try
+            {
+                return Json(new { model = (new Product().EditColor(ColourID, colour)) }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
         public ActionResult AddNewImg(Product model)
         {
@@ -385,6 +476,118 @@ namespace SWQuotation.Controllers
             catch (Exception ex)
             {
                 return Json(new { model = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public ActionResult AddCate(string Prodgrp, string Prodcate, string CatID)
+        {
+            try
+            {
+                Product customerModel = new Product();
+                customerModel.GrpId = Prodgrp;
+                customerModel.Category = Prodcate;
+                customerModel.CategoryID = CatID;
+
+                return Json(new { model = (new Product().AddCate(customerModel)) }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public ActionResult AddColour(string Colour, string ColourId)
+        {
+            try
+            {
+                Product customerModel = new Product();
+                customerModel.colour = Colour;
+                customerModel.ColourID = ColourId;
+
+                return Json(new { model = (new Product().AddColour(Colour, ColourId)) }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public ActionResult AddSubCate(string Prodgrp, string Prodcate, string SubId)
+        {
+            try
+            {
+                Product customerModel = new Product();
+                customerModel.CategoryID = Prodgrp;
+                customerModel.SubCateId = Prodcate;
+                customerModel.SCategory = SubId;
+
+                return Json(new { model = (new Product().AddSubCate(customerModel)) }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public ActionResult Deletecate(string CategoryID)
+        {
+            try
+            {
+                return Json(new { model = (new Product().Deletecate(CategoryID)) }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception Ex)
+            {
+                return Json(new { Ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public ActionResult DeleteColour(string ColourID)
+        {
+            try
+            {
+                return Json(new { model = (new Product().DeleteColour(ColourID)) }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception Ex)
+            {
+                return Json(new { Ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public ActionResult DeleteSubcate(string CategoryID)
+        {
+            try
+            {
+                return Json(new { model = (new Product().DeleteSubcate(CategoryID)) }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception Ex)
+            {
+                return Json(new { Ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public ActionResult EditCate(string Cate, string Grp)
+        {
+            try
+            {
+                return Json(new { model = (new Product().EditCate(Cate,Grp)) }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception Ex)
+            {
+                return Json(new { Ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public ActionResult EditSubCate(string Cate, string Grp)
+        {
+            try
+            {
+                return Json(new { model = (new Product().EditSubCate(Cate, Grp)) }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception Ex)
+            {
+                return Json(new { Ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 

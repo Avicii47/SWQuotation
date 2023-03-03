@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    debugger
+    
     var url = window.location.href;
     var split = url.split("QuotId=");
     var currentURL = split[1];
@@ -11,6 +11,7 @@
 });
 
 function Details(QuotId) {
+    debugger
     let url = "../Home/QuotDetails";
     $.ajax({
         type: "POST",
@@ -51,12 +52,13 @@ function Details(QuotId) {
                 $("#Txttrasport").val(response[0].ShipCost);
                 $("#TxtInstall").val(response[0].InstallCost);
                 $("#Txtname").val(response[0].t_cnam);
-                $("#Txtmob").val(response[0].t_cmob);
+                $("#Txtmob").val(response[0].QuDt);
                 $("#Txtamob").val(response[0].MobNo);
                 $("#Email").val(response[0].Email1);
                 $("#Txtdob").val(response[0].t_cdob);
                 $("#Gst").val(response[0].GST);
                 $("#Txt_tax").val(response[0].TaxName);
+                Qdetail(QuotId);
                 addedProdlist();
                 return response;
 
@@ -75,6 +77,72 @@ function Details(QuotId) {
         }
     });
 }
+
+
+function Qdetail(QuotId) {
+    debugger
+    let url = "../Home/Qdetail";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: '{QuotId:"' + QuotId + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            if (response != null) {
+                debugger
+                $("#Txtt_adva").val(response[0].Advance);
+                $("#Txtt_bala").val(response[0].Balance);
+                $("#Txt_Tc").val(response[0].TaxCode);
+                $("#ddlTaxes").val(response[0].Tax);
+                if ($("#ddlTaxes").val() == '2') {
+                    $("#ddlTaxes").html("IntrState(CGST+SGST)")
+                }
+                else {
+                    $("#ddlTaxes").text("InterState(IGST)")
+                }
+                $("#Txt_CGST").val(response[0].CGST);
+                $("#Txt_SGST").val(response[0].SGST);
+                $("#Txt_IGST").val(response[0].IGST);
+                if ($("#Txt_IGST").val() == 0) {
+                    $("#IGST").hide();
+                    $("#GST").show();
+                    $("#Txt_totaltax").val(Number($("#Txt_CGST").val()) + Number($("#Txt_SGST").val()));
+                } else {
+                    $("#IGST").show();
+                    $("#GST").hide();
+                    $("#Txt_totaltax").val($("#Txt_IGST").val());
+                };
+
+                $("#Txt_Th").val(response[0].TotalPrice);
+                $("#Txt_t").val(response[0].Taxes);
+                $("#Txttrasport").val(response[0].ShipCost);
+                $("#TxtInstall").val(response[0].InstallCost);
+                $("#Txt_tax").val(response[0].TaxName);
+                Qdetail();
+                addedProdlist();
+                return response;
+
+            }
+            else {
+                return false;
+            }
+            return response;
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
+    });
+}
+
+
+
+
 
 function addedProdlist(QuotId) {
     QuotId = $("#QuotId").val();
@@ -127,19 +195,23 @@ function bindtotable(response) {
                     }
                 },
                 { 'data': 'Position', 'title': 'Position', visible: false },
-                /*{ 'data': 'PId', 'title': 'Position', visible: false },*/
-                { 'data': 'PName', 'title': 'ProductName' },
+                { 'data': 'PId', 'title': 'Product ID' },
+                { 'data': 'PName', 'title': 'Product Name' },
                 { 'data': 'PQty', 'title': 'Quantity' },
-                { 'data': 'PPrice', 'title': 'ProductPrice' },
-                { 'data': 'TPrice', 'title': 'DiscountedPrice' },
+                { 'data': 'Nou', 'title': 'UOM' },
+                { 'data': 'PPrice', 'title': 'Product Price' },
+                { 'data': 'Diso', 'title': 'Discount In Rs' },
+                { 'data': 'DisoN', 'title': 'Discount In %' },
+                { 'data': 'DiscAmt', 'title': 'Total Discount' },
+                { 'data': 'TPrice', 'title': 'Total Price' },
 
 
             ],
             "footerCallback": function (row, data, start, end, display) {
-                debugger
+                
                 var api = this.api();
                 nb_cols = api.columns().nodes().length;
-                var j = 4;
+                var j = 10;
                 while (j < nb_cols) {
                     var pageTotal = api
                         .column(j, { page: 'current' })

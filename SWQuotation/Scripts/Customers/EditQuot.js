@@ -7,7 +7,6 @@
     BindECountry();
     BindCountrys();
     BindProducts();
-    BindTaxes();
     Details(QuotId);
     GetbillAdd();
     GetshipAdd();
@@ -27,6 +26,48 @@ function Editaddmodal() {
     BindEState();
 };
 
+var cheakTaxes = function () {
+    debugger
+    var billto = $("#ExtBill").val();
+    var shipto = $("#ExtShip").val();
+    var model = {
+        BillTo: billto,
+        ShipTo: shipto,
+    };
+    $.ajax({
+        url: "/Customers/cheakTaxes",
+        method: "post",
+        data: JSON.stringify(model),
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            debugger
+            if (response.model == '1') {
+                $("#ddlTaxes").empty();
+                $("#ddlTaxes").append($("<option></option>").val("2").html("IntrState(CGST+SGST)"));
+                $("#IGST").hide();
+                $("#GST").show();
+
+            } else {
+                $("#ddlTaxes").empty();
+                $("#ddlTaxes").append($("<option></option>").val("3").html("InterState(IGST)"));
+                $("#GST").hide();
+                $("#IGST").show();
+
+            }
+        },
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went Wrong',
+                text: response,
+            });
+        }
+    });
+};
+
+
 function Details(QuotId) {
     let url = "../Home/QuotDetails";
     $.ajax({
@@ -37,8 +78,8 @@ function Details(QuotId) {
         dataType: "json",
         async: false,
         success: function (response) {
-            debugger
             if (response != null) {
+                debugger
                 $("#QuotId").val(response[0].QuotId);
                 $("#Txt_Prod").val(response[0].custId);
                 $("#ExtBill").val(response[0].Billto);
@@ -50,7 +91,7 @@ function Details(QuotId) {
                 $("#Txtt_adva").val(response[0].Advance);
                 $("#Txtt_bala").val(response[0].Balance);
                 $("#Txt_Tc").val(response[0].TaxCode);
-                $("#ddlTaxes").val(response[0].Tax);
+                $("#ddlTaxes").html(response[0].Tax);
                 $("#Txt_CGST").val(response[0].CGST);
                 $("#Txt_SGST").val(response[0].SGST);
                 $("#Txt_IGST").val(response[0].IGST);
@@ -58,12 +99,13 @@ function Details(QuotId) {
                 $("#Txttrasport").val(response[0].ShipCost);
                 $("#TxtInstall").val(response[0].InstallCost);
                 $("#Txtname").val(response[0].t_cnam);
-                $("#Txtmob").val(response[0].t_cmob);
+                $("#Txtmob").val(response[0].QuDt);
                 $("#Txtamob").val(response[0].MobNo);
                 $("#Email").val(response[0].Email1);
                 $("#Txtdob").val(response[0].t_cdob);
                 $("#Gst").val(response[0].GST);
                 $("#Txt_tax").val(response[0].TaxName);
+                cheakTaxes();
                 addedProdlist();
                 return response;
 
@@ -116,14 +158,24 @@ var addtoliner = function (quotId) {
         var diso = $("#Txt_Dis").val();
     else
         var diso = 0;
-    if ($("#Txt_DisN").val() != "")
-        var disoN = $("#Txt_DisN").val();
+    if ($("#Txt_DisN").val() != "") {
+        var disoN = $("#Txt_DisN").val(); 
+    }
     else
         var disoN = 0;
 
     var topr = $("#Txt_DisP").val();
     
     var tax = $('#Txt_TPrice1').val();
+
+    if ($('#Txt_Dis').val() == "" || $('#Txt_Dis').val() == "0") {
+        debugger
+        var discprices = $('#Txt_DisN').val();
+        discprice = discprices;
+    }
+    else {
+
+    }
 
     var model = {
         QuotationID: quotId,
@@ -145,7 +197,7 @@ var addtoliner = function (quotId) {
         contentType: "application/json;charset=utf-8",
         datatype: "json",
         success: function (modal) {
-            debugger
+            
             toastr.success('Product Added');
             $('#AddModal').modal('toggle');
             QuotId = $("#QuotId").val();
@@ -182,9 +234,9 @@ var clearfunction = function () {
 }
 
 var addAddress = function () {
-    debugger
-    if ($("#Txtname").val() != "") {
-        var name = $("#Txtname").val();
+    
+    if ($("#Txt_Prod").val() != "") {
+        var name = $("#Txt_Prod").val();
     }
     else {
         toastr.error('Please enter Customer details first');
@@ -347,6 +399,7 @@ function addedProdlist(QuotId) {
 }
 
 function bindtotable(response) {
+    debugger
     var datatableVariable = $("#tblQuotation").DataTable(
         {
             "responsive": false, "lengthChange": true, "autoWidth": true,
@@ -385,13 +438,15 @@ function bindtotable(response) {
                     }
                 },
                 { 'data': 'Position', 'title': 'Position', visible: false },
-                /*{ 'data': 'PId', 'title': 'Position', visible: false },*/
+                { 'data': 'PId', 'title': 'Product ID' },
                 { 'data': 'PName', 'title': 'Product Name' },
-                { 'data': 'Nou', 'title': 'Units' },
                 { 'data': 'PQty', 'title': 'Quantity' },
-                
-                { 'data': 'PPrice', 'title': 'Per Product Price' },
-                { 'data': 'TPrice', 'title': 'Discounted Price' },
+                { 'data': 'Nou', 'title': 'UOM' },
+                { 'data': 'PPrice', 'title': 'Product Price' },
+                /*{ 'data': 'Diso', 'title': 'Discount In Rs' },*/
+                { 'data': 'DisoN', 'title': 'Discount In %' },
+                { 'data': 'DiscAmt', 'title': 'Total Discount' },
+                { 'data': 'TPrice', 'title': 'Total Price' },
                
                 
             ],
@@ -399,7 +454,7 @@ function bindtotable(response) {
                 debugger
                 var api = this.api();
                 nb_cols = api.columns().nodes().length;
-                var j = 7;
+                var j = 10;
                 while (j < nb_cols) {
                     var pageTotal = api
                         .column(j, { page: 'current' })
@@ -413,6 +468,7 @@ function bindtotable(response) {
                     var value = parseFloat(pageTotal).toFixed(2);
                     $("#Txt_GPri").val(value).focus;
                     $("#Txt_DisAmt").val(value).focus;
+                    debugger
                     editProduct();
                 }
             }
@@ -437,12 +493,13 @@ var DeleteP = function (Position) {
 };
 
 function Editmodal() {
-    debugger
+    
     $("#Editmodal").modal('show');
 };
 
 function getAddress() {
-    var custid = $('#Txtname').val();
+    debugger
+    var custid = $('#Txt_Prod').val();
     $.ajax({
         type: "POST",
         url: "/Customers/GetAddress",
@@ -493,7 +550,7 @@ function AddressList(response) {
             columns: [
                 {
                     'data': null, title: '', wrap: true, "render": function (item) {
-                        return '<center><div class="btn-group"><button type="button" onclick="GetCode1(' + "'" + item.AddressCode + "'" + ')" value="0" data-dismiss="modal" class="btn btn-secondary btn-sm" id="btn-sa-confirm"><i class="fas fa-plus-circle"></i></button></div></center>'
+                        return '<center><div class="btn-group"><button type="button" onclick="GetCode1(' + "'" + item.AddressCode + "'" + ');cheakTaxes();" value="0" data-dismiss="modal" class="btn btn-secondary btn-sm" id="btn-sa-confirm"><i class="fas fa-plus-circle"></i></button></div></center>'
                     },
                 },
                 {
@@ -503,7 +560,7 @@ function AddressList(response) {
                     },
                 },
                 { 'data': 'AddressCode', 'title': 'Address Code'/*, "visible": false*/ },
-                { 'data': 't_cnam', 'title': 'Customer Name' },
+                { 'data': 't_cnam', 'title': 'Customer Name', visible: false },
                 { 'data': 't_cadd', 'title': 'Address 1' },
                 { 'data': 'Address2', 'title': 'Address 2' },
                 { 'data': 'Address3', 'title': 'Address 3' },
@@ -518,7 +575,8 @@ function AddressList(response) {
 };
 
 function getAddress1() {
-    var custid = $('#Txtname').val();
+    debugger
+    var custid = $('#Txt_Prod').val();
     $.ajax({
         type: "POST",
         url: "/Customers/GetAddress",
@@ -569,7 +627,7 @@ function AddressList1(response) {
             columns: [
                 {
                     'data': null, title: '', wrap: true, "render": function (item) {
-                        return '<center><div class="btn-group"><button type="button" onclick="GetCode(' + "'" + item.AddressCode + "'" + ')" value="0" data-dismiss="modal" class="btn btn-secondary btn-sm" id="btn-sa-confirm"><i class="fas fa-plus-circle"></i></button></div></center>'
+                        return '<center><div class="btn-group"><button type="button" onclick="GetCode(' + "'" + item.AddressCode + "'" + ');cheakTaxes();" value="0" data-dismiss="modal" class="btn btn-secondary btn-sm" id="btn-sa-confirm"><i class="fas fa-plus-circle"></i></button></div></center>'
                     },
                 },
                 {
@@ -579,7 +637,7 @@ function AddressList1(response) {
                     },
                 },
                 { 'data': 'AddressCode', 'title': 'Address Code'/*, "visible": false*/ },
-                { 'data': 't_cnam', 'title': 'Customer Name' },
+                { 'data': 't_cnam', 'title': 'Customer Name', visible: false },
                 { 'data': 't_cadd', 'title': 'Address 1' },
                 { 'data': 'Address2', 'title': 'Address 2' },
                 { 'data': 'Address3', 'title': 'Address 3' },
@@ -618,7 +676,7 @@ var DeleteADD = function (AddressCode) {
         dataType: "json",
         async: false,
         success: function (model) {
-            debugger
+            
             if (model.model == '0') {
                 Swal.fire({
                     icon: "warning",
@@ -637,7 +695,7 @@ var DeleteADD = function (AddressCode) {
 };
 
 function AddressDetails(AddressCode) {
-    debugger
+    
     let url = "../Customers/AddressDetails";
     $.ajax({
         type: "POST",
@@ -647,7 +705,6 @@ function AddressDetails(AddressCode) {
         dataType: "json",
         async: false,
         success: function (response) {
-            debugger
             if (response != null) {
                 $("#Acode").val(response[0].AddressCode);
                 $("#Aname").val(response[0].t_cnam);
@@ -679,7 +736,6 @@ function AddressDetails(AddressCode) {
 }
 
 function BindECountry() {
-    debugger
     let url = "../Customers/GetCountry";
     $.ajax({
         type: "POST",
@@ -710,7 +766,6 @@ function BindECountry() {
 }
 
 function BindEState() {
-    debugger
     var countID = $('#ddlEcountry').val();
     let url = "../Customers/StateList";
     $.ajax({
@@ -720,7 +775,6 @@ function BindEState() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            debugger
             if (response != null) {
                 $("#ddlEStates").empty();
                 $("#ddlEStates").append($("<option></option>").val("0").html("Select State"));
@@ -742,7 +796,6 @@ function BindEState() {
 }
 
 function BindECity() {
-    debugger
     var StateId = $("#ddlEStates option:selected").val();
     let url = "../Customers/CityList";
     $.ajax({
@@ -773,6 +826,7 @@ function BindECity() {
 }
 
 var GetCode1 = function (AddressCode) {
+    debugger
     $("#ShipAddress").val(AddressCode);
     $("#ExtShip").val(AddressCode);
     let url = "../Customers/GetCustAdd";
@@ -807,7 +861,6 @@ var GetCode1 = function (AddressCode) {
 }
 
 var GetshipAdd = function (AddressCode) {
-    debugger
     var AddressCode= $("#ExtShip").val();
     let url = "../Customers/GetCustAdd";
     $.ajax({
@@ -874,7 +927,6 @@ var GetCode = function (AddressCode) {
 
 var GetbillAdd = function (AddressCode) {
     var AddressCode = $("#ExtBill").val();
-     
     let url = "../Customers/GetCustAdd";
     $.ajax({
         type: "POST",
@@ -925,7 +977,6 @@ var DeleteProduct = function (Position) {
 };
 
 var Detailprod = function (Position) {
-    debugger
     var Qid = $("#QuotId").val()
     var model = {
         QuotId: Qid,
@@ -940,7 +991,6 @@ var Detailprod = function (Position) {
         async: false,
         success: function (model) {
             if (model != null) {
-                debugger
                 $("#edtname").val(model[0].PName);
                 $("#postion").val(model[0].Position);
                 $("#No").val(model[0].PQty);
@@ -951,7 +1001,6 @@ var Detailprod = function (Position) {
                 $("#DisN").val(model[0].DisoN);
                 $("#Txt_Disprice").val(model[0].FinalPrice);
                 return model;
-
             }
             else {
                 return false;
@@ -964,7 +1013,8 @@ var Detailprod = function (Position) {
 
 var Editdata = function () {
     debugger
-    var quotId = $("#QuotId").val()
+    var cusid = $("#Txt_Prod").val();
+    var quotId = $("#QuotId").val();
     var billto = document.getElementById("ExtBill").value;
     var shipto = document.getElementById("ExtShip").value;
     var taxes = $("#ddlTaxes option:selected").val();
@@ -992,28 +1042,32 @@ var Editdata = function () {
         var transport = $("#Txttrasport").val();
     }
     else {
-        toastr.error('Enter Transport Cost');
-        $("#Txttrasport").val('');
-        $("#Txttrasport").focus();
-        return false;
-    }
+        var transport="0"
+    } 
 
     if ($("#TxtInstall").val() != "") {
         var intsall = $("#TxtInstall").val();
     }
     else {
-        toastr.error('Enter Installation Cost');
-        $("#TxtInstall").val('');
-        $("#TxtInstall").focus();
-        return false;
+        var intsall ="0"
     }
     var discount = $("#Txt_DisAmt").val();
     var tprice = $("#Txt_FPrice1").val();
     var totalprice = $("#Txt_GPri").val();
-    var advance = $("#Txtt_adva").val();
+   
+
+    if ($("#Txtt_adva").val() != "") {
+        var advance = $("#Txtt_adva").val();
+    }
+    else {
+        var advance = "0"
+    }
+
+
     var balance = $("#Txtt_bala").val();
 
     var model = {
+        CustId: cusid,
         QuotId: quotId,   
         Advance: advance,
         Balance: balance,
@@ -1062,7 +1116,7 @@ var Editdata = function () {
 };
 
 var Clearfunction = function () {
-    debugger
+    
     $('#edtname').val("");
     $('#Price').val("");
     $('#No').val("");
@@ -1071,7 +1125,6 @@ var Clearfunction = function () {
 }
 
 var EditADD = function () {
-    debugger
     var add1 = $("#AAdd1").val()
     var add2 = $("#AAdd2").val();
     var add3 = $("#AAdd3").val();
@@ -1174,7 +1227,7 @@ function BindCountry() {
 }
 
 function BindState() {
-    debugger
+    
     var countID = $("#ddlcountry").val();
     let url = "../Customers/StateList";
     $.ajax({
@@ -1184,7 +1237,7 @@ function BindState() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            debugger
+            
             if (response != null) {
                 $("#ddlStates").empty();
                 $("#ddlStates").append($("<option></option>").val("0").html("Select State"));
@@ -1206,7 +1259,7 @@ function BindState() {
 }
 
 function BindCity() {
-    debugger
+    
     var StateId = $("#ddlStates option:selected").val();
     let url = "../Customers/CityList";
     $.ajax({
@@ -1275,7 +1328,7 @@ function BindStates() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            debugger
+            
             if (response != null) {
                 $("#ddlStatess").empty();
                 $("#ddlStatess").append($("<option></option>").val("0").html("Select State"));
@@ -1299,7 +1352,7 @@ function BindStates() {
 }
 
 function BindCitys() {
-    debugger
+    
     var StateId = $("#ddlStatess option:selected").val();
     let url = "../Customers/CityList";
     $.ajax({
@@ -1329,8 +1382,8 @@ function BindCitys() {
     });
 }
 
-function BindTaxes() {
-
+function BindTaxes(tax) {
+    debugger
     let url = "../Customers/TaxesList";
     $.ajax({
         type: "POST",
@@ -1350,7 +1403,16 @@ function BindTaxes() {
                 $("#ddlTaxes").empty();
                 $("#ddlTaxes").append($("<option disabled></option>").val(0).html("Select Tax"));
             }
-            return $("#ddlTaxes option:selected").text();
+            debugger
+            if (tax != "") {
+                $("#ddlTaxes").val(tax);
+                return $("#ddlTaxes").text();
+            }
+            else {
+                return $("#ddlTaxes option:selected").text();
+            }
+
+           
         },
         failure: function (response) {
             alert(response.responseText);
@@ -1463,7 +1525,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     $("#Txt_Price,#Txtt_No").keyup(function () {
-        debugger
+        
         var total = 0;
         var x = Number($("#Txt_Price").val());
         var y = Number($("#Txtt_No").val());
@@ -1517,8 +1579,9 @@ $(document).on("change keyup blur", "#Txt_DisN", function () {
 });
 
 function editProduct() {
+    debugger
     var total = $("#Txt_GPri").val();
-    var tax = $('#Txt_Tc').val();
+    var tax = $('#ddlTaxes').val();
     getGST(tax);
     editedTax(tax);
     var per = $('#TxtPER').val();
@@ -1552,11 +1615,11 @@ function editProduct() {
 };
 
 var addbillAddress = function () {
-    if ($("#Txtname").val() != "") {
-        var name = $("#Txtname").val();
+    if ($("#Txt_Prod").val() != "") {
+        var name = $("#Txt_Prod").val();
     }
     else {
-        var name = $("Txtname").val();
+        var name = $("Txt_Prod").val();
     }
 
     if ($("#Txtt_cadd").val() != "") {
@@ -1656,7 +1719,7 @@ var addbillAddress = function () {
             getAddress();
             $("#AddbillAddress").modal('hide');
             $("#ShipModal").modal('hide');
-            debugger
+            
             GetbillCode(model);
         },
         error: function (AddressCode) {
@@ -1670,7 +1733,7 @@ var addbillAddress = function () {
 };
 
 var GetbillCode = function (model) {
-    debugger
+    
     $("#BillAddress").val(model.model);
     $("#ExtBill").val(model.model);
     let url = "../Customers/GetCustAdd";
@@ -1682,7 +1745,7 @@ var GetbillCode = function (model) {
         dataType: "json",
         async: false,
         success: function (response) {
-            debugger
+            
             if (response != null) {
                 $("#NBTo").html(response[0].address).focus;
                 $("#EBTo").html(response[0].address).focus;
@@ -1706,12 +1769,12 @@ var GetbillCode = function (model) {
 }
 
 var addshipAddress = function () {
-    debugger
-    if ($("#Txtname").val() != "") {
-        var name = $("#Txtname").val();
+    
+    if ($("#Txt_Prod").val() != "") {
+        var name = $("#Txt_Prod").val();
     }
     else {
-        var name = $("Txtname").val();
+        var name = $("Txt_Prod").val();
     }
 
     if ($("#Txtt_cadds").val() != "") {
@@ -1810,7 +1873,7 @@ var addshipAddress = function () {
         contentType: "application/json;charset=utf-8",
         dataType: "json",
         success: function (response) {
-            debugger
+            
             //Swal.fire({
             //    icon: 'success',
             //    title: 'Address Added',
@@ -1866,7 +1929,7 @@ var GetsCode = function (model) {
 }
 
 $(document).on("change keyup blur", "#Txt_DisN", function () {
-    debugger
+    
     var main = $('#Txt_TPrice').val();
     var disN = $('#Txt_DisN').val();
     var discont = main - disN;
@@ -1884,7 +1947,7 @@ function editedTax(tax) {
 }
 
 var EditP = function () {
-    debugger
+    
     var quotId = $("#QuotId").val()
     var postion = $("#postion").val()
     /*var noofunits = $("#No").val();*/
@@ -1929,7 +1992,7 @@ var EditP = function () {
         dataType: "json",
         async: false,
         success: function (response) {
-            debugger
+            
             toastr.success('Changes Complete');
             
             console.log(response);

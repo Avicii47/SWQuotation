@@ -59,55 +59,16 @@
                                     <div class="form-group">
                                         <label class="col-sm-10 col-form-label">Customer Name</label>
                                         <div class="col-sm-11">
-                                            <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Address" id="Txtname" readonly>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="100" id="Txtname" readonly>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="col-sm-10 col-form-label">Date of Birth</label>
-                                        <div class="col-sm-11">
-                                            <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Address" id="Txtdob" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-sm-10 col-form-label">Mobile No</label>
                                         <div class="col-sm-11">
-                                            <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Address" id="Txtmob" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="col-sm-10 col-form-label">Alter No.</label>
-                                        <div class="col-sm-11">
-                                            <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Address" id="Txtamob" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="col-sm-10 col-form-label">GST No.</label>
-                                        <div class="col-sm-11">
-                                            <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Address" id="Gst" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="col-sm-10 col-form-label">Email Id</label>
-                                        <div class="col-sm-11">
-                                            <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Address" id="Email" readonly>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="100" id="Txtmob" readonly>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="100" placeholder="Enter Address" id="Txt_Prod" style="display:none">
                                         </div>
                                     </div>
                                 </div>
@@ -120,7 +81,7 @@
                                         <label class="col-sm-10 col-form-label" style="margin-left: 3px">Bill To</label>
                                         <div class="col-sm-4">
                                             <div class="row">
-                                                <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Bill To Address" id="ExtBill" style="margin-left: 7px; width: 210px ">
+                                                <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Bill To Address" id="ExtBill" style="margin-left: 7px; width: 210px" onchange="cheakTaxes();">
                                                 <button type="button" data-toggle="modal" value="0" class="btn btn-secondary btn-sm input-button" style="height: 37.99px; width: 37.99px; transform: translateX(258px); position: absolute; " id="btn-sa-confirm" onclick="billtoModal();"><i class="nav-icon fas fa-plus-circle"></i></button>
                                             </div>
                                         </div>
@@ -133,7 +94,7 @@
                                     <label class="col-sm-10 col-form-label" style="margin-left: 9px">Ship To</label>
                                     <div class="col-sm-4">
                                         <div class="row">
-                                            <input type="text" class="form-control" autocomplete="off" placeholder="Ship To Address" id="ExtShip" style="margin-left: 17px; width: 210px ">
+                                            <input type="text" class="form-control" autocomplete="off" placeholder="Ship To Address" id="ExtShip" style="margin-left: 17px; width: 210px " onchange="cheakTaxes();">
                                             <button type="button" data-toggle="modal" value="0" class="btn btn-secondary btn-sm input-button" style="height: 37.99px; width: 37.99px; transform: translateX(267px); position: absolute; " id="shipto" onclick="shiptoModal();"><i class="nav-icon fas fa-plus-circle" style=" margin-left: -5px"></i></button>
                                         </div>
                                     </div>
@@ -172,17 +133,23 @@
                                                 <thead>
                                                     <tr>
                                                         <th><center>SrNo.</center></th>
+                                                        <th><center>Product ID</center></th>
                                                         <th><center>Product Name</center></th>
                                                         <th><center>Quantity</center></th>
                                                         <th><center>Units</center></th>
-                                                        <th><center>ProductPrice</center></th>
-                                                        <th><center>DiscountedPrice</center></th>
+                                                        <th><center>PerProductPrice</center></th>
+                                                        <th><center>Discount In %</center></th>
+                                                        <th><center>Discounted Price</center></th>
+                                                        <th><center>Discounted Price</center></th>
                                                         <th><center>Position</center></th>
                                                         <th><center>Delete Product</center></th>
                                                     </tr>
                                                 </thead>
                                                 <tfoot>
                                                     <tr>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
                                                         <th></th>
                                                         <th></th>
                                                         <th></th>
@@ -213,7 +180,6 @@
                                             <label class="col-sm-10 col-form-label">Taxes</label>
                                             <div class="col-sm-11">
                                                 <select class="form-control select2" id="ddlTaxes" onselect="this.value"></select>
-                                                @*<input class="form-control" autocomplete="off" maxlength="50" id="ddlTaxes" readonly>*@
                                             </div>
                                         </div>
                                     </div>
@@ -259,7 +225,7 @@
                                     <div class="col-sm-6">
                                         <label class="col-sm-10 col-form-label">Transport Cost</label>
                                         <div class="col-sm-11">
-                                            <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" placeholder="Transport Cost" id="Txttrasport">
+                                            <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" value="0" oninput="validity.valid||(value='');" placeholder="0" id="Txttrasport">
                                         </div>
                                     </div>
                                 </div>
@@ -269,7 +235,7 @@
                                     <div class="col-sm-6">
                                         <label class="col-sm-10 col-form-label">Installation Cost</label>
                                         <div class="col-sm-11">
-                                            <input type="number" class="form-control" autocomplete="off" oninput="validity.valid||(value='');" maxlength="50" min="0" placeholder="Installation Cost" id="TxtInstall">
+                                            <input type="number" class="form-control" autocomplete="off" oninput="validity.valid||(value='');" value="0" maxlength="50" min="0" placeholder="0" id="TxtInstall">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
@@ -297,7 +263,8 @@
                                         <label class="col-sm-10 col-form-label">Advance</label>
                                         <div class="form-group">
                                             <div class="col-sm-11">
-                                                <input type="number" class="form-control" autocomplete="off" oninput="validity.valid||(value='');" maxlength="50" placeholder="Advance" id="Txtt_adva">
+                                                <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" value="0"  oninput="validity.valid||(value='');" placeholder="0" id="Txtt_adva">
+                                                @*<input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" value="0"  oninput="validity.valid||(value='');" placeholder="Transport Cost" id="Txttrasport">*@
                                             </div>
                                         </div>
                                     </div>
@@ -315,8 +282,9 @@
                             <div class="card-footer">
                                 <div class="form-group">
                                     <div class="row">
-                                            <input id="Btnsuccess" class="btn btn-secondary" type="button" value="Back" href="~/Home/Dashboard" onclick="back();" style="margin-left: 6px" />&ensp;
-                                            <center><button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true" onclick="Editdata()" @*style="margin-left: -1342px;"*@>Save</button></center>
+                                        <input id="Btnsuccess" class="btn btn-secondary" type="button" value="Back" href="~/Home/Dashboard" onclick="back();" style="margin-left: 6px" />&ensp;
+                                        <center><button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true" onclick="Editdata()">Save</button></center>
+                                        <input id="Btnsuccess" class="btn btn-secondary" type="button" value="Print" onclick="PrintQuot();" style="margin-left: 6px" />&ensp;
                                     </div>
                                 </div>
                             </div>
@@ -330,8 +298,15 @@
 
 <script>
     function back() {
+        debugger
         window.location.href = "/Home/Dashboard";
     }
+
+    function PrintQuot() {
+        debugger
+        var QuotId = $('#QuotId').val();
+        window.location.href = "/Customers/Quot?QuotId=" + QuotId;
+    };
 </script>
 
 
@@ -684,7 +659,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="col-sm-10 col-form-label">Price</label>
+                                <label class="col-sm-10 col-form-label">Product Price</label>
                                 <div class="col-sm-11">
                                     <input type="number" class="form-control" autocomplete="off" maxlength="50" placeholder="Price" id="Txt_Price" readonly>
                                 </div>
@@ -717,7 +692,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-10 col-form-label">Discount In %</label>
                                     <div class="col-sm-11">
-                                        <input type="number" class="form-control" autocomplete="off" max="100" min="0" id="Txt_Dis" placeholder="0">
+                                        <input type="number" class="form-control" autocomplete="off" max="100" min="0" value="0" id="Txt_Dis" placeholder="0">
                                     </div>
                                 </div>
                             </div>
@@ -725,7 +700,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-10 col-form-label">Discount In No.</label>
                                     <div class="col-sm-11">
-                                        <input type="number" class="form-control" autocomplete="off" placeholder="0" maxlength="50" id="Txt_DisN">
+                                        <input type="number" class="form-control" autocomplete="off" placeholder="0" value="0" maxlength="50" id="Txt_DisN">
                                     </div>
                                 </div>
                             </div>
@@ -733,7 +708,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12">
-                            <label class="col-sm-10 col-form-label" style="margin-left: -6px">Final Price</label>
+                            <label class="col-sm-10 col-form-label" style="margin-left: -6px">Net Price</label>
                             <div class="col-sm-12" style="width:auto">
                                 <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                        type="number" class="form-control" id="Txt_DisP"  readonly style="margin-left: -5px" />
@@ -999,7 +974,6 @@
 <script>
     $(function () {
         $("#ddlTaxes").on("change", function () {
-            debugger
             if (parseInt($("#ddlTaxes").val()) == 2) {
                 $("#IGST").hide();
                 $("#GST").show();
@@ -1014,7 +988,7 @@
 
 <script>
     $(document).on("change keyup blur", "#Dis", "#DisN", function () {
-        debugger
+        
         var main = $('#TPrice').val();
         var disc = $('#Dis').val();
         var dec = (disc / 100).toFixed(2);
@@ -1039,7 +1013,7 @@
 
 <script>
     $(document).on("change keyup blur", "#DisN", function () {
-        debugger
+        
         var main = $('#TPrice').val();
         var disN = $('#DisN').val();
         var discont = main - disN;
@@ -1050,17 +1024,17 @@
 
 <script>
     var closeadd = function () {
-        debugger
+        
         $('#AddNewAddressModal').modal('toggle');
     };
 
     var closeship = function () {
-        debugger
+        
         $('#ShipModal').modal('hide');
     };
 
     var close = function () {
-        debugger
+        
         $("ShipModal").modal("hide");
         $("ShipModal").remove();
         //$('.modal').removeClass('show');
@@ -1097,7 +1071,7 @@
 <script>
     $(document).ready(function () {
         $("#No,#Price").keyup(function () {
-            debugger
+            
             var total = 0;
             var x = Number($("#Price").val());
             var y = Number($("#No").val());
@@ -1177,7 +1151,7 @@
 <script>
     $(document).ready(function () {
         $("#Txt_Dis").keyup(function () {
-            debugger
+            
             if ($("#Txt_Dis").val().length == 0) {
                 $("#Txt_DisN").attr("disabled", false);
             }
@@ -1188,7 +1162,7 @@
     });
     $(document).ready(function () {
         $("#Txt_DisN").keyup(function () {
-            debugger
+            
             if ($("#Txt_DisN").val().length == 0) {
                 $("#Txt_Dis").attr("disabled", false);
                 return true;
@@ -1202,7 +1176,7 @@
 
     $(document).ready(function () {
         $("#Dis").keyup(function () {
-            debugger
+            
             if ($("#Dis").val().length == 0) {
                 $("#DisN").attr("disabled", false);
             }
@@ -1220,7 +1194,7 @@
     });
     $(document).ready(function () {
         $("#DisN").keyup(function () {
-            debugger
+            
             if ($("#DisN").val().length == 0) {
                 $("#Dis").attr("disabled", false);
             }

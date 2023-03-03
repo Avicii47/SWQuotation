@@ -1,7 +1,9 @@
 ﻿$(document).ready(function () {
-    debugger
     getQuotList();
 });
+
+
+
 
 function getQuotList() {
     $.ajax({
@@ -23,7 +25,6 @@ function getQuotList() {
 
 function QuotList(response) {
     debugger
-    var dt = response[0].QuDt;
     var datatableVariable = $("#tblQuot").DataTable(
         {
             "responsive": false, "lengthChange": true, "autoWidth": false,
@@ -31,6 +32,7 @@ function QuotList(response) {
             paging: true,
             searching: true,
             destroy: true,
+            ordering: true,
             buttons: [
                 { extend: 'copyHtml5', footer: true, header: true },
                 { extend: 'excelHtml5', footer: true, header: true },
@@ -42,7 +44,6 @@ function QuotList(response) {
                     .columns()
                     .every(function () {
                         var that = this;
-
                         $('input', this.header()).on('keyup change clear', function () {
                             if (that.search() !== this.value) {
                                 that.search(this.value).draw();
@@ -65,12 +66,7 @@ function QuotList(response) {
                 },
                 { 'data': 'QuotId', 'title': 'Quotation Id' },
                 { 'data': 'CustId', 'title': 'Customer Name' },
-                {
-                    'data': 'QuDt', 'title': 'Quotation Date', "render": function (QuDt) {
-                        return QuDt = dt.split(" ")[0];
-                    },
-
-                },
+                { 'data': 'QuDt', 'title': 'Quotation Date' },
                 { 'data': 'Total', 'title': 'Total Amount' },
                 { 'data': 'Adv', 'title': 'Advance' },
                 { 'data': 'Balance', 'title': 'Balance' },
@@ -107,6 +103,7 @@ var CheckForD = function (QuotId) {
 };
 
 function Approved(QuotId) {
+    debugger
     $.ajax({
         type: "POST",
         url: "/Customers/Approved",
@@ -114,13 +111,20 @@ function Approved(QuotId) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            console.log(response);
-            Swal.fire({
-                icon: 'success',
-                title: 'Quotation Approved',
-                //text: 'Customer Detail Changed'
-            });
-            getQuotList();
+            debugger
+            if (response.model=="1") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Quotation is PreApproved',
+                });
+            }
+            else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Quotation Approved',
+                });
+                getQuotList();
+            }
         },
         error: function (response) {
             Swal.fire({
@@ -150,7 +154,6 @@ function Delete(QuotId) {
 };
 
 var CheckForEdit = function (QuotId) {
-    debugger
     $.ajax({
         type: "POST",
         url: "/Customers/cheakforedit",
@@ -158,7 +161,6 @@ var CheckForEdit = function (QuotId) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            debugger
             if (response.model == '1') {
                 ViewQuot(QuotId);
             } else {
@@ -176,7 +178,6 @@ var CheckForEdit = function (QuotId) {
 };
 
 var CheckForDelete = function (QuotId) {
-    debugger
     $.ajax({
         type: "POST",
         url: "/Customers/DeleteQuot",
@@ -184,7 +185,7 @@ var CheckForDelete = function (QuotId) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            debugger
+            
             if (response.model == '1') {
                 Swal.fire({
                     icon: 'error',
@@ -229,5 +230,213 @@ function Edit(QuotId) {
 function MovetoQuot() {
     window.location.href = "/Customers/Index" 
 };
+
+
+const canvasElement = document.getElementById("canvas");
+
+function printPdf(action) {
+    const docDefinition = {
+        content: [
+            {
+                alignment: 'center',
+                text: 'PPRA',
+                style: 'header',
+                fontSize: 23,
+                bold: true,
+                margin: [0, 10],
+            },
+            {
+                margin: [0, 0, 0, 10],
+                layout: {
+                    fillColor: function (rowIndex, node, columnIndex) {
+                        return (rowIndex % 2 === 0) ? '#ebebeb' : '#f5f5f5';
+                    }
+                },
+                table: {
+                    widths: ['100%'],
+                    heights: [20, 10],
+                    body: [
+                        [
+                            {
+                                text: 'SETOR: ADMINISTRATIVO',
+                                fontSize: 9,
+                                bold: true,
+                            }
+                        ],
+                        [
+                            {
+                                text: 'FUNÇÃO: DIRETOR DE ENSINO',
+                                fontSize: 9,
+                                bold: true
+                            }
+                        ],
+                    ],
+                }
+            },
+            {
+                style: 'tableExample',
+                layout: {
+                    fillColor: function (rowIndex, node, columnIndex) {
+                        return (rowIndex === 0) ? '#c2dec2' : null;
+                    }
+                },
+                table: {
+                    widths: ['30%', '10%', '25%', '35%'],
+                    heights: [10, 10, 10, 10, 30, 10, 25],
+                    headerRows: 1,
+                    body: [
+                        [
+                            {
+                                text: 'AGENTE: Não Identificados',
+                                colSpan: 3,
+                                bold: true,
+                                fontSize: 9
+                            },
+                            {
+                            },
+                            {
+                            },
+                            {
+                                text: 'GRUPO: Grupo 1 - Riscos Físicos',
+                                fontSize: 9,
+                                bold: true
+                            }
+                        ],
+                        [
+                            {
+                                text: 'Limite de Tolerância:',
+                                fontSize: 9,
+                                bold: true
+                            },
+                            {
+                                text: 'Meio de Propagação:',
+                                colSpan: 3,
+                                fontSize: 9,
+                                bold: true
+                            },
+                            {
+                            },
+                            {
+                            }
+                        ],
+                        [
+                            {
+                                text: [
+                                    'Frequência: ',
+                                    {
+                                        text: 'Habitual',
+                                        bold: false
+                                    }
+                                ],
+                                fontSize: 9,
+                                bold: true
+                            },
+                            {
+                                text: [
+                                    'Classificação do Efeito: ',
+                                    {
+                                        text: 'Leve',
+                                        bold: false
+                                    }
+                                ],
+                                colSpan: 3,
+                                fontSize: 9,
+                                bold: true
+                            },
+                            {
+                            },
+                            {
+                            }
+                        ],
+                        [
+                            {
+                                text: 'Tempo de Exposição:',
+                                colSpan: 2,
+                                fontSize: 9,
+                                bold: true
+                            },
+                            {
+                            },
+                            {
+                                text: 'Medição:',
+                                colSpan: 2,
+                                fontSize: 9,
+                                bold: true
+                            },
+                            {
+                            }
+                        ],
+                        [
+                            {
+                                text: 'Fonte Geradora:',
+                                border: [true, true, false, false],
+                                colSpan: 2,
+                                fontSize: 9,
+                                bold: true
+                            },
+                            {
+                            },
+                            {
+                                text: 'Téc. Utilizada:',
+                                border: [false, true, true, false],
+                                colSpan: 2,
+                                fontSize: 9,
+                                bold: true
+                            },
+                            {
+                            }
+                        ],
+                        [
+                            {
+                                text: 'Conclusão:',
+                                border: [true, false, true, true],
+                                colSpan: 4,
+                                fontSize: 9,
+                                bold: true
+                            },
+                            {
+                            },
+                            {
+                            },
+                            {
+                            }
+                        ],
+                        [
+                            {
+                                text: 'EPIs/EPCs:',
+                                border: [true, true, false, true],
+                                colSpan: 3,
+                                fontSize: 9,
+                                bold: true
+                            },
+                            {
+                            },
+                            {
+                            },
+                            {
+                                text: 'CAs:',
+                                border: [false, true, true, true],
+                                fontSize: 9,
+                                bold: true
+                            }
+                        ],
+                    ]
+                }
+            }
+        ]
+    };
+
+    if (action === 1) {
+        pdfMake.createPdf(docDefinition).getDataUrl((dataURL) => {
+            renderPDF(dataURL, document.getElementById('canvas'));
+        });
+    }
+    else if (action === 2) {
+        const pdf = createPdf(docDefinition);
+        pdf.download('PPRA.pdf');
+    }
+}
+
+
 
 

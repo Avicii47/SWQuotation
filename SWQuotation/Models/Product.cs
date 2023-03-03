@@ -35,6 +35,15 @@ namespace SWQuotation.Models
         public string colour { get; set; }
         public string Id { get; set; }
         public string Category { get; set; }
+        public string GrpId { get; set; }
+        public string GrpName { get; set; }
+        public string CategoryID { get; set; }
+        public string CategoryName { get; set; }
+        public string SubCateId { get; set; }
+        public string SCategory { get; set; }
+        public string FinishID { get; set; }
+        public string ColourID { get; set; }
+        public string Finish { get; set; }
 
 
         public List<Product> ProductList()
@@ -56,12 +65,15 @@ namespace SWQuotation.Models
                     Prod.ProductName = dr.GetValue(1).ToString();
                     Prod.PC = dr.GetValue(2).ToString();
                     Prod.ProductCatogery = dr.GetValue(3).ToString();
-                    Prod.Height = dr.GetValue(4).ToString();
-                    Prod.Width = dr.GetValue(5).ToString();
-                    Prod.Depth = dr.GetValue(6).ToString();
-                    Prod.Thickness = dr.GetValue(7).ToString();
-                    Prod.UOM = dr.GetValue(8).ToString();
-                    Prod.ProductPrice = dr.GetValue(9).ToString();
+                    Prod.GrpName = dr.GetValue(4).ToString();
+                    Prod.SubCateId = dr.GetValue(5).ToString();
+                    Prod.Finish = dr.GetValue(6).ToString();
+                    Prod.Height = dr.GetValue(7).ToString();
+                    Prod.Width = dr.GetValue(8).ToString();
+                    Prod.Depth = dr.GetValue(9).ToString();
+                    Prod.Thickness = dr.GetValue(10).ToString();
+                    Prod.UOM = dr.GetValue(11).ToString();
+                    Prod.ProductPrice = dr.GetValue(12).ToString();
                     ProductList.Add(Prod);
                 }
             }
@@ -84,7 +96,6 @@ namespace SWQuotation.Models
             cmd.Parameters.AddWithValue("@PId", ProductId);
             cmd.Parameters.AddWithValue("@choice", "Delete");
             cmd.Parameters.Add("@delete", SqlDbType.Int, 10);
-            //cmd.Parameters.Add("@Img", SqlDbType.Int, 10);
             cmd.Parameters.Add("@Back", SqlDbType.NVarChar, 100);
             cmd.Parameters.AddWithValue("@P", "");
 
@@ -221,12 +232,13 @@ namespace SWQuotation.Models
             return UOMList;
         }
 
-        public List<Product> GetCategory()
+        public List<Product> GrpList()
         {
             String message = "";
-            List<Product> PList = new List<Product>();
+            List<Product> GrpList = new List<Product>();
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
-            SqlCommand cmd = new SqlCommand("select * from tbl_ProductCategory", con);
+            SqlCommand cmd = new SqlCommand("select t_cbrn,t_dsca from swlive.dbo.ttcmcs031100", con);
+
             cmd.CommandType = CommandType.Text;
             cmd.CommandTimeout = 300;
             con.Open();
@@ -235,10 +247,10 @@ namespace SWQuotation.Models
                 SqlDataReader dr = cmd.ExecuteReader();
                 while (dr.Read())
                 {
-                    Product Category = new Product();
-                    Category.Id = dr.GetValue(0).ToString();
-                    Category.Category = dr.GetValue(1).ToString();
-                    PList.Add(Category);
+                    Product Glist = new Product();
+                    Glist.GrpId = dr.GetValue(0).ToString();
+                    Glist.GrpName = dr.GetValue(1).ToString();
+                    GrpList.Add(Glist);
                 }
             }
             catch (Exception ex)
@@ -246,8 +258,305 @@ namespace SWQuotation.Models
                 message = ex.Message.ToString() + "Error.";
             }
             con.Close();
-            return PList;
+            return GrpList;
         }
+
+        public List<Product> ProdCategory(string GrpId)
+        {
+            String message = "";
+            List<Product> PCList = new List<Product>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("select t_catg,t_dsca,(select t_dsca from swlive.dbo.ttcmcs031100 where swlive.dbo.ttcmcs031100.t_cbrn=swlive.dbo.ttdswc729100.t_cbrn ) from swlive.dbo.ttdswc729100", con);
+
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandTimeout = 300;
+            con.Open();
+            try
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    Product Plist = new Product();
+                    Plist.CategoryID = dr.GetValue(0).ToString();
+                    Plist.CategoryName = dr.GetValue(1).ToString();
+                    Plist.GrpName = dr.GetValue(2).ToString();
+                    PCList.Add(Plist);
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            con.Close();
+            return PCList;
+        }
+
+        public List<Product> ProdCate(string GrpId)
+        {
+            String message = "";
+            List<Product> PCList = new List<Product>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("select t_catg,t_dsca from swlive.dbo.ttdswc729100 where t_cbrn='" + GrpId + "'", con);
+
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandTimeout = 300;
+            con.Open();
+            try
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    Product Plist = new Product();
+                    Plist.CategoryID = dr.GetValue(0).ToString();
+                    Plist.CategoryName = dr.GetValue(1).ToString();
+                    //Plist.GrpName = dr.GetValue(2).ToString();
+                    PCList.Add(Plist);
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            con.Close();
+            return PCList;
+        }
+
+        public List<Product> AddProdCategory()
+        {
+            String message = "";
+            List<Product> PCList = new List<Product>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("select t_catg,t_dsca from swlive.dbo.ttdswc729100", con);
+
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandTimeout = 300;
+            con.Open();
+            try
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    Product Plist = new Product();
+                    Plist.CategoryID = dr.GetValue(0).ToString();
+                    Plist.CategoryName = dr.GetValue(1).ToString();
+                    PCList.Add(Plist);
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            con.Close();
+            return PCList;
+        }
+
+        public List<Product> ProdSubCategory(string CategoryID)
+        {
+            String message = "";
+            List<Product> PSCList = new List<Product>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("select t_sctg,t_dsca,t_catg, (select t_dsca from swlive.dbo.ttdswc729100 where swlive.dbo.ttdswc729100.t_catg = swlive.dbo.ttdswc730100.t_catg) from swlive.dbo.ttdswc730100", con);
+
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandTimeout = 300;
+            con.Open();
+            try
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    Product PClist = new Product();
+                    PClist.SubCateId = dr.GetValue(0).ToString();
+                    PClist.SCategory = dr.GetValue(1).ToString();
+                    PClist.CategoryID = dr.GetValue(2).ToString();
+                    PClist.CategoryName = dr.GetValue(3).ToString();
+                    PSCList.Add(PClist);
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            con.Close();
+            return PSCList;
+        }
+        public List<Product> ProdSubCate(string CategoryID)
+        {
+            String message = "";
+            List<Product> PSCList = new List<Product>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("select t_sctg,t_dsca from swlive.dbo.ttdswc730100 where t_catg='" + CategoryID + "'", con);
+
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandTimeout = 300;
+            con.Open();
+            try
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    Product PClist = new Product();
+                    PClist.SubCateId = dr.GetValue(0).ToString();
+                    PClist.SCategory = dr.GetValue(1).ToString();
+                    //PClist.CategoryID = dr.GetValue(2).ToString();
+                    //PClist.CategoryName = dr.GetValue(3).ToString();
+                    PSCList.Add(PClist);
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            con.Close();
+            return PSCList;
+        }
+
+
+
+        public List<Product> FinishList()
+        {
+            String message = "";
+            List<Product> UOMList = new List<Product>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("select t_fnsh,t_desc from swlive.dbo.ttdtst102100", con);
+
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandTimeout = 300;
+            con.Open();
+            try
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    Product Ulist = new Product();
+                    Ulist.FinishID = dr.GetValue(0).ToString();
+                    Ulist.Finish = dr.GetValue(1).ToString();
+                    UOMList.Add(Ulist);
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            con.Close();
+            return UOMList;
+        }
+
+        public string AddColour(string Colour, string ColourId)
+        {
+            String message = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            var ReturnValue = "";
+            SqlCommand cmd = new SqlCommand("QA_AddProdCategory", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@Disc", Colour);
+            cmd.Parameters.AddWithValue("@NO", ColourId);
+            cmd.Parameters.AddWithValue("@choice", "AddColour");
+            cmd.Parameters.AddWithValue("@Return", "");
+            try
+            {
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            finally
+            {
+                con.Close();
+            }
+            return ReturnValue;
+        }
+
+        public string EditColor(string ColourID, string colour)
+        {
+            String message = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            var ReturnValue = "";
+            SqlCommand cmd = new SqlCommand("QA_AddProdCategory", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@Cate", ColourID);
+            cmd.Parameters.AddWithValue("@Disc", colour);
+            cmd.Parameters.AddWithValue("@choice", "EditColour");
+            cmd.Parameters.AddWithValue("@Return", "");
+            try
+            {
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            finally
+            {
+                con.Close();
+            }
+            return ReturnValue;
+        }
+
+        public string DeleteColour(string ColourID)
+        {
+            String message = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            var ReturnValue = "";
+            SqlCommand cmd = new SqlCommand("QA_AddProdCategory", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Cate", ColourID);
+            cmd.Parameters.AddWithValue("@choice", "DeleteColour");
+            cmd.Parameters.AddWithValue("@Return", "");
+            try
+            {
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            finally
+            {
+                con.Close();
+            }
+            return ReturnValue;
+        }
+
+
+
+        public List<Product> Colourlist()
+        {
+            String message = "";
+            List<Product> NCList = new List<Product>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("select t_colr,t_dsca from swlive.dbo.ttdswc731100", con);
+            cmd.CommandType = CommandType.Text;
+            con.Open();
+            try
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    Product NCust = new Product();
+                    NCust.ColourID = dr.GetValue(0).ToString();
+                    NCust.colour = dr.GetValue(1).ToString();
+
+                    NCList.Add(NCust);
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            con.Close();
+            return NCList;
+        }
+
 
         public List<Product> ProductDetails(string ProductId)
         {
@@ -273,7 +582,12 @@ namespace SWQuotation.Models
                     NCust.Depth = dr.GetValue(6).ToString();
                     NCust.Thickness = dr.GetValue(7).ToString();
                     NCust.colour = dr.GetValue(8).ToString();
-                    NCust.ProductPrice = dr.GetValue(9).ToString();
+                    NCust.GrpName = dr.GetValue(9).ToString();
+                    //NCust.Category = dr.GetValue(10).ToString();
+                    NCust.SubCateId = dr.GetValue(10).ToString();
+                    NCust.Finish = dr.GetValue(11).ToString();
+                    NCust.ProductPrice = dr.GetValue(12).ToString();
+
                     NCList.Add(NCust);
                 }
             }
@@ -305,6 +619,10 @@ namespace SWQuotation.Models
                 cmd.Parameters.AddWithValue("@Thickness", customer.Thickness);
                 cmd.Parameters.AddWithValue("@PPrice", customer.ProductPrice);
                 cmd.Parameters.AddWithValue("@PColour", customer.colour);
+                cmd.Parameters.AddWithValue("@PCate", customer.Category);
+                cmd.Parameters.AddWithValue("@PGrp", customer.GrpId);
+                cmd.Parameters.AddWithValue("@Psubcate", customer.SubCateId);
+                cmd.Parameters.AddWithValue("@PFinish", customer.Finish);
                 cmd.Parameters.AddWithValue("@choice", "Update");
                 cmd.Parameters.AddWithValue("@P", "");
 
@@ -381,6 +699,194 @@ namespace SWQuotation.Models
             }
             con.Close();
             return ProductList;
+        }
+
+        public String AddCate(Product customerModel)
+        {
+            String message = "";
+            //return null;
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            var ReturnValue = "";
+            SqlCommand cmd = new SqlCommand("QA_AddProdCategory", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@Grp", customerModel.GrpId);
+            cmd.Parameters.AddWithValue("@Disc", customerModel.Category);
+            cmd.Parameters.AddWithValue("@NO", customerModel.CategoryID);
+            cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
+            cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
+            cmd.Parameters.AddWithValue("@choice", "AddCategory");
+            try
+            {
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            finally
+            {
+                con.Close();
+            }
+            return ReturnValue;
+        }
+
+        public String AddSubCate(Product customerModel)
+        {
+            String message = "";
+    
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            var ReturnValue = "";
+            SqlCommand cmd = new SqlCommand("QA_AddProdCategory", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@Cate", customerModel.CategoryID);
+            cmd.Parameters.AddWithValue("@Disc", customerModel.SubCateId);
+            cmd.Parameters.AddWithValue("@NO", customerModel.SCategory);
+            cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
+            cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
+            cmd.Parameters.AddWithValue("@choice", "AddSubCategory");
+            try
+            {
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            finally
+            {
+                con.Close();
+            }
+            return ReturnValue;
+        }
+
+        public string Deletecate(string CategoryID)
+        {
+            String message = "";
+            var ReturnValue = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("QA_AddProdCategory", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 300;
+            cmd.Parameters.AddWithValue("@Cate", CategoryID);
+            cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
+            cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
+            cmd.Parameters.AddWithValue("@choice", "DeleteCate");
+            try
+            {
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+                Return = Convert.ToString(cmd.Parameters["@Return"].Value);
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            finally
+            {
+                con.Close();
+                ReturnValue = Return;
+            }
+            return ReturnValue;
+        }
+
+        public string DeleteSubcate(string CategoryID)
+        {
+            String message = "";
+            var ReturnValue = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("QA_AddProdCategory", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 300;
+            cmd.Parameters.AddWithValue("@Cate", CategoryID);
+            cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
+            cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
+            cmd.Parameters.AddWithValue("@choice", "DeleteSub");
+            try
+            {
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+                Return = Convert.ToString(cmd.Parameters["@Return"].Value);
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            finally
+            {
+                con.Close();
+                ReturnValue = Return;
+            }
+            return ReturnValue;
+        }
+
+        public string EditCate(string Cate,string Grp)
+        {
+            String message = "";
+            var ReturnValue = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("QA_AddProdCategory", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 300;
+            cmd.Parameters.AddWithValue("@Disc", Cate);
+            cmd.Parameters.AddWithValue("@Cate", Grp);
+            cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
+            cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
+            cmd.Parameters.AddWithValue("@choice", "EditCate");
+            try
+            {
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            finally
+            {
+                con.Close();
+                ReturnValue = Return;
+            }
+            return ReturnValue;
+        }
+
+        public string EditSubCate(string Cate, string Grp)
+        {
+            String message = "";
+            var ReturnValue = "";
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SWQ"].ConnectionString);
+            SqlCommand cmd = new SqlCommand("QA_AddProdCategory", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 300;
+            cmd.Parameters.AddWithValue("@Disc", Cate);
+            cmd.Parameters.AddWithValue("@Cate", Grp);
+            cmd.Parameters.Add("@Return", SqlDbType.Int, 10);
+            cmd.Parameters["@Return"].Direction = ParameterDirection.Output;
+            cmd.Parameters.AddWithValue("@choice", "EditSubCate");
+            try
+            {
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message.ToString() + "Error.";
+            }
+            finally
+            {
+                con.Close();
+                ReturnValue = Return;
+            }
+            return ReturnValue;
         }
 
     }

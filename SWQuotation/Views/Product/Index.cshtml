@@ -67,14 +67,14 @@
                 <ul class="nav nav-pills ml-auto">
                     <li class="nav-item">
                         <a class="btn  bg-gradient-secondary" onclick="prod();" style="height: 34px; width: 75px;">
-                            <i class="fa fa-fw fa-plus-circle"></i>@*&nbsp;Add*@
+                            <i class="fa fa-fw fa-plus-circle"></i>
                         </a>
                     </li>
                 </ul>&nbsp;&nbsp;
                 <ul class="nav nav-pills ml-auto">
                     <li class="nav-item">
                         <a class="btn  bg-gradient-secondary" onclick="prodPrice();" style="height: 34px; width: 75px;">
-                            <i class="fa fa-fw fa-history"></i>@*&nbsp;History*@
+                            <i class="fa fa-fw fa-history"></i>
                         </a>
                     </li>
                 </ul>
@@ -111,8 +111,8 @@
     <img class="modal-content" id="img01">
 </div>
 
-<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow-y: auto">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="card card-primary">
                 <div class="card-header">
@@ -132,71 +132,119 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-sm-6">
-                        <label class="col-sm-10 col-form-label" style="margin-left: 14px;">Product Name </label>
+                        <label class="col-sm-10 col-form-label">Product Name </label>
                         <div class="col-sm-11">
-                            <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Product Name" id="Txt_Prod" style="margin-left: 14px; width: 305px;">
+                            <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Product Name" id="Txt_Prod">
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <label class="col-sm-10 col-form-label" style="padding-left: 22px">Product ID </label>
-                        <div class="col-sm-11" style="padding-left: 20px">
-                            <input type="text" class="form-control" autocomplete="off" style="width: 305px" maxlength="50" placeholder="Enter Product Name" id="ProductId">
+                        <label class="col-sm-10 col-form-label">Product ID </label>
+                        <div class="col-sm-11">
+                            <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Product Name" id="ProductId">
+                            <input type="text" class="form-control" autocomplete="off" style="display:none" maxlength="50" placeholder="Enter Product Name" id="c">
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="card card-default" style="width: 95%; margin-left: 9px">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label class="col-form-label" style="padding-left: 10px">Product Image</label>
+                            &nbsp;
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="col-sm-10 col-form-label" style="margin-left: 14px;">Product Catogery</label>
-                            <div class="col-sm-11">
-                                <select class="form-control select2" id="cata" onselect="this.value" style="margin-left: 14px; width: 305px; ">
-                                    <option>Chair</option>
-                                    <option>Table</option>
-                                    <option>Door</option>
-                                    <option>Bed</option>
-                                </select>
+                        <div class="col-sm-11">
+                            <div class="form-group" style="margin-left: 8px; margin-top: -21px">
+                                <label for="exampleInputFile" style="margin-top: 7px; margin-left: -4px;">Add Image</label>
+                                <div class="input-group" style="margin-left: -12px;">
+                                    &ensp;
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" multiple name="file" id="Img">
+                                        <label class="custom-file-label" for="file">Add file</label>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" onclick="AddImage();" style="height: 38px">Upload</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <label class="col-sm-10 col-form-label" style="padding-left: 22px">Unit Of Measurement </label>
-                        <div class="col-sm-11" style=" padding-left: 20px">
-                            <select class="form-control select2" id="ddlUOM1" style="width: 305px" onselect="this.value"></select>
+                    <div class="col-sm-6" id="Edit" aria-label="Close" data-backdrop="false" @*style="overflow-y: auto"*@>
+                        <div class="col-sm-11">
+                            <div class="form-group" style="margin-left: 11px; margin-top: -21px">
+                                <label for="exampleInputFile" style="margin-top: 7px">Edit Image</label>
+                                <div class="input-group" style="margin-left: -12px;">
+                                    &ensp;
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="EditImg">
+                                        <label class="custom-file-label" for="Img">Add file</label>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" onclick="editImage();" style="height: 38px">Upload</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="tab-content" id="custom-tabs-three-tabContent" style="margin-top: -28px; padding-left: 11px; ">
+                    <div class="tab-pane fade show active table-responsive p-0" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                        &nbsp;
+                        <table id="tblPImg" class="table table-bordered table-striped" style="width: 98%"><thead></thead></table>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label class="col-sm-10 col-form-label" style="margin-left: 14px; padding-left: 10px;">Height Of Product</label>
-                        <div class="col-sm-11">
-                            <input type="number" class="form-control" min="0" oninput="validity.valid||(value='');" autocomplete="off" style="margin-left: 14px; width: 305px; " maxlength="50" placeholder="" id="Txt_Ht">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="col-sm-10 col-form-label" style="padding-left: 23px; ">Width Of Product</label>
-                        <div class="col-sm-11" style=" padding-left: 20px">
-                            <input type="number" class="form-control" style="width: 305px" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" id="Txt_Wdt">
-                        </div>
-                    </div>
+            
 
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label">Product Group</label>
+                        <div class="col-sm-11">
+                            <select class="form-control select2" id="ddlPG1" onselect="this.value" onchange="ProdCategory1();"></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label">Product Category</label>
+                        <div class="col-sm-11">
+                            <select class="form-control select2" id="ddlPCat1" onselect="this.value" onchange="ProdSubCategory2();"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label">Sub Category</label>
+                        <div class="col-sm-11">
+                            <select class="form-control select2" id="ddlProdSubCate" onselect="this.value"></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label">Product Finish</label>
+                        <div class="col-sm-11">
+                            <select class="form-control select2" id="ddlPFinish1" onselect="this.value"></select>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="row">
                     <div class="col-sm-6">
-                        <label class="col-sm-10 col-form-label" style="margin-left: 14px;">Depth Of Product</label>
+                        <label class="col-sm-10 col-form-label">Unit Of Measurement </label>
                         <div class="col-sm-11">
-                            <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" style="margin-left: 14px; width: 305px; " oninput="validity.valid||(value='');" placeholder="" id="Txt_Dpt">
+                            <select class="form-control select2" id="ddlUOM1" onselect="this.value"></select>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <label class="col-sm-10 col-form-label" style="padding-left: 22px">Thickness Of Product</label>
-                        <div class="col-sm-11" style=" padding-left: 20px">
-                            <input type="number" class="form-control" autocomplete="off" style="width: 305px" maxlength="50" min="0" oninput="validity.valid||(value='');" id="Txt_Th">
+                        <label class="col-sm-10 col-form-label">Height Of Product</label>
+                        <div class="col-sm-11">
+                            <input type="number" class="form-control" min="0" oninput="validity.valid||(value='');" autocomplete="off" maxlength="50" placeholder="" id="Txt_Ht">
                         </div>
                     </div>
                 </div>
@@ -204,22 +252,48 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-sm-6">
-                        <label class="col-sm-10 col-form-label" style="margin-left: 14px; padding-left: 10px;">Product Colour </label>
+                        <label class="col-sm-10 col-form-label">Width Of Product</label>
                         <div class="col-sm-11">
-                            <input type="text" class="form-control" autocomplete="off" maxlength="50" min="0" style="margin-left: 14px; width: 305px; " oninput="validity.valid||(value='');" placeholder="Enter Product colour" id="Txt_PCol">
+                            <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" id="Txt_Wdt">
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <label class="col-sm-10 col-form-label" style="padding-left: 24px;">Product Price </label>
-                        <div class="col-sm-11" style=" padding-left: 20px">
-                            <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" style="width: 305px; margin-left: 1px; " placeholder="Enter Product Price" id="Txt_Price">
+                        <label class="col-sm-10 col-form-label">Depth Of Product</label>
+                        <div class="col-sm-11">
+                            <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" placeholder="" id="Txt_Dpt">
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label">Thickness Of Product</label>
+                        <div class="col-sm-11">
+                            <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" id="Txt_Th">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="col-sm-10 col-form-label">Product Colour </label>
+                        <div class="col-sm-11">
+                            @*<input type="text" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" placeholder="Enter Product colour" id="Txt_PCol">*@
+                            <select class="form-control select2" id="EditColour" onselect="this.value"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <label class="col-sm-10 col-form-label" style="padding-left: 2px">Product Price </label>
+                    <div class="col-sm-12" style="padding-left: 3px">
+                        <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" placeholder="Enter Product Price" id="Txt_Price">
+                    </div>
+                </div>
+            </div>
+
             <div class="card-footer">
                 <div class="row">
-                    <input id="Btnsuccess" class="btn btn-secondary" type="button" value="Save" onclick="Editdata()" data-dismiss="modal" style="margin-left: 9px" />
+                    <input id="Btnsuccess" class="btn btn-secondary" type="button" value="Save" onclick="Editdata()" style="margin-left: 9px" />
                 </div>
             </div>
         </div>
@@ -227,7 +301,7 @@
 </div>
 
 <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="card card-primary">
                 <div class="card-header">
@@ -244,38 +318,7 @@
                     </div>
                 </div>
                 <br>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group" style="margin-left: 35px">
-                            <div class="input-group" style="margin-left: -12px;">
-                                <label for="exampleInputFile" style="margin-top: 7px">Add More Image</label>
-                                &ensp;
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" multiple name="file" id="Img">
-                                    <label class="custom-file-label" for="file">Add file</label>
-                                </div>
-                                <div class="input-group-append">
-                                    <span class="input-group-text" onclick="AddImage();" style="height: 38px">Upload</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6" id="Edit" aria-label="Close" data-backdrop="false">
-                        <div class="form-group" style="margin-left: 35px">
-                            <div class="input-group" style="margin-left: -12px;">
-                                <label for="exampleInputFile" style="margin-top: 7px">Edit Image</label>
-                                &ensp;
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="EditImg">
-                                    <label class="custom-file-label" for="Img">Add file</label>
-                                </div>
-                                <div class="input-group-append">
-                                    <span class="input-group-text" onclick="editImage();" style="height: 38px">Upload</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <label class="col-sm-10 col-form-label">Product Image</label>
                 <input type="text" id="PP" style="display:none">
                 <div class="tab-content" id="custom-tabs-three-tabContent" style="margin-top: -23px">
                     <center>
@@ -288,7 +331,7 @@
                 <div class="card-footer">
                     <div class="form-group">
                         <div class="row" style="margin-left: -2px">
-                            <button class="btn btn-secondary" @*data-dismiss="modal"*@ onclick="closeM();" aria-hidden="true">Close</button>
+                            <button class="btn btn-secondary" onclick="closeM();" aria-hidden="true">Close</button>
                         </div>
                     </div>
                 </div>
@@ -321,7 +364,7 @@
                                 <div class="col-sm-6">
                                     <label class="col-sm-10 col-form-label">Product Name </label>
                                     <div class="col-sm-11">
-                                        <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Product Name" id="txtproduct">
+                                        <input type="text" class="form-control" autocomplete="off" placeholder="Enter Product Name" id="txtproduct">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -335,24 +378,26 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
-                                <div class="card card-default">
+                            <div class="col-md-12" style="margin-left: 10px">
+                                <div class="card card-default" style="width: 95%;">
                                     <div class="card-body">
                                         <div class="col-md-12">
                                             <div class="card-header">
-                                                <div class="row">
-                                                    <div class=" col-sm-6">
-                                                        <div class="row">
-                                                            <label class="col-sm-10 col-form-label" style="margin-left: -38px;">Add Product Image</label>
-                                                            <center>
-                                                                <button type="button" class="btn btn-secondary col fileinput-button" style="width: 132.1px; position: absolute; margin-left: -59px; ">
-                                                                    <i class="fas fa-plus"></i>
-                                                                    <span>Add Files</span>
-                                                                </button>
-                                                            </center>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                  <h3 class="card-title">
+                                                        <label class="ccol-form-label" style="margin-left: -31px">Product Image</label>
+                                                  </h3>
+                                                  <div class="card-tools">
+                                                       <ul class="nav nav-pills ml-auto">
+                                                           <li class="nav-item">
+                                                                <center>
+                                                                   <button type="button" class="btn btn-secondary col fileinput-button" style="width: 108px; position: absolute; margin-left: -82px ">
+                                                                          <i class="fas fa-plus"></i>
+                                                                          <span>Add Files</span>
+                                                                   </button>
+                                                                </center>
+                                                           </li>
+                                                       </ul>
+                                                  </div>
                                             </div>
                                             <div class="card-body">
                                                 <div class="table table-striped files" id="previews">
@@ -386,44 +431,59 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="col-sm-10 col-form-label">Product Catogery</label>
-                                        <div class="col-sm-11">
-                                            <select name="ddlCatogery" class="form-control select2" id="ddlCatogery" onselect="this.value" @*style="width: 291.5px; margin-left: -9px; "*@>
-                                                <option>Chair</option>
-                                                <option>Table</option>
-                                                <option>Door</option>
-                                                <option>Bed</option>
-                                            </select>
-                                        </div>
+                                    <label class="col-sm-10 col-form-label">Product Group</label>
+                                    <div class="col-sm-11">
+                                        <select class="form-control select2" id="ddlPG" onchange="ProdCategory()"></select>
                                     </div>
                                 </div>
+                                <div class="col-sm-6">
+                                    <label class="col-sm-10 col-form-label">Product Category</label>
+                                    <div class="col-sm-11">
+                                        <select class="form-control select2" id="ddlPCat" onchange="ProdSubCategory()"></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="col-sm-10 col-form-label">Sub Category</label>
+                                    <div class="col-sm-11">
+                                        <select class="form-control select2" id="ddlPSCat" onselect="this.value"></select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-sm-10 col-form-label">Product Finish</label>
+                                    <div class="col-sm-11">
+                                        <select class="form-control select2" id="ddlPFinish" onselect="this.value"></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
                                 <div class="col-sm-6">
                                     <label class="col-sm-10 col-form-label">Unit Of Measurement </label>
                                     <div class="col-sm-11">
                                         <select class="form-control select2" id="ddlUOM" onselect="this.value"></select>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row">
                                 <div class="col-sm-6">
                                     <label class="col-sm-10 col-form-label">Height Of Product</label>
                                     <div class="col-sm-11">
                                         <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" placeholder="Enter Product Height" id="txtHt">
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
                                 <div class="col-sm-6">
                                     <label class="col-sm-10 col-form-label">Width Of Product</label>
                                     <div class="col-sm-11">
                                         <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" placeholder="Enter Product Width" id="txtWdt">
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row">
                                 <div class="col-sm-6">
                                     <label class="col-sm-10 col-form-label">Depth Of Product</label>
                                     <div class="col-sm-11">
@@ -433,34 +493,34 @@
                                         <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Product Name" id="postion" style="display:none">
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
                                 <div class="col-sm-6">
                                     <label class="col-sm-10 col-form-label">Thickness Of Product</label>
                                     <div class="col-sm-11">
                                         <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" placeholder="Enter Product Thickness" id="txtTh">
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row">
                                 <div class="col-sm-6">
                                     <label class="col-sm-10 col-form-label">Product Colour </label>
                                     <div class="col-sm-11">
-                                        <input type="text" class="form-control" autocomplete="off" maxlength="50" min="0" oninput="validity.valid||(value='');" placeholder="Enter Product Colour" id="txtcolour">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-10 col-form-label">Product Price</label>
-                                    <div class="col-sm-11">
-                                        <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" placeholder="Enter Product Price" id="txtprice" @*style="width: 291.5px; margin-left: -9px "*@>
+                                        <select class="form-control select2" id="ddlcolour" onselect="this.value"></select>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <label>Product Price</label>
+                            <input type="number" class="form-control" autocomplete="off" maxlength="50" min="0" placeholder="Enter Product Price" id="txtprice">
+                        </div>
+                    </div>
                         <div class="card-footer">
-                            <center>
-                                <center><input id="btn btn-secondary" class="btn btn-secondary" type="button" value="Add" onclick="saveProduct()" /></center>
-                            </center>
+                            
+                                <input id="btn btn-secondary" class="btn btn-secondary" type="button" value="Add" onclick="saveProduct()" />
+                            
                         </div>
                     </div>
                 </form>
@@ -535,7 +595,7 @@
 <script>
     // Add the following code if you want the name of the file appear on select
     $(".custom-file-input").on("change", function () {
-        debugger
+       
         var fileName = $(this).val().split("\\").pop();
         $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
@@ -546,10 +606,8 @@
         window.location.href = "/Home/Dashboard";
     }
     function closeM() {
-        debugger
         $("#myModal2").modal('hide');
         $('body').removeClass('modal-backdrop');
-        //$("#myModal2").removeClass("modal-backdrop");
     }
 </script>
 

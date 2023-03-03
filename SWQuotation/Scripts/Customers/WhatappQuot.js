@@ -9,14 +9,35 @@
     var QuotId = currentURL;
     Footer();
     getQueryParams(url);
+    Pdf();
+       //window.open(
+       //     "https://wa.me/"
+       // );
+
 });
 
-function getQueryParams(url) {
+
+function Pdf() {
     debugger
+    var quotId = $('#QuotId').html();
+    var element = document.getElementById('create_pdf');
+    var opt = {
+        margin: [3, 0, 0, 0],
+        filename: 'Quotation Number ' + quotId,
+        image: { type: 'jpeg', quality: 0.99 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).toPdf().save();
+}
+
+
+
+function getQueryParams(url) {
     const paramArr = url.slice(url.indexOf('?') + 1).split('&');
     const params = {};
     paramArr.map(param => {
-        debugger
+        
         const [key, val] = param.split('=');
         params[key] = decodeURIComponent(val);
     })
@@ -27,7 +48,6 @@ function getQueryParams(url) {
 }
 
 function CustQuot(p,ID) {
-    debugger
     let url = "../Customers/CustQuots";
     $.ajax({
         type: "POST",
@@ -60,8 +80,6 @@ function CustQuot(p,ID) {
                 $("#Total").html(response[0].TotalPrice).focus;
                 $("#ShipCost").html(response[0].ShipCost).focus;
                 $("#IntallCost").html(response[0].InstallCost).focus;
-                debugger
-                
                 return response;
             }
             else {
@@ -90,7 +108,6 @@ function Footer() {
                 $("#Mob2").html(response[1].MobNo1).focus;
                 $("#Email2").html(response[1].Email1).focus;
                 $("#Display3").html(response[2].Display1).focus;
-                $("#Display3").html(response[2].Display1).focus;
                 $("#Mob3").html(response[2].MobNo1).focus;
                 $("#Email3").html(response[2].Email1).focus;
                 return response;
@@ -104,7 +121,6 @@ function Footer() {
 }
 
 function GetQuotProduct(p) {
-    debugger
     let url = "../Customers/GetQuotProduct";
     $.ajax({
         type: "POST",
@@ -114,11 +130,10 @@ function GetQuotProduct(p) {
         dataType: "json",
         async: false,
         success: function (response) {
-            debugger
             var html = "";
             $("#tblQuotProduts tbody").empty();
             $.each(response, function (index, elementValue) {
-                debugger
+                
                 html += "<tr><td>" + "</td><td>" + elementValue.PName + "</td><td>" + '<center>' + elementValue.PPrice + '</center>' + "</td><td>" + '<center>' + elementValue.PCol + '</center>' + "</td><td>" + '<center>' + elementValue.PQty + '</center>' + "</td><td>" + '<center>' + elementValue.TotalPrice + '</center>' + "</td><td>" + '<center><img src="/Uploads/' + elementValue.Img + '" style="height:120px;width:120px;"' + "</td></tr>";
             });
             $("#tblQuotProduts tbody").append(html);

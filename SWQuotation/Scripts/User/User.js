@@ -3,7 +3,7 @@
 })
 
 function UserDetails(loginid) {
-    debugger
+    
     let url = "../Login/Userdetail";
 
     $.ajax({
@@ -29,7 +29,7 @@ function UserDetails(loginid) {
 }
 
 function UserDetails2(loginid) {
-    debugger
+    
     let url = "../Login/Userdetail2";
 
     $.ajax({

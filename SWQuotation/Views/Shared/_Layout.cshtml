@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @*<meta property="og:title" content="Sales Mate" />*@
+    <meta property="og:title" content="QTN" />
     <meta property="og:description" id="metasalesname" content="">
     <meta property="og:image" itemprop="image" content="https://bla123.neocities.org/mp/images/thumbs/IMG_327.JPG" />
     <meta property="og:locale" content="en_GB" />
@@ -17,7 +18,7 @@
     <!-- Bootstrap Color Picker -->
     <link rel="stylesheet" href="~/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
     <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!--<link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">-->
     <!-- Font Awesome -->
     <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
     <!-- Bootstrap4 Duallistbox -->
@@ -144,7 +145,7 @@
             <a href="/home/Dashboard" class="brand-link">
                 @*<img src="~/images/logo3.png" />*@
                 <img src="~/dist/img/SWLogo.png" alt="Spacewood Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">Spacewood Furnishers</span>
+                <span class="brand-text font-weight-light">Spacewood</span>
             </a>
             <!-- Sidebar -->
             @*@Html.Partial("~/Views/Home/UserDetailInView.cshtml")*@
@@ -193,16 +194,8 @@
     <script src="~/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
     <script src="~/Scripts/Dashboard/Dashboard.js"></script>
 
-    <script>
-        jQuery(document).ajaxStart(function () {
-            debugger
-            $('#divLoader').show();
-        })
-            .ajaxStop(function() {
-            debugger
-            $('#divLoader').hide();
-        });
-    </script>
+
+
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
@@ -263,23 +256,6 @@
 
             var UsId = '@Session["userId"]';
 
-        //$.ajax({
-        //    type: "POST",
-        //    url: "../Home/GetUserProfilePic",
-        //    data: '{userId :"' + UsId + '"}',
-        //    contentType: "application/json; charset=utf-8",
-        //    dataType: "json",
-        //    success: function (response) {
-        //        if (response.length > 0) {
-        //            $("#imgprofilepic").attr("src", ('' + response + ''));
-        //        }
-        //        else {
-        //            var exisImg = '../dist/img/salesperson.jpg';
-        //            $("#imgprofilepic").attr("src", ('' + exisImg + ''));
-        //        }
-        //    }
-        //    })
-
         });
     </script>
 
@@ -310,19 +286,19 @@
     <!-- Bootstrap4 Duallistbox -->
     <script src="~/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
     <!-- InputMask -->
-    <script src="~/plugins/moment/moment.min.js"></script>
-    <script src="~/plugins/inputmask/jquery.inputmask.min.js"></script>
+    @*<script src="~/plugins/moment/moment.min.js"></script>
+        <script src="~/plugins/inputmask/jquery.inputmask.min.js"></script>*@
     <!-- Bootstrap Switch -->
-    <script src="~/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+    @*<script src="~/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>*@
     <!-- BS-Stepper -->
-    <script src="~/plugins/bs-stepper/js/bs-stepper.min.js"></script>
+    @*<script src="~/plugins/bs-stepper/js/bs-stepper.min.js"></script>*@
     <!-- dropzonejs -->
     <script src="~/plugins/dropzone/min/dropzone.min.js"></script>
     <!-- daterangepicker -->
-    <script src="~/plugins/moment/moment.min.js"></script>
-    <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+    @*<script src="~/plugins/moment/moment.min.js"></script>*@
+    @*<script src="~/plugins/daterangepicker/daterangepicker.js"></script>*@
     <!-- Tempusdominus Bootstrap 4 -->
-    <script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    @*<script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>*@
     <!-- Summernote -->
     <script src="~/plugins/summernote/summernote-bs4.min.js"></script>
     <!-- overlayScrollbars -->

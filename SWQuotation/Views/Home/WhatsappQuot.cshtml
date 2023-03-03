@@ -4,8 +4,8 @@
 }
 
 <head>
-    <meta name="viewport" content="width=1100px, initial-scale=1" />
-    <meta property="og:title" content="Sales Mate" />
+    <meta name="viewport" @*content="width=1100px, initial-scale=1"*@ />
+    <meta property="og:title" content="QTN" />
     <meta property="og:description" id="metasalesname" content="">
     <meta property="og:image" itemprop="image" content="https://bla123.neocities.org/mp/images/thumbs/IMG_327.JPG" />
     <meta property="og:locale" content="en_GB" />
@@ -16,44 +16,141 @@
     @*<script src="~/Scripts/jquery-3.3.1.js"></script>*@
     <script src="~/Scripts/jquery-3.4.1.min.js"></script>
     <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-     @*Bootstrap Color Picker*@ 
+    @*Bootstrap Color Picker*@
     <link rel="stylesheet" href="~/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
-     @*Tempusdominus Bootstrap 4*@ 
+    @*Tempusdominus Bootstrap 4*@
     <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-     @*Font Awesome*@ 
+    @*Font Awesome*@
     <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
-     @*Bootstrap4 Duallistbox*@ 
+    @*Bootstrap4 Duallistbox*@
     <link rel="stylesheet" href="~/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
-     @*iCheck*@ 
+    @*iCheck*@
     <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-     @*Select2*@ 
+    @*Select2*@
     <link rel="stylesheet" href="~/plugins/select2/css/select2.min.css">
     <link rel="stylesheet" href="~/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-     @*BS Stepper*@ 
+    @*BS Stepper*@
     <link rel="stylesheet" href="~/plugins/bs-stepper/css/bs-stepper.min.css">
-     @*JQVMap*@ 
+    @*JQVMap*@
     <link rel="stylesheet" href="~/plugins/jqvmap/jqvmap.min.css">
-     @*dropzonejs*@ 
+    @*dropzonejs*@
     <link rel="stylesheet" href="~/plugins/dropzone/min/dropzone.min.css">
-     @*Theme style*@ 
+    @*Theme style*@
     <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
-     @*overlayScrollbars*@ 
+    @*overlayScrollbars*@
     <link rel="stylesheet" href="~/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-     @*Daterange picker*@ 
+    @*Daterange picker*@
     <link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
-     @*summernote*@ 
+    @*summernote*@
     <link rel="stylesheet" href="~/plugins/summernote/summernote-bs4.min.css">
 
     <link rel="icon" src="~/favicon.ico" />
-     @*Google Font: Source Sans Pro*@ 
+    @*Google Font: Source Sans Pro*@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
-     @*DataTables*@ 
+    @*DataTables*@
+    <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    @*Bootstrap Color Picker*@
+    <link rel="stylesheet" href="~/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+    @*Tempusdominus Bootstrap 4*@
+    <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    @*Font Awesome*@
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    @*Bootstrap4 Duallistbox*@
+    <link rel="stylesheet" href="~/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+    @*iCheck*@
+    <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    @*Select2*@
+    <link rel="stylesheet" href="~/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    @*BS Stepper*@
+    <link rel="stylesheet" href="~/plugins/bs-stepper/css/bs-stepper.min.css">
+    @*JQVMap*@
+    <link rel="stylesheet" href="~/plugins/jqvmap/jqvmap.min.css">
+    @*dropzonejs*@
+    <link rel="stylesheet" href="~/plugins/dropzone/min/dropzone.min.css">
+    @*Theme style*@
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+    @*overlayScrollbars*@
+    <link rel="stylesheet" href="~/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    @*Daterange picker*@
+    <link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
+    @*summernote*@
+    <link rel="stylesheet" href="~/plugins/summernote/summernote-bs4.min.css">
+
+    <link rel="icon" src="~/favicon.ico" />
+    @*Google Font: Source Sans Pro*@
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+    @*DataTables*@
     <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 
+    <style>
+        #myDIV {
+            width: 100%;
+            height: 83px;
+            background-color: #FFFFFF;
+            border-bottom: 3px solid;
+            border-bottom-style: solid;
+        }
+    </style>
+
+    <style>
+        .vl {
+            border-left: 3px solid black;
+            /*height: 500px;*/
+        }
+
+        .center {
+            display: block;
+            margin-top: 60px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+        }
+    </style>
+
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+
+    <STYLE TYPE="text/css">
+        .breakhere {
+            page-break-after: always
+        }
+    </STYLE>
+
+    <style type="text/css">
+        body {
+            counter-reset: Serial;
+        }
+
+        tr td:first-child:before {
+            counter-increment: Serial;
+            content: counter(Serial);
+        }
+    </style>
 </head>
 
 <script>
@@ -61,78 +158,23 @@
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
-
     today = mm + '/' + dd + '/' + yyyy;
 </script>
 
-<style>
-    #myDIV {
-        width: 100%;
-        height: 83px;
-        background-color: #FFFFFF;
-        border-bottom: 3px solid;
-        border-bottom-style: solid;
-    }
-</style>
 
-<style>
-    .vl {
-        border-left: 3px solid black;
-        /*height: 500px;*/
-    }
-
-    .center {
-        display: block;
-        margin-top: 60px;
-        margin-left: auto;
-        margin-right: auto;
-        width: 50%;
-    }
-</style>
-
-<style>
-    table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-    }
-
-    tr:nth-child(even) {
-        background-color: #dddddd;
-    }
-</style>
-
-<STYLE TYPE="text/css">
-    .breakhere {
-        page-break-after: always
-    }
-</STYLE>
-
-<style type="text/css">
-    body {
-        counter-reset: Serial;
-    }
-
-    tr td:first-child:before {
-        counter-increment: Serial;
-        content: counter(Serial);
-    }
-</style>
 <script src="~/Scripts/Customers/WhatappQuot.js"></script>
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script src="~/cdnjs/html2pdf.bundle.min.js"></script>
 <br>
 <body>
     <div class="row">
         <div class="col-sm-1"></div>
         <div class="col-sm-10">
             <div class="container-fluid" id="create_pdf">
+               
                 <div class="card card-warning card-outline" @*style="position:fixed"*@>
                     <div id="content">
                         <div class="card-header">
@@ -140,7 +182,7 @@
                                 <div class="col-sm-6">
                                     <div>
                                         <h3 style="margin-left: -8px;">&nbsp;&nbsp; WISHLIST DETAILS</h3>
-                                        &nbsp;&nbsp; Date&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;:-&emsp;@Html.Label("txtFrmDate", DateTime.Now.ToString("dd-MMM-yyyy"))<br>
+                                        &nbsp;&nbsp; Date&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;:-&emsp;<label id="QuotDt"></label><br>
                                         &nbsp;&nbsp; Contact Person&emsp;:-&emsp;<label id="ID"></label><br>
                                         &nbsp;&nbsp; Contact No&emsp;&emsp;&ensp;&nbsp;:-&emsp;<label id="MobNo"></label><br>
                                         &nbsp;&nbsp; Quot ID&emsp;&emsp;&emsp;&emsp;&nbsp;:-&emsp;<label id="QuotId"></label>
@@ -169,7 +211,7 @@
                                     <br />
                                     <i class="fa fa-phone" aria-hidden="true"></i>
                                     &nbsp; Mobile No. : &nbsp;<label id="PhoneNo" />
-                                                              <label id="m" style="margin-left: 18px;" />
+                                    <label id="m" style="margin-left: 18px;" />
                                 </div>
                                 <div class="col-sm-6">
                                     <br />
@@ -194,21 +236,21 @@
                         </div>
                         @*<br>*@
 
-                        <center><hr width="97%" color="black" style="margin-top: 3px"/></center>
+                        <center><hr width="97%" color="black" style="margin-top: 3px" /></center>
 
                         <div class="vl" style="margin-left: 33px;">
                             <h3>&nbsp;&nbsp;WISHLIST ITEMS</h3>
                         </div>
 
                         @*<div class="card" style="padding: 11px; font-size: 18px; margin-left: 20px;">*@
-                            <div class="card-body p-0" >
-                                <center>
+                        <div class="card-body p-0">
+                            <center>
                                 <table id="tblQuotProduts" class="table table-striped" style="width:96%">
                                     <thead>
                                         <tr>
                                             <th style="width: 10px; padding-bottom: 37px; ">#</th>
                                             <th style="padding-bottom: 37px;">Product Name</th>
-                                            <th style="width: 137px">Per Product Price</th>
+                                            <th style="width: 137px">Product Price</th>
                                             <th style=" width: 137px">Product Colour</th>
                                             <th style="width: 10px; padding-bottom: 37px;">Quantity</th>
                                             <th style=" width: 137px">Discounted Price</th>
@@ -218,13 +260,13 @@
                                     <tbody>
                                     </tbody>
                                 </table>
-                                </center>
-                            </div>
+                            </center>
+                        </div>
                         @*</div>*@
                         <center><hr width="97%" color="black" /></center>
 
                         <P CLASS="breakhere">
-                            <div class="row">
+                            <div class="row" @*style="margin-top: -18px;"*@>
                                 <div class="col-sm-7" style="padding:40px; margin-top:-20px">
                                     <div class="vl">
                                         <h3>&nbsp;&nbsp;BAJAJ FINANCE SCHEME</h3>
@@ -275,13 +317,14 @@
                                         </table>
                                     </center>
                                 </div>
+                                <input type="text" class="form-control" autocomplete="off" maxlength="50" placeholder="Enter Product Name" id="CustMo" style="display:none">
                                 <div class="col-sm-5" style="margin-top: 65px; padding-right: 40px; text-align: left;">
                                     <center>
                                         <TABLE border="1">
                                             <TR>
                                             <TR><TH>Gross Amount<TD>Rs.<label id="GAmt" />
-                                            <TR><TH>Discounted Amount<TD>Rs.<label id="Discount" />
-                                            <TR><TH>Net Amount<TD>Rs.<label id="NetAmt" />
+                                            <TR><TH>Total Discount<TD>Rs.<label id="NetAmt" />
+                                            <TR><TH>Net Amount<TD>Rs.<label id="Discount" />
                                             <TR><TH>Taxes GST(18%)<TD>Rs.<label id="Tax" />
                                             <TR><TH>Shipping Cost<TD>Rs.<label id="ShipCost" />
                                             <TR><TH>Installation Cost<TD>Rs.<label id="IntallCost" />
@@ -293,8 +336,7 @@
                                 </div>
                             </div>
                             <center><hr width="97%" color="black" /></center>
-
-                            <div class="row">
+                            <div class="row" style="margin-top: -17px">
                                 <div class="col-sm-6" style="padding:40px; margin-top:-20px">
                                     <div class="vl">
                                         <h4>&nbsp;&nbsp;TERMS & CONDITIONS </h4>
@@ -323,12 +365,8 @@
                                     </TABLE>
                                 </div>
                             </div>
-
-                            <center><hr width="97%" color="black" /></center>
-                        <P CLASS="breakhere">
-                            <br>
-                            <br>
-                            <div class="row">
+                            <!--<-->@*center><hr width="97%" color="black" /></center>*@
+                            <div class="row" style="margin-top: -17px">
                                 <div class="col-sm-4" style="padding: 35px; margin-top: -38px; margin-right: -20px">
                                     <div class="vl">
                                         <h5>&nbsp;&nbsp;<label id="Display1" />:-</h5>
@@ -357,7 +395,6 @@
                                     </TABLE>
                                 </div>
                             </div>
-                            <label id="filename" style="display:none" />
                     </div>
                 </div>
             </div>
@@ -368,3 +405,6 @@
 
 
 
+
+
+@*<input id="Btnsuccess" class="btn btn-secondary" type="button" value="Back" onclick="shareToWhatsApp();" style="margin-left: 155px;" />&ensp;*@

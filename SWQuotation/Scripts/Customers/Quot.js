@@ -1,16 +1,23 @@
 ﻿$(document).ready(function () {
     debugger
+    $('#divLoader').show();
     var url = window.location.href;
     var split = url.split("QuotId=");
     var currentURL = split[1];
     var QuotId = currentURL;
     CustQuot(QuotId);
     Footer();
+    Savemail();
+    //$('#divLoader').focus();
+    $('#divLoader').hide();
 });
 
+
+
+
+
+
 function CustQuot(QuotId) {
-    debugger
-    //var model = { t_cmob: t_cmob };
     let url = "../Customers/CustQuot";
     $.ajax({
         type: "POST",
@@ -21,7 +28,6 @@ function CustQuot(QuotId) {
         async: false,
         success: function (response) {
             if (response != null) {
-                debugger
                 $("#QuotId").html(response[0].QuotId).focus;
                 $("#CustName").html(response[0].t_cnam).focus;
                 $("#QuotDt").html(response[0].QuotDt).focus;
@@ -102,26 +108,27 @@ function Footer() {
 }
 
 function SendMail() {
+    $('#divLoader').show();
     var quotId = $('#QuotId').html();
     var element = document.getElementById('create_pdf');
     var opt = {
         margin: [10, 0, 0, 0],
-        filename: 'Quotation Number ' + quotId ,
+        filename: quotId ,
         image: { type: 'jpeg', quality: 0.99 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
     };
-
+    
     html2pdf().set(opt).from(element).toPdf().output('datauristring').then(function (pdfAsString) {
         var pdfData = pdfAsString.trim();
         var base64result = pdfData.split(',')[1];
         var email = $("#Email").html();
         var quotId = $('#QuotId').html();
         var name = $('#CustName').html();
-        debugger
+        
         var reqData = {
             attachment: base64result,
-            quot: 'Quotation Number ' + quotId + '.pdf',
+            quot: quotId + '.pdf',
             Email: email,
             Name: name
         };
@@ -132,18 +139,57 @@ function SendMail() {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
-                debugger
+                $('#divLoader').hide();
                 Swal.fire({
                     icon: 'success',
                     title: 'Mail Send!',
                 });
             },
-            error: function (respose) {
+            error: function (response) {
+                $('#divLoader').hide();
                 Swal.fire({
                     icon: 'error',
                     title: 'Something went Wrong',
                     text: 'Error in sending Email',
                 });
+            }
+        });
+    });
+}
+
+
+function Savemail() {
+    
+    var quotId = $('#QuotId').html();
+    var element = document.getElementById('create_pdf');
+    var opt = {
+        margin: [10, 0, 0, 0],
+        filename: quotId,
+        image: { type: 'jpeg', quality: 0.99 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).toPdf().output('datauristring').then(function (pdfAsString) {
+     
+        var pdfData = pdfAsString.trim();
+        var base64result = pdfData.split(',')[1];
+        var quotId = $('#QuotId').html();
+
+        var reqData = {
+            attachment: base64result,
+            quot: quotId + '.pdf'
+        }
+        $.ajax({
+            type: "POST",
+            url: "../Customers/send",
+            data: JSON.stringify({ data: reqData }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                //$('#divLoader').hide();
+            },
+            error: function (response) {
+                
             }
         });
     });
@@ -158,23 +204,7 @@ function GetQuotProduct(QuotId) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         async: false,
-        success: function (response) {
-            debugger
-            var html = "";
-            $("#tblQuotProduts tbody").empty();
-            $.each(response, function (index, elementValue) {
-                debugger
-                html += "<tr><td>" + "</td><td>" + elementValue.PName +
-                                     "</td><td>" + '<center>' + elementValue.PPrice + '</center>' +
-                                     "</td><td>" + '<center>' + elementValue.PCol + '</center>' +
-                                     "</td><td>" + '<center>' + elementValue.Nou + '</center>' +
-                                     "</td><td>" + '<center>' + elementValue.PQty + '</center>' +
-                                     "</td><td>" + '<center>' + elementValue.TotalPrice + '</center>' +
-                                     "</td><td>" + '<center><img src="/Uploads/' + elementValue.Img +
-                                     '" style="height:120px;width:120px;"' + "</td></tr>";
-            });
-            $("#tblQuotProduts tbody").append(html);
-        }
+        success: ProductList,
     });
 }
 
@@ -182,31 +212,68 @@ function ProductList(response) {
     var datatableVariable = $("#tblQuotProduts").DataTable(
         {
             "responsive": false, "lengthChange": false, "autoWidth": false,
+            scrollX: false,
             "deferRender": false, "ordering": false,
             paging: false,
             searching: false,
-            destroy: false,
-            "info": false,
+            destroy: true,
+            "bInfo": false,
             data: response,
             columns: [
-                {
-                    "data": "id","title":"SNo.",
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
+                { 'data': 'Advance', 'title': 'SrNo.', "width": 80 },
                 { 'data': 'PName', 'title': 'Product Name',"width": 800},
-                { 'data': 'PPrice', 'title': 'Per Product Price', "width": 80 },
-                { 'data': 'PCol', 'title': 'Product Colour', "width": 80 },
-                { 'data': 'PQty', 'title': 'Quantity', "width": 80 },
-                { 'data': 'TotalPrice', 'title': 'Final Price',"width": 80 },
+                { 'data': 'PPrice', 'title': 'Product Price', "width": 80 },
+                { 'data': 'PQty', 'title': 'Qty', "width": 80 },
+                { 'data': 'Nou', 'title': 'Units', "width": 80 },
+                { 'data': 'DiscAmt', 'title': 'Discount', "width": 80 },
+                { 'data': 'Prod', 'title': 'Final Amount', "width": 80 },
                 {
                     'title': 'Product Image',
                     "render": function (data, type, JsonResultRow, meta) {
-                        return '<center><img src="/Uploads/' + JsonResultRow.Img + '" style="height:120px;width:120px;"/></center>';
+                        return '<center><img src="/Uploads/' + JsonResultRow.Img + '" style="height:110px;width:110px;"/></center>';
                     }
                 },
-            ]
+            ],
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api();
+                nb_cols = 4;
+                var j = 3;
+
+                while (j < nb_cols) {
+                    var pageTotal = api
+                        .column(j, { page: 'current' })
+                        .data()
+                        .reduce(function (a, b) {
+                            return Number(a) + Number(b);
+                        }, 0);
+                    // Update footer
+                    $(api.column(j).footer()).html(pageTotal);
+                    j++;
+                    var value = parseFloat(pageTotal).toFixed(2);
+                
+                }
+
+                var api1 = this.api();
+                nb_cols1 = 7;
+                var i = 6;
+
+                while (i < nb_cols1) {
+                    var pageTotal = api1
+                        .column(i, { page: 'current' })
+                        .data()
+                        .reduce(function (a, b) {
+                            return Number(a) + Number(b);
+                        }, 0);
+                    // Update footer
+                    $(api1.column(i).footer()).html(pageTotal);
+                    i++;
+                    var value = parseFloat(pageTotal).toFixed(2);
+       
+                }
+            }
         }).buttons().container().appendTo('#tblQuotProduts_wrapper .col-md-6:eq(0)');
 };
+
+
+
 
